@@ -9,7 +9,7 @@ interface Section {
 }
 
 const sections: Section[] = [
-  { id: 1, title: 'INVICTOS KIDS', image: '/invictos-kids.png' },
+  { id: 1, title: 'INVICTOS KIDS', image: '/invictoskids.png' },
   { id: 2, title: 'INVICTOS TEENS', image: '/invictosTeens.png' },
   { id: 3, title: 'INVICTOS', image: '/invictos.png' },
   { id: 4, title: 'GDC', image: '/gdc.png' }
