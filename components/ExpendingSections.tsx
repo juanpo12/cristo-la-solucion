@@ -6,23 +6,18 @@ interface Section {
   id: number
   title: string
   image: string
+  href: string
 }
 
-const sections: Section[] = [
-  { id: 1, title: 'INVICTOS KIDS', image: '/invictoskids.png' },
-  { id: 2, title: 'INVICTOS TEENS', image: '/invictosTeens.png' },
-  { id: 3, title: 'INVICTOS', image: '/invictos.png' },
-  { id: 4, title: 'GDC', image: '/gdc.png' }
-]
-
-export default function ExpandingSections() {
+export default function ExpandingSections({sections}: {sections: Section[]}) {
   const [hoveredId, setHoveredId] = useState<number | null>(null)
 
   return (
     <div className="flex h-full w-screen bg-black overflow-hidden">
       {sections.map((section) => (
-        <div
-          key={section.id}
+        <a
+        href={section.href}
+        key={section.id}
           className={cn(
             "relative flex items-center justify-center transition-all duration-500 ease-in-out cursor-pointer border border-white",
             hoveredId === section.id ? "flex-grow-[2]" : "flex-grow-[1]"
@@ -46,7 +41,7 @@ export default function ExpandingSections() {
               {section.title}
             </h2>
           </div>
-        </div>
+        </a>
       ))}
     </div>
   )
