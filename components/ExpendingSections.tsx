@@ -13,13 +13,13 @@ export default function ExpandingSections({sections}: {sections: Section[]}) {
   const [hoveredId, setHoveredId] = useState<number | null>(null)
 
   return (
-    <div className="flex h-full w-screen bg-black overflow-hidden">
+    <div className="flex h-full w-screen flex-col md:flex-row bg-black overflow-hidden">
       {sections.map((section) => (
         <a
         href={section.href}
         key={section.id}
           className={cn(
-            "relative flex items-center justify-center transition-all duration-500 ease-in-out cursor-pointer border border-white",
+            "relative flex items-center flex-col md:flex-row justify-center transition-all duration-500 ease-in-out cursor-pointer border border-white",
             hoveredId === section.id ? "flex-grow-[2]" : "flex-grow-[1]"
           )}
           style={{
