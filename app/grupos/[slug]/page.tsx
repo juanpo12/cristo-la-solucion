@@ -12,7 +12,7 @@ const groupsData = {
     subtitle: "Donde los pequeños grandes sueños cobran vida",
     description:
       "Un espacio mágico donde los niños descubren el amor de Dios a través de aventuras, juegos, canciones y enseñanzas diseñadas especialmente para ellos. Aquí cada niño es valorado, amado y guiado para crecer en fe de manera divertida y segura.",
-    image: "/images/kids-group.jpg",
+    image: "/KIDS.jpg",
     schedule: "Domingos 11:00 AM",
     location: "Salón Infantil - Planta Baja",
     ageRange: "3 a 12 años",
@@ -41,7 +41,7 @@ const groupsData = {
     subtitle: "Descubriendo tu identidad en Cristo",
     description:
       "Un espacio auténtico donde los adolescentes pueden ser ellos mismos mientras exploran su fe, construyen amistades genuinas y se preparan para ser los líderes del mañana. Aquí abordamos las preguntas reales de la vida con respuestas bíblicas relevantes.",
-    image: "/images/teens-group.jpg",
+    image: "/TEENS.jpg",
     schedule: "Sábados 18:00 HS",
     location: "Auditorio Principal",
     ageRange: "13 a 18 años",
@@ -70,7 +70,7 @@ const groupsData = {
     subtitle: "Crecimiento espiritual sin límites",
     description:
       "Una comunidad vibrante de jóvenes y adultos comprometidos con el crecimiento espiritual, el servicio y la transformación personal. Aquí profundizamos en la Palabra, desarrollamos nuestros dones y impactamos nuestra comunidad con el amor de Cristo.",
-    image: "/images/invictos-group.jpg",
+    image: "/INVICTOS.jpg",
     schedule: "Jueves 20:30 HS",
     location: "Santuario Principal",
     ageRange: "18+ años",
@@ -99,7 +99,7 @@ const groupsData = {
     subtitle: "Familia, fe y comunión íntima",
     description:
       "Espacios íntimos donde las familias y personas de todas las edades se reúnen para compartir la vida, orar juntos y crecer en comunión. Aquí experimentamos el verdadero significado de la familia de Dios en un ambiente acogedor y de apoyo mutuo.",
-    image: "/images/gdc-group.jpg",
+    image: "/GDC.jpg",
     schedule: "Miércoles 19:00 HS",
     location: "Salas de Reunión (Múltiples ubicaciones)",
     ageRange: "Todas las edades",
