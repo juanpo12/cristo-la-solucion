@@ -1,88 +1,201 @@
-import { Card, CardContent } from "@/components/ui/card"
+"use client"
+
+import { useState, useEffect } from "react"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { ArrowRight, Users, Calendar } from "lucide-react"
+import Link from "next/link"
 
 const groups = [
   {
+    id: "invictos-kids",
     name: "INVICTOS KIDS",
-    description:
-      "Un espacio divertido y seguro donde los niños aprenden sobre el amor de Dios a través de juegos, canciones y enseñanzas adaptadas a su edad.",
-    schedule: "Domingos 11:00 AM",
-    bgPosition: "0% 0%",
-    color: "from-church-electric-500 to-church-electric-700",
+    shortDesc: "Diversión y aprendizaje",
+    schedule: "Dom 11:00 AM",
+    image: "/KIDS.jpg",
+    color: "from-blue-600/30 to-cyan-600/30",
   },
   {
+    id: "invictos-teens",
     name: "INVICTOS TEENS",
-    description:
-      "Adolescentes descubriendo su identidad en Cristo, construyendo amistades sólidas y preparándose para ser líderes del mañana.",
-    schedule: "Sábados 18:00 HS",
-    bgPosition: "25% 0%",
-    color: "from-church-navy-600 to-church-electric-600",
+    shortDesc: "Descubriendo propósito",
+    schedule: "Sáb 18:00 HS",
+    image: "/TEENS.jpg",
+    color: "from-purple-600/30 to-pink-600/30",
   },
   {
+    id: "invictos",
     name: "INVICTOS",
-    description:
-      "Jóvenes y adultos comprometidos con el crecimiento espiritual, el servicio y la transformación personal y comunitaria.",
-    schedule: "Jueves 20:30 HS",
-    bgPosition: "50% 0%",
-    color: "from-church-electric-600 to-church-navy-700",
+    shortDesc: "Crecimiento espiritual",
+    schedule: "Jue 20:30 HS",
+    image: "/INVICTOS.jpg",
+    color: "from-church-electric-600/30 to-church-navy-600/30",
   },
   {
+    id: "gdc",
     name: "GDC",
-    description:
-      "Grupos de Conexión donde las familias se reúnen para compartir, orar y crecer juntos en un ambiente íntimo y acogedor.",
-    schedule: "Miércoles 19:00 HS",
-    bgPosition: "75% 0%",
-    color: "from-church-navy-700 to-church-navy-800",
+    shortDesc: "Conexión familiar",
+    schedule: "Mié 19:00 HS",
+    image: "/GDC2.jpg",
+    color: "from-orange-600/30 to-red-600/30",
   },
 ]
 
 export function Groups() {
+  const [hoveredGroup, setHoveredGroup] = useState<string | null>(null)
+
+  useEffect(() => {
+    groups.forEach((group) => {
+      const img = new Image()
+      img.src = group.image
+    })
+  }, [])
+
+  const getHoveredGroupData = () => {
+    return hoveredGroup
+      ? groups.find((g) => g.id === hoveredGroup) ?? groups[0]
+      : null
+  }
+
+  const hoveredData = getHoveredGroupData()
+
   return (
-    <section id="grupos" className="py-20 bg-white scroll-mt-20">
-      <div className="container mx-auto px-4">
-        <h2 className="text-5xl font-bold text-center church-text mb-16">NUESTROS GRUPOS</h2>
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+    <section id="grupos" className="py-0 bg-white scroll-mt-20 overflow-hidden">
+      <div className="container mx-auto px-4 mb-12">
+        <h2 className="text-5xl font-bold text-center church-text mb-8">NUESTROS GRUPOS</h2>
+        <p className="text-xl church-text-muted text-center max-w-3xl mx-auto">
+          Descubre el lugar perfecto para crecer, conectar y servir junto a otros en tu jornada de fe
+        </p>
+      </div>
+
+      <div className="w-full h-[70vh] relative">
+        <div className="flex h-full">
           {groups.map((group, index) => (
-            <Card
-              key={index}
-              className="group hover:shadow-2xl transition-all duration-500 overflow-hidden cursor-pointer transform hover:scale-105 church-card border-0"
+            <Link
+              key={group.id}
+              href={`/grupos/${group.id}`}
+              className="relative flex-1 overflow-hidden cursor-pointer group"
+              onMouseEnter={() => setHoveredGroup(group.id)}
+              onMouseLeave={() => setHoveredGroup(null)}
             >
-              <div className="relative h-72 overflow-hidden">
+              {/* Imagen de fondo global (hovered o default) */}
+              <div
+                className="absolute inset-0 bg-cover bg-center transition-all duration-700 ease-out"
+                style={{
+                  backgroundImage: `url('${hoveredData ? hoveredData.image : group.image}')`,
+                  backgroundPosition: `${index * 33.33}% center`,
+                  backgroundSize: "400% 100%",
+                  filter:
+                    hoveredGroup && hoveredGroup !== group.id
+                      ? "brightness(0.6) contrast(0.8)"
+                      : "brightness(0.9)",
+                }}
+              />
+
+              {/* Overlay con color dinámico */}
+              <div
+                className={`absolute inset-0 bg-gradient-to-t transition-all duration-700 ${
+                  hoveredData ? hoveredData.color : group.color
+                } ${hoveredGroup === group.id ? "opacity-20" : "opacity-40"}`}
+              />
+
+              {/* Capa para texto legible */}
+              <div className="absolute inset-0 bg-black/20" />
+
+              {/* Contenido */}
+              <div className="absolute inset-0 flex flex-col justify-center items-center text-white p-6 z-10">
                 <div
-                  className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-                  style={{
-                    backgroundImage: `url('/images/invictos-kids.png')`,
-                    backgroundPosition: group.bgPosition,
-                  }}
+                  className={`text-center transition-all duration-700 ease-out ${
+                    !hoveredGroup || hoveredGroup === group.id
+                      ? "opacity-100 translate-y-0"
+                      : "opacity-0 translate-y-4 pointer-events-none"
+                  }`}
                 >
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent group-hover:from-black/60 transition-all duration-500" />
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <h3 className="text-white text-2xl font-bold text-center px-4 transform transition-all duration-500 group-hover:scale-110">
-                      {group.name}
-                    </h3>
+                  <h3 className="text-2xl md:text-3xl font-bold mb-3 drop-shadow-md">{group.name}</h3>
+
+                  <div
+                    className={`transition-all duration-700 ease-out ${
+                      hoveredGroup === group.id
+                        ? "opacity-100 translate-y-0 max-h-96"
+                        : "opacity-0 translate-y-6 max-h-0 overflow-hidden"
+                    }`}
+                  >
+                    <p className="text-lg mb-4 drop-shadow-sm font-medium">{group.shortDesc}</p>
+
+                    <div className="flex items-center justify-center space-x-2 mb-6 opacity-90">
+                      <Calendar className="w-4 h-4" />
+                      <span className="text-base">{group.schedule}</span>
+                    </div>
+
+                    <Button
+                      size="lg"
+                      className="bg-white/90 text-gray-800 hover:bg-white hover:text-gray-900 transition-all duration-300 shadow-lg border-0"
+                    >
+                      Conoce más
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </Button>
                   </div>
-                </div>
-                <div
-                  className={`absolute inset-0 bg-gradient-to-br ${group.color} opacity-0 group-hover:opacity-95 transition-opacity duration-500 flex items-center justify-center p-6`}
-                >
-                  <div className="text-center text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                    <h3 className="text-2xl font-bold mb-4">{group.name}</h3>
-                    <p className="text-sm mb-6 opacity-90 leading-relaxed">{group.description.split(".")[0]}</p>
-                    <Badge className="bg-white/20 text-white border-white/30 px-4 py-2">{group.schedule}</Badge>
+
+                  <div
+                    className={`transition-all duration-500 ${
+                      !hoveredGroup ? "opacity-90" : "opacity-0 absolute"
+                    }`}
+                  >
+                    <p className="text-sm md:text-base font-medium">{group.shortDesc}</p>
                   </div>
                 </div>
               </div>
-              <CardContent className="p-8 bg-white group-hover:bg-blue-50 transition-colors duration-300">
-                <p className="church-text-muted mb-6 leading-relaxed">{group.description}</p>
-                <div className="flex items-center justify-between">
-                  <Badge variant="secondary" className="group-hover:bg-church-electric-100 px-3 py-1">
-                    {group.schedule}
-                  </Badge>
-                  <div className="w-3 h-3 bg-church-electric-500 rounded-full group-hover:w-5 group-hover:h-5 transition-all duration-300"></div>
+
+              {/* Badge */}
+              <div
+                className={`absolute top-6 left-6 z-20 transition-all duration-500 ${
+                  !hoveredGroup || hoveredGroup === group.id ? "opacity-100" : "opacity-0"
+                }`}
+              >
+                <Badge className="bg-white/80 text-gray-800 border-0 shadow-sm text-xs font-medium">
+                  <Users className="w-3 h-3 mr-1" />
+                  {group.name.split(" ")[1] || group.name}
+                </Badge>
+              </div>
+
+              {/* Indicadores */}
+              <div className="absolute bottom-6 left-6 z-20">
+                <div className="flex space-x-1.5">
+                  {groups.map((_, i) => (
+                    <div
+                      key={i}
+                      className={`w-2 h-2 rounded-full transition-all duration-500 ${
+                        hoveredGroup
+                          ? i === index
+                            ? "bg-white shadow-sm"
+                            : "bg-white/40"
+                          : i === index
+                            ? "bg-white/70"
+                            : "bg-white/25"
+                      }`}
+                    />
+                  ))}
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+
+              {/* Línea divisoria */}
+              {index < groups.length - 1 && <div className="absolute top-0 right-0 w-px h-full bg-white/15 z-30" />}
+            </Link>
           ))}
+        </div>
+      </div>
+
+      {/* CTA */}
+      <div className="bg-gradient-to-r from-church-electric-50 to-blue-50 py-16">
+        <div className="container mx-auto px-4 text-center">
+          <h3 className="text-3xl font-bold church-text mb-6">¿Listo para conectar?</h3>
+          <p className="text-lg church-text-muted mb-8 max-w-2xl mx-auto">
+            Cada grupo es una oportunidad única de crecer, servir y construir relaciones duraderas. ¡Encontrá tu lugar
+            en nuestra familia!
+          </p>
+          <Button size="lg" className="church-button-primary">
+            Contáctanos para más información
+          </Button>
         </div>
       </div>
     </section>
