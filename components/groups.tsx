@@ -11,7 +11,7 @@ const groups = [
     name: "INVICTOS KIDS",
     shortDesc: "Diversión y aprendizaje",
     schedule: "Dom 11:00 AM",
-    image: "/KIDS.jpg",
+    image: "/test.jpg",
     color: "from-blue-600/30 to-cyan-600/30",
   },
   {
