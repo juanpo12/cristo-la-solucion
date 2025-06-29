@@ -12,7 +12,7 @@ const groupsData = {
     subtitle: "Donde los pequeños grandes sueños cobran vida",
     description:
       "Un espacio mágico donde los niños descubren el amor de Dios a través de aventuras, juegos, canciones y enseñanzas diseñadas especialmente para ellos. Aquí cada niño es valorado, amado y guiado para crecer en fe de manera divertida y segura.",
-    image: "/KIDS.jpg",
+    image: "/test.jpg",
     schedule: "Domingos 11:00 AM",
     location: "Salón Infantil - Planta Baja",
     ageRange: "3 a 12 años",
