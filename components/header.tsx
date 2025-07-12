@@ -7,6 +7,7 @@ import Link from "next/link"
 export function Header() {
   const [activeSection, setActiveSection] = useState("")
   const [isScrolled, setIsScrolled] = useState(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   // Función para scroll suave con offset personalizado
   const scrollToSection = (sectionId: string) => {
@@ -20,6 +21,8 @@ export function Header() {
         behavior: "smooth",
       })
     }
+    // Cerrar menú móvil después de hacer scroll
+    setIsMobileMenuOpen(false)
   }
 
   // Detectar scroll y sección activa
@@ -47,6 +50,18 @@ export function Header() {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
+  // Cerrar menú móvil cuando se redimensiona la ventana
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1024) {
+        setIsMobileMenuOpen(false)
+      }
+    }
+
+    window.addEventListener("resize", handleResize)
+    return () => window.removeEventListener("resize", handleResize)
+  }, [])
+
   const navItems = [
     { href: "vision", label: "Visión", type: "scroll" },
     { href: "grupos", label: "Grupos", type: "scroll" },
@@ -56,6 +71,10 @@ export function Header() {
     { href: "oracion", label: "Oración", type: "scroll" },
     { href: "contacto", label: "Contacto", type: "scroll" },
   ]
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen)
+  }
 
   return (
     <header
@@ -83,7 +102,7 @@ export function Header() {
             </div>
           </Link>
 
-          {/* Navegación */}
+          {/* Navegación Desktop */}
           <div className="hidden lg:flex items-center space-x-8">
             {navItems.map((item) => (
               <div key={item.href}>
@@ -117,7 +136,7 @@ export function Header() {
           </div>
 
           {/* Botón CTA */}
-          <div className="hidden md:block">
+          <div className="hidden md:block lg:block">
             {/* <button
               onClick={() => scrollToSection("contacto")}
               className="bg-gradient-to-r from-church-electric-500 to-church-electric-600 hover:from-church-electric-600 hover:to-church-electric-700 text-white px-6 py-2.5 rounded-full font-medium transition-all duration-300 transform hover:scale-105 shadow-xl hover:shadow-2xl border border-church-electric-400/30"
@@ -126,15 +145,75 @@ export function Header() {
             </button> */}
           </div>
 
-          {/* Menú móvil (hamburger) */}
+          {/* Botón Hamburguesa */}
           <div className="lg:hidden">
-            <button className="p-2 text-gray-300 hover:text-white transition-colors hover:bg-white/10 rounded-lg">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
+            <button
+              onClick={toggleMobileMenu}
+              className="relative w-8 h-8 flex flex-col justify-center items-center group"
+              aria-label="Toggle menu"
+            >
+              <span
+                className={`w-6 h-0.5 bg-gray-300 transition-all duration-300 group-hover:bg-white ${
+                  isMobileMenuOpen ? "rotate-45 translate-y-1.5" : ""
+                }`}
+              />
+              <span
+                className={`w-6 h-0.5 bg-gray-300 transition-all duration-300 group-hover:bg-white mt-1 ${
+                  isMobileMenuOpen ? "opacity-0" : ""
+                }`}
+              />
+              <span
+                className={`w-6 h-0.5 bg-gray-300 transition-all duration-300 group-hover:bg-white mt-1 ${
+                  isMobileMenuOpen ? "-rotate-45 -translate-y-1.5" : ""
+                }`}
+              />
             </button>
           </div>
         </nav>
+
+        {/* Menú Móvil */}
+        <div
+          className={`lg:hidden transition-all duration-300 ease-in-out ${
+            isMobileMenuOpen
+              ? "max-h-full opacity-100 visible"
+              : "max-h-0 opacity-0 invisible"
+          }`}
+        >
+          <div className="py-4 space-y-2 border-t border-gray-700/50">
+            {navItems.map((item) => (
+              <div key={item.href}>
+                {item.type === "link" ? (
+                  <Link
+                    href={item.href}
+                    className="block px-4 py-3 text-gray-300 hover:text-white hover:bg-gray-800/50 transition-all duration-300 rounded-lg mx-2"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    {item.label}
+                  </Link>
+                ) : (
+                  <button
+                    onClick={() => scrollToSection(item.href)}
+                    className={`block w-full text-left px-4 py-3 text-gray-300 hover:text-white hover:bg-gray-800/50 transition-all duration-300 rounded-lg mx-2 ${
+                      activeSection === item.href ? "text-white bg-gray-800/30" : ""
+                    }`}
+                  >
+                    {item.label}
+                  </button>
+                )}
+              </div>
+            ))}
+            
+            {/* Botón CTA en móvil */}
+            <div className="px-2 pt-4">
+              <button
+                onClick={() => scrollToSection("contacto")}
+                className="w-full bg-gradient-to-r from-church-electric-500 to-church-electric-600 hover:from-church-electric-600 hover:to-church-electric-700 text-white px-6 py-3 rounded-lg font-medium transition-all duration-300 shadow-lg"
+              >
+                Contáctanos
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </header>
   )

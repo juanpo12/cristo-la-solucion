@@ -59,7 +59,7 @@ const groupsData = {
     name: "INVICTOS",
     subtitle: "Crecimiento espiritual sin límites",
     description:
-      "Invictos es un grupo de jóvenes, que creen en que Jesús es la respuesta a todas las preguntas y que solo en Él hay esperanza. Mediante grupos de amistad y reuniones, los días sábados a las 20 hs, buscamos que Dios siga transformando la vida de los jóvenes y que los lleve a compartirlo con otros.",
+      "Invictos es un grupo de jóvenes, que creen en que Jesús es la respuesta a todas las preguntas y que solo en Él hay esperanza. Mediante grupos de amistad y reuniones, los días sábados a las 19:30 hs, buscamos que Dios siga transformando la vida de los jóvenes y que los lleve a compartirlo con otros.",
     image: "/INVICTOS.jpg",
     schedule: "Sábados 19:30 HS",
     location: "Auditorio Principal",
