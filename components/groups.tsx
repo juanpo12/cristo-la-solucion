@@ -1,4 +1,5 @@
 "use client"
+
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, Calendar } from "lucide-react"
@@ -84,7 +85,7 @@ export function Groups() {
     }
   }
 
-  const getOverlayColor = (group: Group) => {
+  const getOverlayColor = (group: Group,) => {
     if (hoveredGroup === null) {
       return group.color
     } else {
@@ -112,8 +113,6 @@ export function Groups() {
 
       {/* Desktop: Efecto horizontal original */}
       <div className="hidden lg:block w-full h-[70vh] relative">
-      {/* Desktop: Efecto horizontal original */}
-      <div className="hidden lg:block w-full h-[70vh] relative">
         <div className="flex h-full">
           {groups.map((group, index) => (
             <Link
@@ -131,14 +130,9 @@ export function Groups() {
                   backgroundSize: getBackgroundSize(),
                   filter:
                     hoveredGroup && hoveredGroup !== group.id ? "brightness(0.6) contrast(0.8)" : "brightness(0.9)",
-                    hoveredGroup && hoveredGroup !== group.id ? "brightness(0.6) contrast(0.8)" : "brightness(0.9)",
                 }}
               />
               <div
-                className={`absolute inset-0 bg-gradient-to-t transition-all duration-700 ${getOverlayColor(group)} ${
-                  hoveredGroup === group.id ? "opacity-20" : "opacity-40"
-                }`}
-              />
                 className={`absolute inset-0 bg-gradient-to-t transition-all duration-700 ${getOverlayColor(group)} ${
                   hoveredGroup === group.id ? "opacity-20" : "opacity-40"
                 }`}
@@ -147,9 +141,6 @@ export function Groups() {
               <div className="absolute inset-0 flex flex-col justify-center items-center text-white p-6 z-10">
                 <div
                   className={`text-center transition-all duration-700 ease-out ${
-                    shouldShowContent(group)
-                      ? "opacity-100 transform translate-y-0"
-                      : "opacity-0 transform translate-y-4"
                     shouldShowContent(group)
                       ? "opacity-100 transform translate-y-0"
                       : "opacity-0 transform translate-y-4"
@@ -179,18 +170,10 @@ export function Groups() {
                   <div
                     className={`transition-all duration-500 ${
                       hoveredGroup === null ? "opacity-90" : "opacity-0 absolute"
-                      hoveredGroup === null ? "opacity-90" : "opacity-0 absolute"
                     }`}
                   >
                     <p className="text-sm md:text-base font-medium">{group.shortDesc}</p>
                   </div>
-                </div>
-              </div>
-              {index < groups.length - 1 && <div className="absolute top-0 right-0 w-px h-full bg-white/15 z-30" />}
-            </Link>
-          ))}
-        </div>
-      </div>
                 </div>
               </div>
               {index < groups.length - 1 && <div className="absolute top-0 right-0 w-px h-full bg-white/15 z-30" />}
@@ -275,7 +258,6 @@ export function Groups() {
         <div className="container mx-auto px-4 text-center">
           <h3 className="text-3xl font-bold church-text mb-6">¿Listo para conectar?</h3>
           <p className="text-lg church-text-muted mb-8 max-w-2xl mx-auto">
-            Cada grupo es una oportunidad única de crecer, servir y construir relaciones duraderas. ¡Encuentra tu lugar
             Cada grupo es una oportunidad única de crecer, servir y construir relaciones duraderas. ¡Encuentra tu lugar
             en nuestra familia!
           </p>
