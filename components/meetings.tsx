@@ -5,17 +5,17 @@ const meetings = [
   {
     day: "JUEVES",
     time: "20:30 HS",
-    description: "Reunión de oración y enseñanza bíblica. Un tiempo especial para crecer en fe y comunión.",
+    description: "Reunión en YouTube para líderes y servidores. Impulsamos juntos la visión.",
   },
   {
     day: "DOMINGO",
     time: "11 Y 18 HS",
-    description: "Servicios dominicales con adoración, predicación y comunión familiar.",
+    description: "Día del Señor. Nos congregamos para adorar en uno de los dos horarios disponibles.",
   },
   {
     day: "SÁBADOS",
-    time: "18 HS",
-    description: "Reunión juvenil con música contemporánea, enseñanza relevante y actividades especiales.",
+    time: "19:30 HS",
+    description: "Reunión de jóvenes. Un espacio para crecer en fe y amistad.",
   },
 ]
 

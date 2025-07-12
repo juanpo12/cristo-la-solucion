@@ -11,10 +11,10 @@ const groupsData = {
     name: "INVICTOS KIDS",
     subtitle: "Donde los pequeños grandes sueños cobran vida",
     description:
-      "Un espacio mágico donde los niños descubren el amor de Dios a través de aventuras, juegos, canciones y enseñanzas diseñadas especialmente para ellos. Aquí cada niño es valorado, amado y guiado para crecer en fe de manera divertida y segura.",
+      "Es un espacio exclusivo para los niños de nuestra congregación. Contamos con un equipo de maestros encargados de sembrar la palabra de Dios, en la vida de cada uno de los niños, por medio de enseñanzas dinámicas, que capturen la atención de ellos e impacten sus vidas.",
     image: "/test.jpg",
-    schedule: "Domingos 11:00 AM",
-    location: "Salón Infantil - Planta Baja",
+    schedule: "Sábados 19:30 AM",
+    location: "Auditorio Principal",
     ageRange: "3 a 12 años",
     color: "from-blue-500 to-cyan-500",
     activities: [
@@ -29,20 +29,15 @@ const groupsData = {
       { icon: Heart, title: "Amor", desc: "Cada niño se siente amado y valorado" },
       { icon: Star, title: "Creatividad", desc: "Fomentamos la imaginación y expresión" },
       { icon: Users, title: "Amistad", desc: "Construimos lazos de amistad duraderos" },
-    ],
-    leaders: [
-      { name: "María González", role: "Coordinadora General", experience: "8 años" },
-      { name: "Carlos Ruiz", role: "Líder de Actividades", experience: "5 años" },
-      { name: "Ana Martín", role: "Maestra Bíblica", experience: "6 años" },
-    ],
+    ]
   },
   "invictos-teens": {
     name: "INVICTOS TEENS",
     subtitle: "Descubriendo tu identidad en Cristo",
     description:
-      "Un espacio auténtico donde los adolescentes pueden ser ellos mismos mientras exploran su fe, construyen amistades genuinas y se preparan para ser los líderes del mañana. Aquí abordamos las preguntas reales de la vida con respuestas bíblicas relevantes.",
+      "Estamos llamados a guiar a los adolescentes a que puedan desarrollar una relación personal con Dios, libre de toda tradición y religión. Nos esforzamos en trasmitir los principios de la Palabra utilizando todos los medios disponibles para alcanzar a la mayor cantidad posible.",
     image: "/TEENS.jpg",
-    schedule: "Sábados 18:00 HS",
+    schedule: "Sábados 19:30 HS",
     location: "Auditorio Principal",
     ageRange: "13 a 18 años",
     color: "from-purple-500 to-pink-500",
@@ -58,21 +53,16 @@ const groupsData = {
       { icon: Target, title: "Propósito", desc: "Descubriendo el plan de Dios para sus vidas" },
       { icon: Users, title: "Comunidad", desc: "Relaciones auténticas y de apoyo mutuo" },
       { icon: Star, title: "Liderazgo", desc: "Formando líderes íntegros para el futuro" },
-    ],
-    leaders: [
-      { name: "David Morales", role: "Pastor de Jóvenes", experience: "10 años" },
-      { name: "Sofía López", role: "Líder de Adoración", experience: "4 años" },
-      { name: "Miguel Torres", role: "Consejero", experience: "7 años" },
-    ],
+    ]
   },
   invictos: {
     name: "INVICTOS",
     subtitle: "Crecimiento espiritual sin límites",
     description:
-      "Una comunidad vibrante de jóvenes y adultos comprometidos con el crecimiento espiritual, el servicio y la transformación personal. Aquí profundizamos en la Palabra, desarrollamos nuestros dones y impactamos nuestra comunidad con el amor de Cristo.",
+      "Invictos es un grupo de jóvenes, que creen en que Jesús es la respuesta a todas las preguntas y que solo en Él hay esperanza. Mediante grupos de amistad y reuniones, los días sábados a las 20 hs, buscamos que Dios siga transformando la vida de los jóvenes y que los lleve a compartirlo con otros.",
     image: "/INVICTOS.jpg",
-    schedule: "Jueves 20:30 HS",
-    location: "Santuario Principal",
+    schedule: "Sábados 19:30 HS",
+    location: "Auditorio Principal",
     ageRange: "18+ años",
     color: "from-church-electric-600 to-church-navy-600",
     activities: [
@@ -87,22 +77,17 @@ const groupsData = {
       { icon: Heart, title: "Pasión", desc: "Viviendo con pasión por Dios y su reino" },
       { icon: Target, title: "Misión", desc: "Comprometidos con la Gran Comisión" },
       { icon: Star, title: "Excelencia", desc: "Buscando la excelencia en todo lo que hacemos" },
-    ],
-    leaders: [
-      { name: "Pastor Roberto Silva", role: "Líder Principal", experience: "15 años" },
-      { name: "Lucía Fernández", role: "Coordinadora de Ministerios", experience: "8 años" },
-      { name: "Andrés Vega", role: "Líder de Discipulado", experience: "6 años" },
-    ],
+    ]
   },
   gdc: {
     name: "GDC - GRUPOS DE CONEXIÓN",
     subtitle: "Familia, fe y comunión íntima",
     description:
-      "Espacios íntimos donde las familias y personas de todas las edades se reúnen para compartir la vida, orar juntos y crecer en comunión. Aquí experimentamos el verdadero significado de la familia de Dios en un ambiente acogedor y de apoyo mutuo.",
+      "Contamos con grupos de conexión (+35 años) los días martes a las 19:30 hs. La visión de estos grupos es que la gente pueda ser formada en la palabra de Dios; que puedan conectar con otras personas y juntos descubrir la misión que tienen sus vidas, que es vivir por una causa más importante; que esto los lleve a invitar y alcanzar a aquellos que nunca asistieron a la iglesia.",
     image: "/GDC.jpg",
-    schedule: "Miércoles 19:00 HS",
-    location: "Salas de Reunión (Múltiples ubicaciones)",
-    ageRange: "Todas las edades",
+    schedule: "Martes 19:00 HS",
+    location: "Auditorio Principal",
+    ageRange: "19 a 34 años",
     color: "from-orange-500 to-red-500",
     activities: [
       "Estudios bíblicos familiares",
@@ -116,17 +101,13 @@ const groupsData = {
       { icon: Heart, title: "Familia", desc: "Experimentando la verdadera familia de Dios" },
       { icon: Users, title: "Apoyo", desc: "Caminando juntos en las alegrías y desafíos" },
       { icon: Star, title: "Intimidad", desc: "Relaciones profundas y auténticas" },
-    ],
-    leaders: [
-      { name: "Familia Rodríguez", role: "Coordinadores Generales", experience: "12 años" },
-      { name: "Familia Mendoza", role: "Líderes de Grupo", experience: "9 años" },
-      { name: "Familia Castro", role: "Líderes de Grupo", experience: "7 años" },
-    ],
+    ]
   },
 }
 
-export default function GroupPage({ params }: { params: { slug: string } }) {
-  const group = groupsData[params.slug as keyof typeof groupsData]
+export default async function GroupPage({ params }: { params: { slug: string } }) {
+  const awaitParams = await params
+  const group = groupsData[awaitParams.slug as keyof typeof groupsData]
 
   if (!group) {
     notFound()
@@ -194,23 +175,6 @@ export default function GroupPage({ params }: { params: { slug: string } }) {
                       </div>
                       <h4 className="text-xl font-bold church-text mb-2">{value.title}</h4>
                       <p className="church-text-muted">{value.desc}</p>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </div>
-
-            {/* Líderes */}
-            <div>
-              <h3 className="text-3xl font-bold church-text mb-8">Nuestro Equipo</h3>
-              <div className="grid md:grid-cols-3 gap-6">
-                {group.leaders.map((leader, index) => (
-                  <Card key={index} className="church-card">
-                    <CardContent className="p-6 text-center">
-                      <div className="w-20 h-20 bg-gray-200 rounded-full mx-auto mb-4" />
-                      <h4 className="text-lg font-bold church-text mb-1">{leader.name}</h4>
-                      <p className="church-text-muted mb-2">{leader.role}</p>
-                      {/* <Badge variant="secondary">{leader.experience} de experiencia</Badge> */}
                     </CardContent>
                   </Card>
                 ))}

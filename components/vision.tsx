@@ -7,9 +7,7 @@ export function Vision() {
         <div className="max-w-5xl mx-auto text-center">
           <h2 className="text-5xl font-bold church-text mb-10 animate-fade-in">NUESTRA VISIÓN</h2>
           <p className="text-xl church-text-muted leading-relaxed mb-16 max-w-4xl mx-auto animate-fade-in">
-            Ser una iglesia que transforma vidas a través del amor de Cristo, formando discípulos comprometidos que
-            impacten su comunidad y el mundo. Creemos en el poder de la fe para cambiar corazones y construir un futuro
-            lleno de esperanza y propósito.
+            El propósito de nuestra iglesia es enseñar a las personas quiénes son en Cristo y cómo vivir una vida victoriosa según los privilegios del pacto. Esto se logra cuando los creyentes están suficientemente arraigados y cimentados en la Palabra de Dios como para poder hablarle a otros los mismos principios.
           </p>
           <div className="grid md:grid-cols-3 gap-12 mt-16">
             <div className="text-center group animate-fade-in">

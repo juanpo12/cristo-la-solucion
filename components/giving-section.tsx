@@ -4,7 +4,7 @@ export default function GivingSection() {
   const givingMethods = [
     { icon: CreditCard, title: "Transferencia Bancaria", description: "CBU: 1234567890123456789012" },
     { icon: Smartphone, title: "Mercado Pago", description: "Alias: iglesia.cristo.solucion" },
-    { icon: Building, title: "En Persona", description: "Durante los servicios dominicales" },
+    { icon: Building, title: "En Persona", description: "Durante los servicios" },
     { icon: Heart, title: "Donación Mensual", description: "Compromiso de apoyo continuo" },
   ]
 
