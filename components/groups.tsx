@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { ArrowRight, Calendar, ChevronLeft, ChevronRight } from "lucide-react"
+import { ArrowRight, Calendar } from "lucide-react"
 import Link from "next/link"
 
 type Group = {
@@ -12,9 +12,9 @@ type Group = {
   schedule: string
   image: string
   color: string
+  focusPosition: string // Posición de enfoque para la imagen
 }
-
-const groups = [
+const groups: Group[] = [
   {
     id: "invictos-kids",
     name: "INVICTOS KIDS",
@@ -22,6 +22,7 @@ const groups = [
     schedule: "Dom 11:00 AM",
     image: "/test.jpg",
     color: "from-blue-600/30 to-cyan-600/30",
+    focusPosition: "center center", // Centrado para mostrar al niño
   },
   {
     id: "invictos-teens",
@@ -30,6 +31,7 @@ const groups = [
     schedule: "Sáb 18:00 HS",
     image: "/TEENS.jpg",
     color: "from-purple-600/30 to-pink-600/30",
+    focusPosition: "center center", // Centrado para mostrar a los jóvenes
   },
   {
     id: "invictos",
@@ -38,6 +40,7 @@ const groups = [
     schedule: "Jue 20:30 HS",
     image: "/INVICTOS.jpg",
     color: "from-church-electric-600/30 to-church-navy-600/30",
+    focusPosition: "center center", // Centrado para mostrar el grupo
   },
   {
     id: "gdc",
@@ -46,12 +49,12 @@ const groups = [
     schedule: "Mié 19:00 HS",
     image: "/GDC2.jpg",
     color: "from-orange-600/30 to-red-600/30",
+    focusPosition: "center center", // Centrado para mostrar la familia
   },
 ]
 
 export function Groups() {
   const [hoveredGroup, setHoveredGroup] = useState<string | null>(null)
-  const [currentSlide, setCurrentSlide] = useState(0)
 
   const getBackgroundImage = (sectionIndex: number) => {
     if (hoveredGroup === null) {
@@ -63,7 +66,23 @@ export function Groups() {
   }
 
   const getBackgroundPosition = (sectionIndex: number) => {
-    return `${sectionIndex * 33.33}% center`
+    if (hoveredGroup === null) {
+      // Estado normal: cada sección muestra su parte más representativa
+      return groups[sectionIndex].focusPosition
+    } else {
+      // Estado hover: mostrar la imagen completa dividida
+      return `${sectionIndex * 33.33}% center`
+    }
+  }
+
+  const getBackgroundSize = () => {
+    if (hoveredGroup === null) {
+      // Estado normal: imagen centrada y bien proporcionada
+      return "cover"
+    } else {
+      // Estado hover: imagen completa dividida
+      return "400% auto"
+    }
   }
 
   const getOverlayColor = (group: Group) => {
@@ -81,14 +100,6 @@ export function Groups() {
     } else {
       return hoveredGroup === group.id
     }
-  }
-
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % groups.length)
-  }
-
-  const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + groups.length) % groups.length)
   }
 
   return (
@@ -116,7 +127,7 @@ export function Groups() {
                 style={{
                   backgroundImage: `url('${getBackgroundImage(index)}')`,
                   backgroundPosition: getBackgroundPosition(index),
-                  backgroundSize: "400% auto",
+                  backgroundSize: getBackgroundSize(),
                   filter:
                     hoveredGroup && hoveredGroup !== group.id ? "brightness(0.6) contrast(0.8)" : "brightness(0.9)",
                 }}
@@ -184,6 +195,7 @@ export function Groups() {
                 className="absolute inset-0 bg-cover bg-center transition-all duration-300 group-hover:scale-105"
                 style={{
                   backgroundImage: `url('${group.image}')`,
+                  backgroundPosition: group.focusPosition,
                 }}
               />
               <div className={`absolute inset-0 bg-gradient-to-t ${group.color} opacity-40`} />
@@ -205,12 +217,9 @@ export function Groups() {
       <div className="block md:hidden">
         <div className="relative">
           <div className="overflow-hidden">
-            <div
-              className="flex transition-transform duration-300 ease-out"
-              style={{ transform: `translateX(-${currentSlide * 100}%)` }}
-            >
+            <div className="flex space-x-4 px-4">
               {groups.map((group) => (
-                <div key={group.id} className="w-full flex-shrink-0 px-4">
+                <div key={group.id} className="w-80 flex-shrink-0">
                   <Link
                     href={`/grupos/${group.id}`}
                     className="relative h-80 block overflow-hidden rounded-xl cursor-pointer"
@@ -219,6 +228,7 @@ export function Groups() {
                       className="absolute inset-0 bg-cover bg-center"
                       style={{
                         backgroundImage: `url('${group.image}')`,
+                        backgroundPosition: group.focusPosition,
                       }}
                     />
                     <div className={`absolute inset-0 bg-gradient-to-t ${group.color} opacity-40`} />
@@ -239,33 +249,6 @@ export function Groups() {
                 </div>
               ))}
             </div>
-          </div>
-
-          {/* Controles del carousel */}
-          <button
-            onClick={prevSlide}
-            className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 backdrop-blur-sm text-white p-2 rounded-full hover:bg-white/30 transition-colors"
-          >
-            <ChevronLeft className="w-6 h-6" />
-          </button>
-          <button
-            onClick={nextSlide}
-            className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 backdrop-blur-sm text-white p-2 rounded-full hover:bg-white/30 transition-colors"
-          >
-            <ChevronRight className="w-6 h-6" />
-          </button>
-
-          {/* Indicadores */}
-          <div className="flex justify-center mt-6 space-x-2">
-            {groups.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentSlide(index)}
-                className={`w-3 h-3 rounded-full transition-colors ${
-                  index === currentSlide ? "bg-church-electric-600" : "bg-gray-300"
-                }`}
-              />
-            ))}
           </div>
         </div>
       </div>
