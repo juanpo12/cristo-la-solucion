@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import Image from "next/image"
+import Link from "next/link"
 
 export function Header() {
   const [activeSection, setActiveSection] = useState("")
@@ -47,12 +48,13 @@ export function Header() {
   }, [])
 
   const navItems = [
-    { href: "vision", label: "Visión" },
-    { href: "grupos", label: "Grupos" },
-    { href: "reuniones", label: "Reuniones" },
-    { href: "dar", label: "Dar" },
-    { href: "oracion", label: "Oración" },
-    { href: "contacto", label: "Contacto" },
+    { href: "vision", label: "Visión", type: "scroll" },
+    { href: "grupos", label: "Grupos", type: "scroll" },
+    { href: "reuniones", label: "Reuniones", type: "scroll" },
+    { href: "/tienda", label: "Tienda", type: "link" },
+    { href: "dar", label: "Dar", type: "scroll" },
+    { href: "oracion", label: "Oración", type: "scroll" },
+    { href: "contacto", label: "Contacto", type: "scroll" },
   ]
 
   return (
@@ -66,9 +68,9 @@ export function Header() {
       <div className="container mx-auto px-4">
         <nav className="flex items-center justify-between h-20">
           {/* Logo */}
-          <div
+          <Link
+            href="/"
             className="flex items-center cursor-pointer transition-all duration-300 hover:scale-105 hover:brightness-110"
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           >
             <div className="relative h-12 w-48 drop-shadow-lg">
               <Image
@@ -79,27 +81,38 @@ export function Header() {
                 priority
               />
             </div>
-          </div>
+          </Link>
 
           {/* Navegación */}
           <div className="hidden lg:flex items-center space-x-8">
             {navItems.map((item) => (
-              <button
-                key={item.href}
-                onClick={() => scrollToSection(item.href)}
-                className={`relative text-gray-300 hover:text-white transition-all duration-300 font-medium py-2 px-3 group ${
-                  activeSection === item.href ? "text-white" : ""
-                }`}
-              >
-                {item.label}
-                <span
-                  className={`absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-church-electric-400 to-church-electric-500 transform origin-left transition-transform duration-300 shadow-lg ${
-                    activeSection === item.href ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
-                  }`}
-                />
-                {/* Efecto de brillo en hover */}
-                <span className="absolute inset-0 bg-white/5 rounded-lg scale-0 group-hover:scale-100 transition-transform duration-300 -z-10" />
-              </button>
+              <div key={item.href}>
+                {item.type === "link" ? (
+                  <Link
+                    href={item.href}
+                    className="relative text-gray-300 hover:text-white transition-all duration-300 font-medium py-2 px-3 group"
+                  >
+                    {item.label}
+                    <span className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-church-electric-400 to-church-electric-500 transform origin-left transition-transform duration-300 shadow-lg scale-x-0 group-hover:scale-x-100" />
+                    <span className="absolute inset-0 bg-white/5 rounded-lg scale-0 group-hover:scale-100 transition-transform duration-300 -z-10" />
+                  </Link>
+                ) : (
+                  <button
+                    onClick={() => scrollToSection(item.href)}
+                    className={`relative text-gray-300 hover:text-white transition-all duration-300 font-medium py-2 px-3 group ${
+                      activeSection === item.href ? "text-white" : ""
+                    }`}
+                  >
+                    {item.label}
+                    <span
+                      className={`absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-church-electric-400 to-church-electric-500 transform origin-left transition-transform duration-300 shadow-lg ${
+                        activeSection === item.href ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
+                      }`}
+                    />
+                    <span className="absolute inset-0 bg-white/5 rounded-lg scale-0 group-hover:scale-100 transition-transform duration-300 -z-10" />
+                  </button>
+                )}
+              </div>
             ))}
           </div>
 
