@@ -163,21 +163,21 @@ export function Header() {
             <div className="w-6 h-6 flex flex-col justify-center items-center">
               <span
                 className={`w-5 h-0.5 transition-all duration-300 ${
-                  isScrolled ? "bg-gray-700" : "bg-white"
+                  isScrolled ? "bg-white" : "bg-white"
                 } ${
                   isMobileMenuOpen ? "rotate-45 translate-y-1" : ""
                 }`}
               />
               <span
                 className={`w-5 h-0.5 transition-all duration-300 mt-1 ${
-                  isScrolled ? "bg-gray-700" : "bg-white"
+                  isScrolled ? "bg-white" : "bg-white"
                 } ${
                   isMobileMenuOpen ? "opacity-0" : ""
                 }`}
               />
               <span
                 className={`w-5 h-0.5 transition-all duration-300 mt-1 ${
-                  isScrolled ? "bg-gray-700" : "bg-white"
+                  isScrolled ? "bg-white" : "bg-white"
                 } ${
                   isMobileMenuOpen ? "-rotate-45 -translate-y-1" : ""
                 }`}
@@ -200,7 +200,7 @@ export function Header() {
                 {item.type === "link" ? (
                   <Link
                     href={item.href}
-                    className="block px-4 py-3 text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors duration-200"
+                    className="block px-4 py-3 text-white hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors duration-200"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     {item.label}
@@ -211,7 +211,7 @@ export function Header() {
                     className={`block w-full text-left px-4 py-3 rounded-lg transition-colors duration-200 ${
                       activeSection === item.href 
                         ? "text-blue-600 bg-blue-50" 
-                        : "text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+                        : "text-white hover:text-gray-900 hover:bg-gray-50"
                     }`}
                   >
                     {item.label}
