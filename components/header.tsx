@@ -21,7 +21,6 @@ export function Header() {
         behavior: "smooth",
       })
     }
-    // Cerrar menú móvil después de hacer scroll
     setIsMobileMenuOpen(false)
   }
 
@@ -78,25 +77,25 @@ export function Header() {
 
   return (
     <header
-      className={`fixed top-0 w-full z-50 transition-all duration-500 ${
+      className={`fixed top-0 w-full z-50 transition-all duration-300 ${
         isScrolled
-          ? "bg-gray-900/90 backdrop-blur-xl shadow-2xl border-b border-gray-700/50"
-          : "bg-gradient-to-r from-gray-800/80 via-gray-900/70 to-gray-800/80 backdrop-blur-lg"
+          ? "bg-gray-900/80 backdrop-blur-md"
+          : "bg-gray-900/80 backdrop-blur-md"
       }`}
     >
-      <div className="container mx-auto px-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <nav className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link
             href="/"
-            className="flex items-center cursor-pointer transition-all duration-300 hover:scale-105 hover:brightness-110"
+            className="flex items-center transition-opacity duration-200 hover:opacity-80"
           >
-            <div className="relative h-12 w-48 drop-shadow-lg">
+            <div className="relative h-10 w-44">
               <Image
                 src="/logo-cls.png"
                 alt="Ministerio Cristo la Solución"
                 fill
-                className="object-contain filter brightness-100"
+                className="object-contain"
                 priority
               />
             </div>
@@ -109,83 +108,99 @@ export function Header() {
                 {item.type === "link" ? (
                   <Link
                     href={item.href}
-                    className="relative text-gray-300 hover:text-white transition-all duration-300 font-medium py-2 px-3 group"
+                    className={`font-medium transition-colors duration-200 relative group text-white hover:text-gray-200"`}
                   >
                     {item.label}
-                    <span className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-church-electric-400 to-church-electric-500 transform origin-left transition-transform duration-300 shadow-lg scale-x-0 group-hover:scale-x-100" />
-                    <span className="absolute inset-0 bg-white/5 rounded-lg scale-0 group-hover:scale-100 transition-transform duration-300 -z-10" />
+                    <span className={`absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full bg-white`} />
                   </Link>
                 ) : (
                   <button
                     onClick={() => scrollToSection(item.href)}
-                    className={`relative text-gray-300 hover:text-white transition-all duration-300 font-medium py-2 px-3 group ${
-                      activeSection === item.href ? "text-white" : ""
+                    className={`font-medium transition-colors duration-200 relative group ${
+                      activeSection === item.href 
+                        ? (isScrolled ? "text-white" : "text-white") 
+                        : (isScrolled ? "text-white hover:text-gray-200" : "text-white hover:text-gray-200")
                     }`}
                   >
                     {item.label}
                     <span
-                      className={`absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-church-electric-400 to-church-electric-500 transform origin-left transition-transform duration-300 shadow-lg ${
-                        activeSection === item.href ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
+                      className={`absolute bottom-0 left-0 h-0.5 transition-all duration-300 ${
+                        isScrolled ? "bg-blue-600" : "bg-white"
+                      } ${
+                        activeSection === item.href ? "w-full" : "w-0 group-hover:w-full"
                       }`}
                     />
-                    <span className="absolute inset-0 bg-white/5 rounded-lg scale-0 group-hover:scale-100 transition-transform duration-300 -z-10" />
                   </button>
                 )}
               </div>
             ))}
           </div>
 
-          {/* Botón CTA */}
-          <div className="hidden md:block lg:block">
-            {/* <button
+          {/* CTA Button Desktop */}
+          <div className="hidden lg:block">
+            <button
               onClick={() => scrollToSection("contacto")}
-              className="bg-gradient-to-r from-church-electric-500 to-church-electric-600 hover:from-church-electric-600 hover:to-church-electric-700 text-white px-6 py-2.5 rounded-full font-medium transition-all duration-300 transform hover:scale-105 shadow-xl hover:shadow-2xl border border-church-electric-400/30"
+              className={`px-6 py-2.5 rounded-lg font-medium transition-all duration-200 ${
+                isScrolled 
+                  ? "bg-blue-600 text-white hover:bg-blue-700" 
+                  : "bg-white text-gray-900 hover:bg-gray-100"
+              }`}
             >
               Contáctanos
-            </button> */}
+            </button>
           </div>
 
           {/* Botón Hamburguesa */}
-          <div className="lg:hidden">
-            <button
-              onClick={toggleMobileMenu}
-              className="relative w-8 h-8 flex flex-col justify-center items-center group"
-              aria-label="Toggle menu"
-            >
+          <button
+            onClick={toggleMobileMenu}
+            className={`lg:hidden p-2 rounded-lg transition-colors duration-200 ${
+              isScrolled 
+                ? "hover:bg-white/10" 
+                : "hover:bg-white/10"
+            }`}
+            aria-label="Toggle menu"
+          >
+            <div className="w-6 h-6 flex flex-col justify-center items-center">
               <span
-                className={`w-6 h-0.5 bg-gray-300 transition-all duration-300 group-hover:bg-white ${
-                  isMobileMenuOpen ? "rotate-45 translate-y-1.5" : ""
+                className={`w-5 h-0.5 transition-all duration-300 ${
+                  isScrolled ? "bg-white" : "bg-white"
+                } ${
+                  isMobileMenuOpen ? "rotate-45 translate-y-1" : ""
                 }`}
               />
               <span
-                className={`w-6 h-0.5 bg-gray-300 transition-all duration-300 group-hover:bg-white mt-1 ${
+                className={`w-5 h-0.5 transition-all duration-300 mt-1 ${
+                  isScrolled ? "bg-white" : "bg-white"
+                } ${
                   isMobileMenuOpen ? "opacity-0" : ""
                 }`}
               />
               <span
-                className={`w-6 h-0.5 bg-gray-300 transition-all duration-300 group-hover:bg-white mt-1 ${
-                  isMobileMenuOpen ? "-rotate-45 -translate-y-1.5" : ""
+                className={`w-5 h-0.5 transition-all duration-300 mt-1 ${
+                  isScrolled ? "bg-white" : "bg-white"
+                } ${
+                  isMobileMenuOpen ? "-rotate-45 -translate-y-1" : ""
                 }`}
               />
-            </button>
-          </div>
+            </div>
+          </button>
         </nav>
 
         {/* Menú Móvil */}
         <div
           className={`lg:hidden transition-all duration-300 ease-in-out ${
             isMobileMenuOpen
-              ? "max-h-full opacity-100 visible"
-              : "max-h-0 opacity-0 invisible"
+              ? "max-h-screen opacity-100"
+              : "max-h-0 opacity-0 overflow-hidden"
           }`}
         >
-          <div className="py-4 space-y-2 border-t border-gray-700/50">
+          <div className="py-4 space-y-1 border-t border-gray-200">
             {navItems.map((item) => (
               <div key={item.href}>
                 {item.type === "link" ? (
                   <Link
                     href={item.href}
-                    className="block px-4 py-3 text-gray-300 hover:text-white hover:bg-gray-800/50 transition-all duration-300 rounded-lg mx-2"
+                    className="block px-4 py-3 text-white hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors duration-200"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     {item.label}
@@ -193,8 +208,10 @@ export function Header() {
                 ) : (
                   <button
                     onClick={() => scrollToSection(item.href)}
-                    className={`block w-full text-left px-4 py-3 text-gray-300 hover:text-white hover:bg-gray-800/50 transition-all duration-300 rounded-lg mx-2 ${
-                      activeSection === item.href ? "text-white bg-gray-800/30" : ""
+                    className={`block w-full text-left px-4 py-3 rounded-lg transition-colors duration-200 ${
+                      activeSection === item.href 
+                        ? "text-blue-600 bg-blue-50" 
+                        : "text-white hover:text-gray-900 hover:bg-gray-50"
                     }`}
                   >
                     {item.label}
@@ -204,10 +221,10 @@ export function Header() {
             ))}
             
             {/* Botón CTA en móvil */}
-            <div className="px-2 pt-4">
+            <div className="px-4 pt-4">
               <button
                 onClick={() => scrollToSection("contacto")}
-                className="w-full bg-gradient-to-r from-church-electric-500 to-church-electric-600 hover:from-church-electric-600 hover:to-church-electric-700 text-white px-6 py-3 rounded-lg font-medium transition-all duration-300 shadow-lg"
+                className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors duration-200"
               >
                 Contáctanos
               </button>
