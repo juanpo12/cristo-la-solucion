@@ -11,21 +11,16 @@ const meetings = [
     day: "DOMINGO",
     time: "11 Y 18 HS",
     description: "Día del Señor. Nos congregamos para adorar en uno de los dos horarios disponibles.",
-  },
-  {
-    day: "SÁBADOS",
-    time: "19:30 HS",
-    description: "Reunión de jóvenes. Un espacio para crecer en fe y amistad.",
-  },
+  }
 ]
 
 export function Meetings() {
   return (
-    <section id="reuniones" className="py-20 church-gradient text-white relative overflow-hidden scroll-mt-20">
+    <section id="reuniones" className="py-20 bg-[#171747] text-white relative overflow-hidden scroll-mt-20">
       <div className="absolute inset-0 bg-black/20"></div>
       <div className="container mx-auto px-4 relative z-10">
         <h2 className="text-5xl font-bold text-center mb-16">NUESTRAS REUNIONES</h2>
-        <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+        <div className="grid md:grid-cols-2 gap-8 max-w-3xl mx-auto">
           {meetings.map((meeting, index) => (
             <Card
               key={index}

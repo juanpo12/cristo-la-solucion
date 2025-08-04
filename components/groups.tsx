@@ -29,7 +29,7 @@ const groups: Group[] = [
     name: "INVICTOS TEENS",
     shortDesc: "Descubriendo propósito",
     schedule: "Sáb 18:00 HS",
-    image: "/TEENS.jpg",
+    image: "/fototeens.jpg",
     color: "from-purple-600/30 to-pink-600/30",
     focusPosition: "center center", // Centrado para mostrar a los jóvenes
   },
@@ -104,12 +104,12 @@ export function Groups() {
 
   return (
     <section id="grupos" className="py-0 bg-white scroll-mt-20 overflow-hidden">
-      <div className="container mx-auto px-4 mb-12">
+      {/* <div className="container mx-auto px-4 mb-12">
         <h2 className="text-5xl font-bold text-center church-text mb-8">NUESTROS GRUPOS</h2>
         <p className="text-xl church-text-muted text-center max-w-3xl mx-auto">
           Descubre el lugar perfecto para crecer, conectar y servir junto a otros en tu jornada de fe
         </p>
-      </div>
+      </div> */}
 
       {/* Desktop: Efecto horizontal original */}
       <div className="hidden lg:block w-full h-[70vh] relative">
@@ -250,20 +250,6 @@ export function Groups() {
               ))}
             </div>
           </div>
-        </div>
-      </div>
-
-      {/* Sección de llamada a la acción */}
-      <div className="bg-gradient-to-r from-church-electric-50 to-blue-50 py-16 mt-16">
-        <div className="container mx-auto px-4 text-center">
-          <h3 className="text-3xl font-bold church-text mb-6">¿Listo para conectar?</h3>
-          <p className="text-lg church-text-muted mb-8 max-w-2xl mx-auto">
-            Cada grupo es una oportunidad única de crecer, servir y construir relaciones duraderas. ¡Encuentra tu lugar
-            en nuestra familia!
-          </p>
-          <Button size="lg" className="church-button-primary">
-            Contáctanos para más información
-          </Button>
         </div>
       </div>
     </section>

@@ -89,19 +89,6 @@ const groupsData = {
     location: "Auditorio Principal",
     ageRange: "19 a 34 años",
     color: "from-orange-500 to-red-500",
-    activities: [
-      "Estudios bíblicos familiares",
-      "Cenas comunitarias",
-      "Oración intercesora",
-      "Apoyo en crisis y celebraciones",
-      "Actividades recreativas familiares",
-      "Proyectos de servicio grupal",
-    ],
-    values: [
-      { icon: Heart, title: "Familia", desc: "Experimentando la verdadera familia de Dios" },
-      { icon: Users, title: "Apoyo", desc: "Caminando juntos en las alegrías y desafíos" },
-      { icon: Star, title: "Intimidad", desc: "Relaciones profundas y auténticas" },
-    ]
   },
 }
 
@@ -149,7 +136,7 @@ export default async function GroupPage({ params }: { params: { slug: string } }
             </div>
 
             {/* Actividades */}
-            <div>
+            {/* <div>
               <h3 className="text-3xl font-bold church-text mb-8">¿Qué hacemos?</h3>
               <div className="grid md:grid-cols-2 gap-4">
                 {group.activities.map((activity, index) => (
@@ -159,10 +146,10 @@ export default async function GroupPage({ params }: { params: { slug: string } }
                   </div>
                 ))}
               </div>
-            </div>
+            </div> */}
 
             {/* Valores */}
-            <div>
+            {/* <div>
               <h3 className="text-3xl font-bold church-text mb-8">Nuestros Valores</h3>
               <div className="grid md:grid-cols-3 gap-6">
                 {group.values.map((value, index) => (
@@ -179,7 +166,7 @@ export default async function GroupPage({ params }: { params: { slug: string } }
                   </Card>
                 ))}
               </div>
-            </div>
+            </div> */}
           </div>
 
           {/* Sidebar */}

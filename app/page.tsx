@@ -16,6 +16,7 @@ export default function Home() {
       <Vision />
       <Groups />
       <Meetings />
+      <Groups />
       <Prayer/>
       <GivingSection/>
       {/* <Contact /> */}
