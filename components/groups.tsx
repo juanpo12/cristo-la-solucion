@@ -13,6 +13,7 @@ type Group = {
   image: string
   color: string
   focusPosition: string // Posición de enfoque para la imagen
+  ageRange: string
 }
 const groups: Group[] = [
   {
@@ -23,6 +24,7 @@ const groups: Group[] = [
     image: "/test.jpg",
     color: "from-blue-600/30 to-cyan-600/30",
     focusPosition: "center center", // Centrado para mostrar al niño
+    ageRange: "3 a 8 años",
   },
   {
     id: "invictos-teens",
@@ -32,6 +34,7 @@ const groups: Group[] = [
     image: "/fototeens.jpg",
     color: "from-purple-600/30 to-pink-600/30",
     focusPosition: "center center", // Centrado para mostrar a los jóvenes
+    ageRange: "9 a 17 años",
   },
   {
     id: "invictos",
@@ -41,6 +44,7 @@ const groups: Group[] = [
     image: "/INVICTOS.jpg",
     color: "from-church-electric-600/30 to-church-navy-600/30",
     focusPosition: "center center", // Centrado para mostrar el grupo
+    ageRange: "18 a 35 años",
   },
   {
     id: "gdc",
@@ -50,6 +54,7 @@ const groups: Group[] = [
     image: "/GDC2.jpg",
     color: "from-orange-600/30 to-red-600/30",
     focusPosition: "center center", // Centrado para mostrar la familia
+    ageRange: "+36 años",
   },
 ]
 
@@ -155,9 +160,12 @@ export function Groups() {
                     }`}
                   >
                     <p className="text-lg mb-4 drop-shadow-sm font-medium">{group.shortDesc}</p>
-                    <div className="flex items-center justify-center space-x-2 mb-6 opacity-90">
+                    <div className="flex items-center justify-center space-x-2 mb-3 opacity-90">
                       <Calendar className="w-4 h-4" />
                       <span className="text-base">{group.schedule}</span>
+                    </div>
+                    <div className="text-base mb-6 opacity-90 font-medium">
+                      <span className="bg-white/20 px-3 py-1 rounded-full">{group.ageRange}</span>
                     </div>
                     <Button
                       size="lg"

@@ -6,6 +6,7 @@ import { Header } from "@/components/header";
 import { Hero } from "@/components/hero";
 import { Meetings } from "@/components/meetings";
 import { Prayer } from "@/components/prayer";
+import { StoreShowcase } from "@/components/store-showcase";
 import { Vision } from "@/components/vision";
 
 export default function Home() {
@@ -16,7 +17,7 @@ export default function Home() {
       <Vision />
       <Groups />
       <Meetings />
-      <Groups />
+      <StoreShowcase />
       <Prayer/>
       <GivingSection/>
       {/* <Contact /> */}
