@@ -90,8 +90,8 @@ export default function PastoresPage() {
                 Pastorean la iglesia <strong className="church-text">Cristo La Solución, San Justo</strong>, hace más de treinta años. 
                 Alfredo es un maestro de las Escrituras, le apasiona desmenuzar los versos bíblicos y estudiarlos 
                 detalladamente para enseñárselo a las personas. Algunos de sus estudios pueden encontrarse en los 
-                libros que escribió: <em>"El poder de la pasión"</em>; <em>"Desechando maldiciones"</em>; 
-                <em>"Administración financiera"</em>; entre otros.
+                libros que escribió: <em>&quot;El poder de la pasión&quot;</em>; <em>&quot;Desechando maldiciones&quot;</em>; 
+                <em>&quot;Administración financiera&quot;</em>; entre otros.
               </p>
 
               <p className="text-xl church-text-muted leading-relaxed text-justify mt-6">

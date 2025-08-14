@@ -45,14 +45,13 @@ export function useShare() {
             document.execCommand("copy")
             document.body.removeChild(textArea)
             return { success: true, method: "fallback" }
-          } catch (err) {
+          } catch {
             document.body.removeChild(textArea)
             throw new Error("No se pudo copiar al portapapeles")
           }
         }
       }
     } catch (error) {
-      console.error("Error sharing product:", error)
       return { success: false, error: error instanceof Error ? error.message : "Error desconocido" }
     }
   }

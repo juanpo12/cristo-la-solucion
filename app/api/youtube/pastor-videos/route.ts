@@ -187,7 +187,7 @@ async function getPastorVideos(maxResults: number = 50) {
     const videosData = await videosResponse.json()
     
     // Obtener detalles adicionales de los videos
-    const videoIds = videosData.items.map((item: any) => item.id.videoId).join(',')
+    const videoIds = videosData.items.map((item: Record<string, unknown>) => (item.id as Record<string, string>).videoId).join(',')
     const detailsResponse = await fetch(
       `https://www.googleapis.com/youtube/v3/videos?key=${YOUTUBE_API_KEY}&id=${videoIds}&part=contentDetails,statistics,snippet`
     )
@@ -195,7 +195,7 @@ async function getPastorVideos(maxResults: number = 50) {
     const detailsData = await detailsResponse.json()
     
     // Combinar datos y categorizar videos
-    const videos = videosData.items.map((item: any, index: number) => {
+    const videos = videosData.items.map((item: Record<string, unknown>, index: number) => {
       const details = detailsData.items[index]
       const title = item.snippet.title.toLowerCase()
       
@@ -228,9 +228,8 @@ async function getPastorVideos(maxResults: number = 50) {
       channelInfo
     }
 
-  } catch (error) {
-    console.error('Error fetching Pastor videos:', error)
-    throw error
+  } catch {
+    throw new Error('Error fetching Pastor videos')
   }
 }
 
@@ -301,8 +300,7 @@ export async function GET(request: NextRequest) {
       success: true
     })
 
-  } catch (error) {
-    console.error('Error in Pastor videos API route:', error)
+  } catch {
     return NextResponse.json(
       { 
         error: 'Error fetching Pastor videos',

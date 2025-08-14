@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 // Función para enviar email con Resend (Opción 1 - Recomendada)
-async function sendWithResend(data: any) {
+async function sendWithResend(data: Record<string, unknown>) {
   const { name, email, phone, subject, message, type } = data
   
   try {
@@ -48,15 +48,10 @@ async function sendWithResend(data: any) {
   }
 }
 
-// Función para enviar email con EmailJS (Opción 2 - Sin backend)
-async function sendWithEmailJS(data: any) {
-  // Esta función se ejecutaría en el frontend, no aquí
-  // La incluyo como referencia
-  return { success: true }
-}
+
 
 // Función para enviar con Formspree (Opción 3 - Servicio externo)
-async function sendWithFormspree(data: any) {
+async function sendWithFormspree(data: Record<string, unknown>) {
   try {
     const response = await fetch(`https://formspree.io/f/${process.env.FORMSPREE_FORM_ID}`, {
       method: 'POST',
@@ -78,9 +73,9 @@ async function sendWithFormspree(data: any) {
 }
 
 // Función para guardar en archivo JSON (Opción 4 - Desarrollo/Testing)
-async function saveToFile(data: any) {
-  const fs = require('fs').promises
-  const path = require('path')
+async function saveToFile(data: Record<string, unknown>) {
+  const fs = await import('fs/promises')
+  const path = await import('path')
   
   try {
     const filePath = path.join(process.cwd(), 'peticiones.json')
@@ -89,7 +84,7 @@ async function saveToFile(data: any) {
     try {
       const fileContent = await fs.readFile(filePath, 'utf8')
       peticiones = JSON.parse(fileContent)
-    } catch (error) {
+    } catch {
       // Archivo no existe, crear nuevo array
     }
     
@@ -142,7 +137,6 @@ export async function POST(request: NextRequest) {
 
     // Intentar enviar con diferentes métodos (en orden de preferencia)
     let emailSent = false
-    let errorMessage = ''
 
     // Opción 1: Resend (si está configurado)
     if (process.env.RESEND_API_KEY && !emailSent) {
@@ -150,9 +144,8 @@ export async function POST(request: NextRequest) {
         await sendWithResend(contactData)
         emailSent = true
         console.log('Email enviado con Resend')
-      } catch (error) {
+      } catch {
         console.log('Resend no disponible, intentando siguiente método')
-        errorMessage += 'Resend falló. '
       }
     }
 
@@ -162,9 +155,8 @@ export async function POST(request: NextRequest) {
         await sendWithFormspree(contactData)
         emailSent = true
         console.log('Email enviado con Formspree')
-      } catch (error) {
+      } catch {
         console.log('Formspree no disponible, intentando siguiente método')
-        errorMessage += 'Formspree falló. '
       }
     }
 
@@ -172,8 +164,8 @@ export async function POST(request: NextRequest) {
     try {
       await saveToFile(contactData)
       console.log('Petición guardada en archivo')
-    } catch (error) {
-      console.log('Error guardando en archivo:', error)
+    } catch {
+      console.log('Error guardando en archivo')
     }
 
     // Respuesta exitosa
@@ -188,8 +180,7 @@ export async function POST(request: NextRequest) {
       { status: 200 }
     )
 
-  } catch (error) {
-    console.error('Error procesando petición:', error)
+  } catch {
     return NextResponse.json(
       { error: 'Error interno del servidor' },
       { status: 500 }

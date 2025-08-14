@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
-import { Radio, RadioOff, Play, Eye, Settings, Save, AlertCircle } from "lucide-react"
+import { Radio, Eye, Settings, AlertCircle } from "lucide-react"
 
 interface LiveStreamData {
   isLive: boolean
@@ -28,7 +28,7 @@ export default function YouTubeAdminPage() {
     title: "🔴 CULTO EN VIVO - Cristo La Solución",
     description: "Únete a nosotros en este momento especial de adoración y enseñanza de la Palabra de Dios.",
     url: "https://youtube.com/watch?v=",
-    thumbnail: "/frente.jpg"
+    thumbnail: "/CONFE.jpg"
   })
 
   // Verificar estado actual del stream
@@ -74,7 +74,7 @@ export default function YouTubeAdminPage() {
       } else {
         setMessage(data.error || "Error activando stream")
       }
-    } catch (error) {
+    } catch {
       setMessage("Error de conexión")
     } finally {
       setIsLoading(false)
@@ -109,7 +109,7 @@ export default function YouTubeAdminPage() {
       } else {
         setMessage(data.error || "Error desactivando stream")
       }
-    } catch (error) {
+    } catch {
       setMessage("Error de conexión")
     } finally {
       setIsLoading(false)
@@ -161,7 +161,7 @@ export default function YouTubeAdminPage() {
                     </>
                   ) : (
                     <div className="flex items-center space-x-2">
-                      <RadioOff className="w-5 h-5 text-gray-400" />
+                      <div className="w-5 h-5 text-gray-400 rounded-full border-2 border-gray-400"></div>
                       <Badge variant="outline">DESCONECTADO</Badge>
                     </div>
                   )}
@@ -291,7 +291,7 @@ export default function YouTubeAdminPage() {
                     variant="outline"
                     className="border-red-600 text-red-600 hover:bg-red-50"
                   >
-                    <RadioOff className="w-5 h-5 mr-2" />
+                    <div className="w-5 h-5 mr-2 rounded-full border-2 border-current"></div>
                     {isLoading ? "Desactivando..." : "Desactivar Stream"}
                   </Button>
                 )}
@@ -306,7 +306,7 @@ export default function YouTubeAdminPage() {
                       <li>Asegúrate de tener el token de administrador correcto</li>
                       <li>Configura la URL del stream de YouTube antes de activar</li>
                       <li>El stream aparecerá automáticamente en la página principal</li>
-                      <li>Los usuarios verán la notificación "EN VIVO" cuando esté activo</li>
+                      <li>Los usuarios verán la notificación &quot;EN VIVO&quot; cuando esté activo</li>
                     </ul>
                   </div>
                 </div>

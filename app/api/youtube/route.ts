@@ -50,7 +50,7 @@ async function getChannelVideos() {
     const videosData = await videosResponse.json()
     
     // Obtener detalles adicionales de los videos (duración, vistas)
-    const videoIds = videosData.items.map((item: any) => item.id.videoId).join(',')
+    const videoIds = videosData.items.map((item: Record<string, unknown>) => (item.id as Record<string, string>).videoId).join(',')
     const detailsResponse = await fetch(
       `https://www.googleapis.com/youtube/v3/videos?key=${YOUTUBE_API_KEY}&id=${videoIds}&part=contentDetails,statistics`
     )
@@ -58,7 +58,7 @@ async function getChannelVideos() {
     const detailsData = await detailsResponse.json()
     
     // Combinar datos
-    const videos = videosData.items.map((item: any, index: number) => {
+    const videos = videosData.items.map((item: Record<string, unknown>, index: number) => {
       const details = detailsData.items[index]
       return {
         id: item.id.videoId,
@@ -105,9 +105,8 @@ async function getChannelVideos() {
 
     return { videos, liveStream }
 
-  } catch (error) {
-    console.error('Error fetching YouTube data:', error)
-    throw error
+  } catch {
+    throw new Error('Error fetching YouTube data')
   }
 }
 
@@ -154,8 +153,7 @@ export async function GET(request: NextRequest) {
       success: true
     })
 
-  } catch (error) {
-    console.error('Error in YouTube API route:', error)
+  } catch {
     return NextResponse.json(
       { 
         error: 'Error fetching YouTube data',
@@ -202,8 +200,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ error: 'Acción no válida' }, { status: 400 })
 
-  } catch (error) {
-    console.error('Error in YouTube POST route:', error)
+  } catch {
     return NextResponse.json(
       { error: 'Error procesando solicitud' },
       { status: 500 }

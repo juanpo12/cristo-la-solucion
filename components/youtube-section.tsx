@@ -3,8 +3,7 @@
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Play, ExternalLink, Calendar, Eye, Clock, Radio } from "lucide-react"
+import { Play, ExternalLink, Calendar, Eye, Radio } from "lucide-react"
 import Link from "next/link"
 
 // Tipos para los videos de YouTube
@@ -34,7 +33,7 @@ const sampleVideos: YouTubeVideo[] = [
     id: "1",
     title: "El Poder de la Oración - Pastor Alfredo Dimiro",
     description: "Una enseñanza profunda sobre cómo la oración transforma nuestras vidas y nos conecta con Dios de manera íntima.",
-    thumbnail: "/LIBROS DEL PASTOR ALFREDO DIMIRO0000.png",
+    thumbnail: "/CONFE.jpg",
     publishedAt: "2024-01-15",
     duration: "45:30",
     viewCount: "1,234",
@@ -44,7 +43,7 @@ const sampleVideos: YouTubeVideo[] = [
     id: "2",
     title: "Invictos Kids - Historias Bíblicas",
     description: "Los niños aprenden sobre David y Goliat de una manera divertida e interactiva.",
-    thumbnail: "/test.jpg",
+    thumbnail: "/CONFE.jpg",
     publishedAt: "2024-01-10",
     duration: "25:15",
     viewCount: "856",
@@ -64,7 +63,7 @@ const sampleVideos: YouTubeVideo[] = [
 
 export function YouTubeSection() {
   const [liveStream, setLiveStream] = useState<LiveStream>({ isLive: false })
-  const [videos, setVideos] = useState<YouTubeVideo[]>(sampleVideos)
+  const [videos] = useState<YouTubeVideo[]>(sampleVideos)
   const [selectedVideo, setSelectedVideo] = useState<YouTubeVideo | null>(null)
 
   // Función para verificar si hay stream en vivo
@@ -79,7 +78,7 @@ export function YouTubeSection() {
           isLive: true,
           title: "🔴 CULTO EN VIVO - Cristo La Solución",
           description: "Únete a nosotros en este momento especial de adoración y enseñanza de la Palabra de Dios.",
-          thumbnail: "/frente.jpg",
+          thumbnail: "/CONFE.jpg",
           url: "https://youtube.com/watch?v=live-stream",
           viewerCount: "127"
         })
