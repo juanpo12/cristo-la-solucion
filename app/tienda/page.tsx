@@ -1,12 +1,15 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
+import { useSearchParams } from "next/navigation"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { ShoppingCart, Star, Book, Music, Shirt, Heart, Filter, Search } from "lucide-react"
+import { ShoppingCart, Star, Book, Music, Shirt, Heart, Filter, Search, X, Plus, Minus, Share2, BookOpen, Calendar, Award } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { useCart } from "@/lib/hooks/use-cart"
+import { useFavorites } from "@/lib/hooks/use-favorites"
+import { useShare } from "@/lib/hooks/use-share"
 import Image from "next/image"
 
 const categories = [
@@ -122,7 +125,31 @@ const products = [
 export default function TiendaPage() {
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("all")
+  const [selectedProduct, setSelectedProduct] = useState<(typeof products)[0] | null>(null)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [quantity, setQuantity] = useState(1)
+  const [shareMessage, setShareMessage] = useState("")
   const { dispatch } = useCart()
+  const { toggleFavorite, isFavorite } = useFavorites()
+  const { shareProduct } = useShare()
+  const searchParams = useSearchParams()
+
+  // Detectar producto compartido en URL y abrir modal automáticamente
+  useEffect(() => {
+    const productId = searchParams.get('product')
+    if (productId) {
+      const product = products.find(p => p.id === parseInt(productId))
+      if (product) {
+        setSelectedProduct(product)
+        setIsModalOpen(true)
+        
+        // Limpiar el parámetro de la URL sin recargar la página
+        const url = new URL(window.location.href)
+        url.searchParams.delete('product')
+        window.history.replaceState({}, '', url.toString())
+      }
+    }
+  }, [searchParams])
 
   // Filtrar productos basado en búsqueda y categoría
   const filteredProducts = useMemo(() => {
@@ -149,6 +176,71 @@ export default function TiendaPage() {
         image: product.image,
       },
     })
+  }
+
+  const openProductModal = (product: (typeof products)[0]) => {
+    setSelectedProduct(product)
+    setIsModalOpen(true)
+  }
+
+  const closeModal = () => {
+    setIsModalOpen(false)
+    setSelectedProduct(null)
+    setQuantity(1)
+  }
+
+  const increaseQuantity = () => setQuantity(prev => prev + 1)
+  const decreaseQuantity = () => setQuantity(prev => prev > 1 ? prev - 1 : 1)
+
+  const addToCartWithQuantity = (product: (typeof products)[0], qty: number) => {
+    for (let i = 0; i < qty; i++) {
+      dispatch({
+        type: "ADD_ITEM",
+        payload: {
+          id: product.id,
+          name: product.name,
+          author: product.author,
+          price: product.price,
+          image: product.image,
+        },
+      })
+    }
+    closeModal()
+  }
+
+  const handleToggleFavorite = (e: React.MouseEvent, product: (typeof products)[0]) => {
+    e.stopPropagation() // Evitar que se abra el modal
+    toggleFavorite({
+      id: product.id,
+      name: product.name,
+      author: product.author,
+      price: product.price,
+      image: product.image,
+    })
+  }
+
+  const handleShare = async (product: (typeof products)[0]) => {
+    const result = await shareProduct({
+      id: product.id,
+      name: product.name,
+      author: product.author,
+      price: product.price,
+      originalPrice: product.originalPrice,
+      image: product.image,
+      description: product.description,
+    })
+
+    if (result.success) {
+      if (result.method === "native") {
+        setShareMessage("¡Producto compartido exitosamente!")
+      } else {
+        setShareMessage("¡Enlace copiado al portapapeles!")
+      }
+      setTimeout(() => setShareMessage(""), 3000)
+    } else {
+      setShareMessage("Error al compartir el producto")
+      setTimeout(() => setShareMessage(""), 3000)
+    }
   }
 
   return (
@@ -205,10 +297,13 @@ export default function TiendaPage() {
                 .map((product) => (
                   <Card
                     key={product.id}
-                    className="overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:scale-105 border-0 shadow-lg bg-white"
+                    className="overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:scale-105 border-0 shadow-lg bg-white cursor-pointer"
+                    onClick={() => openProductModal(product)}
                   >
-                    <div className="flex h-full">
-                      <div className="w-2/5 relative">
+                    {/* Layout responsive: vertical en móvil, horizontal en desktop */}
+                    <div className="flex flex-col md:flex-row h-full">
+                      {/* Imagen */}
+                      <div className="w-full md:w-2/5 relative aspect-[3/4] md:aspect-auto">
                         <Image
                           src={product.image || "/placeholder.svg"}
                           alt={product.name}
@@ -221,9 +316,11 @@ export default function TiendaPage() {
                           </Badge>
                         )}
                       </div>
-                      <CardContent className="w-3/5 p-6 flex flex-col justify-between">
+                      
+                      {/* Contenido */}
+                      <CardContent className="w-full md:w-3/5 p-4 md:p-6 flex flex-col justify-between">
                         <div>
-                          <h3 className="text-2xl font-bold church-text mb-2">{product.name}</h3>
+                          <h3 className="text-xl md:text-2xl font-bold church-text mb-2">{product.name}</h3>
                           <p className="text-church-text-muted mb-3">{product.author}</p>
                           <div className="flex items-center space-x-2 mb-3">
                             <div className="flex items-center">
@@ -246,13 +343,16 @@ export default function TiendaPage() {
                           <div className="flex items-center justify-between mb-4">
                             <div className="flex items-center space-x-2">
                               {product.originalPrice && (
-                                <span className="text-lg text-gray-400 line-through">${product.originalPrice}</span>
+                                <span className="text-base md:text-lg text-gray-400 line-through">${product.originalPrice}</span>
                               )}
-                              <span className="text-3xl font-bold text-church-electric-600">${product.price}</span>
+                              <span className="text-2xl md:text-3xl font-bold text-church-electric-600">${product.price}</span>
                             </div>
                           </div>
                           <Button
-                            onClick={() => addToCart(product)}
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              addToCart(product)
+                            }}
                             className="w-full church-button-primary h-12 text-lg"
                           >
                             <ShoppingCart className="w-5 h-5 mr-2" />
@@ -294,7 +394,8 @@ export default function TiendaPage() {
               {filteredProducts.map((product) => (
                 <Card
                   key={product.id}
-                  className="overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-0 shadow-lg group bg-white"
+                  className="overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-0 shadow-lg group bg-white cursor-pointer"
+                  onClick={() => openProductModal(product)}
                 >
                   <div className="relative aspect-[3/4] overflow-hidden">
                     <Image
@@ -310,9 +411,14 @@ export default function TiendaPage() {
                       <Button
                         size="sm"
                         variant="ghost"
-                        className="bg-white/80 hover:bg-white text-gray-700 rounded-full p-2 w-8 h-8"
+                        className={`rounded-full p-2 w-8 h-8 ${
+                          isFavorite(product.id) 
+                            ? 'bg-red-100 hover:bg-red-200 text-red-600' 
+                            : 'bg-white/80 hover:bg-white text-gray-700'
+                        }`}
+                        onClick={(e) => handleToggleFavorite(e, product)}
                       >
-                        <Heart className="w-4 h-4" />
+                        <Heart className={`w-4 h-4 ${isFavorite(product.id) ? 'fill-current' : ''}`} />
                       </Button>
                     </div>
                   </div>
@@ -343,7 +449,13 @@ export default function TiendaPage() {
                         <span className="text-xl font-bold text-church-electric-600">${product.price}</span>
                       </div>
                     </div>
-                    <Button onClick={() => addToCart(product)} className="w-full church-button-primary">
+                    <Button 
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        addToCart(product)
+                      }} 
+                      className="w-full church-button-primary"
+                    >
                       <ShoppingCart className="w-4 h-4 mr-2" />
                       Añadir
                     </Button>
@@ -365,6 +477,203 @@ export default function TiendaPage() {
           </Button>
         </div>
       </div>
+
+      {/* Modal del Producto */}
+      {isModalOpen && selectedProduct && (
+        <div 
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+          onClick={closeModal}
+        >
+          <div 
+            className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header del Modal */}
+            <div className="sticky top-0 bg-white border-b border-gray-200 p-4 flex items-center justify-between rounded-t-2xl">
+              <h2 className="text-2xl font-bold church-text">Detalles del Producto</h2>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={closeModal}
+                className="rounded-full p-2 hover:bg-gray-100"
+              >
+                <X className="w-5 h-5" />
+              </Button>
+            </div>
+
+            {/* Contenido del Modal */}
+            <div className="p-6">
+              <div className="grid md:grid-cols-2 gap-8">
+                {/* Imagen del Producto */}
+                <div className="space-y-4">
+                  <div className="relative aspect-[3/4] rounded-xl overflow-hidden bg-gray-100">
+                    <Image
+                      src={selectedProduct.image || "/placeholder.svg"}
+                      alt={selectedProduct.name}
+                      fill
+                      className="object-cover"
+                    />
+                    {selectedProduct.originalPrice && (
+                      <Badge className="absolute top-4 left-4 bg-red-500 text-white text-lg px-4 py-2">
+                        ¡Oferta!
+                      </Badge>
+                    )}
+                  </div>
+                  
+                  {/* Botones de Acción Secundarios */}
+                  <div className="flex gap-3">
+                    <Button 
+                      variant="outline" 
+                      className={`flex-1 ${isFavorite(selectedProduct.id) ? 'bg-red-50 border-red-200 text-red-600' : ''}`}
+                      onClick={(e) => handleToggleFavorite(e, selectedProduct)}
+                    >
+                      <Heart className={`w-4 h-4 mr-2 ${isFavorite(selectedProduct.id) ? 'fill-current' : ''}`} />
+                      {isFavorite(selectedProduct.id) ? 'En Favoritos' : 'Favoritos'}
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      className="flex-1"
+                      onClick={() => handleShare(selectedProduct)}
+                    >
+                      <Share2 className="w-4 h-4 mr-2" />
+                      Compartir
+                    </Button>
+                  </div>
+                  
+                  {/* Mensaje de compartir */}
+                  {shareMessage && (
+                    <div className="bg-green-100 border border-green-200 text-green-800 px-4 py-2 rounded-lg text-sm text-center">
+                      {shareMessage}
+                    </div>
+                  )}
+                </div>
+
+                {/* Información del Producto */}
+                <div className="space-y-6">
+                  {/* Título y Autor */}
+                  <div>
+                    <h1 className="text-3xl font-bold church-text mb-2">{selectedProduct.name}</h1>
+                    <p className="text-xl text-church-text-muted flex items-center">
+                      <BookOpen className="w-5 h-5 mr-2" />
+                      Por {selectedProduct.author}
+                    </p>
+                  </div>
+
+                  {/* Rating y Reseñas */}
+                  <div className="flex items-center space-x-4">
+                    <div className="flex items-center space-x-2">
+                      <div className="flex items-center">
+                        {[...Array(5)].map((_, i) => (
+                          <Star
+                            key={i}
+                            className={`w-5 h-5 ${
+                              i < Math.floor(selectedProduct.rating) 
+                                ? "text-yellow-400 fill-current" 
+                                : "text-gray-300"
+                            }`}
+                          />
+                        ))}
+                      </div>
+                      <span className="text-lg font-semibold">{selectedProduct.rating}</span>
+                    </div>
+                    <div className="flex items-center text-church-text-muted">
+                      <Award className="w-4 h-4 mr-1" />
+                      <span>({selectedProduct.reviews} reseñas)</span>
+                    </div>
+                  </div>
+
+                  {/* Precio */}
+                  <div className="bg-gray-50 rounded-xl p-4">
+                    <div className="flex items-center space-x-3">
+                      {selectedProduct.originalPrice && (
+                        <span className="text-2xl text-gray-400 line-through">
+                          ${selectedProduct.originalPrice}
+                        </span>
+                      )}
+                      <span className="text-4xl font-bold text-church-electric-600">
+                        ${selectedProduct.price}
+                      </span>
+                      {selectedProduct.originalPrice && (
+                        <Badge className="bg-green-100 text-green-800 text-sm">
+                          Ahorra ${(selectedProduct.originalPrice - selectedProduct.price).toFixed(2)}
+                        </Badge>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Descripción Detallada */}
+                  <div>
+                    <h3 className="text-xl font-bold church-text mb-3">Descripción</h3>
+                    <p className="text-church-text-muted leading-relaxed text-lg">
+                      {selectedProduct.description}
+                    </p>
+                  </div>
+
+                  {/* Información Adicional */}
+                  <div className="bg-blue-50 rounded-xl p-4">
+                    <h4 className="font-semibold church-text mb-3">Información del Libro</h4>
+                    <div className="grid grid-cols-2 gap-4 text-sm">
+                      <div className="flex items-center">
+                        <Book className="w-4 h-4 mr-2 text-church-electric-600" />
+                        <span>Formato: Libro físico</span>
+                      </div>
+                      <div className="flex items-center">
+                        <Calendar className="w-4 h-4 mr-2 text-church-electric-600" />
+                        <span>Disponible ahora</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Selector de Cantidad y Botón de Compra */}
+                  <div className="space-y-4">
+                    <div className="flex items-center space-x-4">
+                      <span className="font-semibold church-text">Cantidad:</span>
+                      <div className="flex items-center border border-gray-300 rounded-lg">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={decreaseQuantity}
+                          className="px-3 py-2 hover:bg-gray-100"
+                        >
+                          <Minus className="w-4 h-4" />
+                        </Button>
+                        <span className="px-4 py-2 font-semibold min-w-[3rem] text-center">
+                          {quantity}
+                        </span>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={increaseQuantity}
+                          className="px-3 py-2 hover:bg-gray-100"
+                        >
+                          <Plus className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </div>
+
+                    {/* Total */}
+                    <div className="flex items-center justify-between text-xl font-bold church-text">
+                      <span>Total:</span>
+                      <span className="text-church-electric-600">
+                        ${(selectedProduct.price * quantity).toFixed(2)}
+                      </span>
+                    </div>
+
+                    {/* Botón de Añadir al Carrito */}
+                    <Button
+                      onClick={() => addToCartWithQuantity(selectedProduct, quantity)}
+                      className="w-full church-button-primary h-14 text-lg"
+                    >
+                      <ShoppingCart className="w-6 h-6 mr-3" />
+                      Añadir {quantity} {quantity === 1 ? 'libro' : 'libros'} al Carrito
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

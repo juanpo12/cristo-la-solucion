@@ -13,43 +13,48 @@ type Group = {
   image: string
   color: string
   focusPosition: string // Posición de enfoque para la imagen
+  ageRange: string
 }
 const groups: Group[] = [
   {
     id: "invictos-kids",
     name: "INVICTOS KIDS",
     shortDesc: "Diversión y aprendizaje",
-    schedule: "Dom 11:00 AM",
+    schedule: "Sáb 19:30 HS",
     image: "/test.jpg",
     color: "from-blue-600/30 to-cyan-600/30",
     focusPosition: "center center", // Centrado para mostrar al niño
+    ageRange: "3 a 8 años",
   },
   {
     id: "invictos-teens",
     name: "INVICTOS TEENS",
     shortDesc: "Descubriendo propósito",
-    schedule: "Sáb 18:00 HS",
-    image: "/TEENS.jpg",
+    schedule: "Sáb 19:30 HS",
+    image: "/fototeens.jpg",
     color: "from-purple-600/30 to-pink-600/30",
     focusPosition: "center center", // Centrado para mostrar a los jóvenes
+    ageRange: "9 a 17 años",
   },
   {
     id: "invictos",
     name: "INVICTOS",
     shortDesc: "Crecimiento espiritual",
-    schedule: "Jue 20:30 HS",
+    schedule: "Sáb 19:30 HS",
     image: "/INVICTOS.jpg",
     color: "from-church-electric-600/30 to-church-navy-600/30",
     focusPosition: "center center", // Centrado para mostrar el grupo
+    ageRange: "18 a 35 años",
   },
   {
     id: "gdc",
     name: "GDC",
     shortDesc: "Conexión familiar",
-    schedule: "Mié 19:00 HS",
+    schedule: "Mar 19:00 HS",
     image: "/GDC2.jpg",
     color: "from-orange-600/30 to-red-600/30",
     focusPosition: "center center", // Centrado para mostrar la familia
+    ageRange: "+36 años",
   },
 ]
 
@@ -104,12 +109,12 @@ export function Groups() {
 
   return (
     <section id="grupos" className="py-0 bg-white scroll-mt-20 overflow-hidden">
-      <div className="container mx-auto px-4 mb-12">
+      {/* <div className="container mx-auto px-4 mb-12">
         <h2 className="text-5xl font-bold text-center church-text mb-8">NUESTROS GRUPOS</h2>
         <p className="text-xl church-text-muted text-center max-w-3xl mx-auto">
           Descubre el lugar perfecto para crecer, conectar y servir junto a otros en tu jornada de fe
         </p>
-      </div>
+      </div> */}
 
       {/* Desktop: Efecto horizontal original */}
       <div className="hidden lg:block w-full h-[70vh] relative">
@@ -155,9 +160,12 @@ export function Groups() {
                     }`}
                   >
                     <p className="text-lg mb-4 drop-shadow-sm font-medium">{group.shortDesc}</p>
-                    <div className="flex items-center justify-center space-x-2 mb-6 opacity-90">
+                    <div className="flex items-center justify-center space-x-2 mb-3 opacity-90">
                       <Calendar className="w-4 h-4" />
                       <span className="text-base">{group.schedule}</span>
+                    </div>
+                    <div className="text-base mb-6 opacity-90 font-medium">
+                      <span className="bg-white/20 px-3 py-1 rounded-full">{group.ageRange}</span>
                     </div>
                     <Button
                       size="lg"
@@ -250,20 +258,6 @@ export function Groups() {
               ))}
             </div>
           </div>
-        </div>
-      </div>
-
-      {/* Sección de llamada a la acción */}
-      <div className="bg-gradient-to-r from-church-electric-50 to-blue-50 py-16 mt-16">
-        <div className="container mx-auto px-4 text-center">
-          <h3 className="text-3xl font-bold church-text mb-6">¿Listo para conectar?</h3>
-          <p className="text-lg church-text-muted mb-8 max-w-2xl mx-auto">
-            Cada grupo es una oportunidad única de crecer, servir y construir relaciones duraderas. ¡Encuentra tu lugar
-            en nuestra familia!
-          </p>
-          <Button size="lg" className="church-button-primary">
-            Contáctanos para más información
-          </Button>
         </div>
       </div>
     </section>

@@ -11,7 +11,7 @@ export function Footer() {
               <div className="w-10 h-10 bg-gradient-to-r from-church-electric-500 to-church-electric-600 rounded-full flex items-center justify-center">
                 <Heart className="w-5 h-5 text-white" />
               </div>
-              <span className="text-2xl font-bold">IGLESIA</span>
+              <span className="text-2xl font-bold">CRISTO LA SOLUCIÓN</span>
             </div>
             <p className="text-gray-300 text-lg leading-relaxed">Transformando vidas a través del amor de Cristo</p>
           </div>
@@ -50,14 +50,15 @@ export function Footer() {
           <div>
             <h4 className="font-bold mb-6 text-xl">Contacto</h4>
             <div className="space-y-3 text-gray-300 text-lg">
-              <p>Av. Principal 123</p>
-              <p>+1 (555) 123-4567</p>
-              <p>info@iglesia.com</p>
+              <p>Av. Juan Manuel de Rosas 4357</p>
+              <p>San Justo</p>
+              <p>+54 9 11 2864-8642</p>
+              <p>oficinasclsj@gmail.com</p>
             </div>
           </div>
         </div>
         <div className="border-t border-gray-700 mt-12 pt-8 text-center text-gray-300">
-          <p className="text-lg">&copy; {new Date().getFullYear()} Iglesia. Todos los derechos reservados.</p>
+          <p className="text-lg">&copy; {new Date().getFullYear()} Cristo La Solución. Todos los derechos reservados.</p>
         </div>
       </div>
     </footer>

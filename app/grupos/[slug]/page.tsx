@@ -13,9 +13,9 @@ const groupsData = {
     description:
       "Es un espacio exclusivo para los niños de nuestra congregación. Contamos con un equipo de maestros encargados de sembrar la palabra de Dios, en la vida de cada uno de los niños, por medio de enseñanzas dinámicas, que capturen la atención de ellos e impacten sus vidas.",
     image: "/test.jpg",
-    schedule: "Sábados 19:30 AM",
+    schedule: "Sábados 19:30 HS",
     location: "Auditorio Principal",
-    ageRange: "3 a 12 años",
+    ageRange: "3 a 8 años",
     color: "from-blue-500 to-cyan-500",
     activities: [
       "Historias bíblicas interactivas",
@@ -39,7 +39,7 @@ const groupsData = {
     image: "/TEENS.jpg",
     schedule: "Sábados 19:30 HS",
     location: "Auditorio Principal",
-    ageRange: "13 a 18 años",
+    ageRange: "9 a 17 años",
     color: "from-purple-500 to-pink-500",
     activities: [
       "Estudios bíblicos relevantes",
@@ -63,7 +63,7 @@ const groupsData = {
     image: "/INVICTOS.jpg",
     schedule: "Sábados 19:30 HS",
     location: "Auditorio Principal",
-    ageRange: "18+ años",
+    ageRange: "18 a 35 años",
     color: "from-church-electric-600 to-church-navy-600",
     activities: [
       "Estudios bíblicos profundos",
@@ -83,25 +83,12 @@ const groupsData = {
     name: "GDC - GRUPOS DE CONEXIÓN",
     subtitle: "Familia, fe y comunión íntima",
     description:
-      "Contamos con grupos de conexión (+35 años) los días martes a las 19:30 hs. La visión de estos grupos es que la gente pueda ser formada en la palabra de Dios; que puedan conectar con otras personas y juntos descubrir la misión que tienen sus vidas, que es vivir por una causa más importante; que esto los lleve a invitar y alcanzar a aquellos que nunca asistieron a la iglesia.",
+      "Contamos con grupos de conexión (+36 años) los días martes a las 19:00 hs. La visión de estos grupos es que la gente pueda ser formada en la palabra de Dios; que puedan conectar con otras personas y juntos descubrir la misión que tienen sus vidas, que es vivir por una causa más importante; que esto los lleve a invitar y alcanzar a aquellos que nunca asistieron a la iglesia.",
     image: "/GDC.jpg",
     schedule: "Martes 19:00 HS",
     location: "Auditorio Principal",
-    ageRange: "19 a 34 años",
+    ageRange: "+36 años",
     color: "from-orange-500 to-red-500",
-    activities: [
-      "Estudios bíblicos familiares",
-      "Cenas comunitarias",
-      "Oración intercesora",
-      "Apoyo en crisis y celebraciones",
-      "Actividades recreativas familiares",
-      "Proyectos de servicio grupal",
-    ],
-    values: [
-      { icon: Heart, title: "Familia", desc: "Experimentando la verdadera familia de Dios" },
-      { icon: Users, title: "Apoyo", desc: "Caminando juntos en las alegrías y desafíos" },
-      { icon: Star, title: "Intimidad", desc: "Relaciones profundas y auténticas" },
-    ]
   },
 }
 
@@ -149,7 +136,7 @@ export default async function GroupPage({ params }: { params: { slug: string } }
             </div>
 
             {/* Actividades */}
-            <div>
+            {/* <div>
               <h3 className="text-3xl font-bold church-text mb-8">¿Qué hacemos?</h3>
               <div className="grid md:grid-cols-2 gap-4">
                 {group.activities.map((activity, index) => (
@@ -159,10 +146,10 @@ export default async function GroupPage({ params }: { params: { slug: string } }
                   </div>
                 ))}
               </div>
-            </div>
+            </div> */}
 
             {/* Valores */}
-            <div>
+            {/* <div>
               <h3 className="text-3xl font-bold church-text mb-8">Nuestros Valores</h3>
               <div className="grid md:grid-cols-3 gap-6">
                 {group.values.map((value, index) => (
@@ -179,7 +166,7 @@ export default async function GroupPage({ params }: { params: { slug: string } }
                   </Card>
                 ))}
               </div>
-            </div>
+            </div> */}
           </div>
 
           {/* Sidebar */}
