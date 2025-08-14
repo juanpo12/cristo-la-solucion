@@ -1,0 +1,495 @@
+"use client"
+
+import { useState, useEffect, useMemo } from "react"
+import { Card, CardContent } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { ArrowLeft, Play, Search, Filter, Calendar, Eye, Clock, ExternalLink, Grid, List } from "lucide-react"
+import Link from "next/link"
+import Image from "next/image"
+
+interface PastorVideo {
+  id: string
+  title: string
+  description: string
+  thumbnail: string
+  publishedAt: string
+  duration: string
+  viewCount: string
+  url: string
+  category: string
+}
+
+// Videos de ejemplo del Pastor Alfredo Dimiro (en producción vendrían de YouTube API)
+const pastorVideos: PastorVideo[] = [
+  {
+    id: "1",
+    title: "El Poder de la Oración - Parte 1",
+    description: "Una enseñanza profunda sobre cómo la oración transforma nuestras vidas y nos conecta con Dios de manera íntima. Descubre los secretos de una vida de oración efectiva.",
+    thumbnail: "/LIBROS DEL PASTOR ALFREDO DIMIRO0000.png",
+    publishedAt: "2024-01-15",
+    duration: "45:30",
+    viewCount: "2,340",
+    url: "https://youtube.com/watch?v=ejemplo1",
+    category: "Enseñanza"
+  },
+  {
+    id: "2",
+    title: "El Poder de la Pasión - Conferencia Completa",
+    description: "Conferencia especial sobre cómo descubrir y vivir con pasión el propósito que Dios tiene para tu vida. Una enseñanza que cambiará tu perspectiva.",
+    thumbnail: "/LIBROS DEL PASTOR ALFREDO DIMIRO0001.png",
+    publishedAt: "2024-01-10",
+    duration: "1:15:20",
+    viewCount: "3,567",
+    url: "https://youtube.com/watch?v=ejemplo2",
+    category: "Conferencia"
+  },
+  {
+    id: "3",
+    title: "Administración Financiera Bíblica",
+    description: "Principios bíblicos para manejar las finanzas de manera sabia. Aprende cómo Dios quiere que administremos los recursos que nos ha dado.",
+    thumbnail: "/LIBROS DEL PASTOR ALFREDO DIMIRO0002.png",
+    publishedAt: "2024-01-05",
+    duration: "38:45",
+    viewCount: "1,890",
+    url: "https://youtube.com/watch?v=ejemplo3",
+    category: "Enseñanza"
+  },
+  {
+    id: "4",
+    title: "Desechando Maldiciones - Serie Completa",
+    description: "Una serie poderosa sobre cómo identificar y romper las maldiciones que pueden estar afectando tu vida. Camina en la libertad que Cristo te dio.",
+    thumbnail: "/LIBROS DEL PASTOR ALFREDO DIMIRO0003.png",
+    publishedAt: "2023-12-28",
+    duration: "52:15",
+    viewCount: "4,123",
+    url: "https://youtube.com/watch?v=ejemplo4",
+    category: "Serie"
+  },
+  {
+    id: "5",
+    title: "El Poder de la Imaginación",
+    description: "Descubre cómo Dios quiere renovar tu mente y transformar tu imaginación para que puedas ver las cosas desde Su perspectiva.",
+    thumbnail: "/LIBROS DEL PASTOR ALFREDO DIMIRO0004.png",
+    publishedAt: "2023-12-20",
+    duration: "41:30",
+    viewCount: "2,756",
+    url: "https://youtube.com/watch?v=ejemplo5",
+    category: "Enseñanza"
+  },
+  {
+    id: "6",
+    title: "Salmo 91 - Protección Divina",
+    description: "Un estudio detallado del Salmo 91 y cómo vivir bajo la protección sobrenatural de Dios en estos tiempos difíciles.",
+    thumbnail: "/LIBROS DEL PASTOR ALFREDO DIMIRO0005.png",
+    publishedAt: "2023-12-15",
+    duration: "47:20",
+    viewCount: "3,234",
+    url: "https://youtube.com/watch?v=ejemplo6",
+    category: "Estudio Bíblico"
+  },
+  {
+    id: "7",
+    title: "El Poder del Trabajo - Prosperidad Bíblica",
+    description: "Entiende los principios bíblicos del trabajo y cómo Dios quiere prosperarte a través de tu labor diaria.",
+    thumbnail: "/LIBROS DEL PASTOR ALFREDO DIMIRO0006.png",
+    publishedAt: "2023-12-10",
+    duration: "43:45",
+    viewCount: "2,890",
+    url: "https://youtube.com/watch?v=ejemplo7",
+    category: "Enseñanza"
+  },
+  {
+    id: "8",
+    title: "El Poder de la Paternidad Espiritual",
+    description: "La importancia de tener padres espirituales y cómo esto impacta nuestro crecimiento en el reino de Dios.",
+    thumbnail: "/LIBROS DEL PASTOR ALFREDO DIMIRO0007.png",
+    publishedAt: "2023-12-05",
+    duration: "39:15",
+    viewCount: "1,567",
+    url: "https://youtube.com/watch?v=ejemplo8",
+    category: "Enseñanza"
+  }
+]
+
+const categories = ["Todos", "Enseñanza", "Conferencia", "Serie", "Estudio Bíblico"]
+const sortOptions = [
+  { value: "newest", label: "Más Recientes" },
+  { value: "oldest", label: "Más Antiguos" },
+  { value: "most-viewed", label: "Más Vistos" },
+  { value: "duration-long", label: "Más Largos" },
+  { value: "duration-short", label: "Más Cortos" }
+]
+
+export default function VideosPage() {
+  const [videos, setVideos] = useState<PastorVideo[]>(pastorVideos)
+  const [searchTerm, setSearchTerm] = useState("")
+  const [selectedCategory, setSelectedCategory] = useState("Todos")
+  const [sortBy, setSortBy] = useState("newest")
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
+  const [selectedVideo, setSelectedVideo] = useState<PastorVideo | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
+
+  console.log(setIsLoading);
+  console.log(setVideos);
+  
+  
+
+  // Filtrar y ordenar videos
+  const filteredAndSortedVideos = useMemo(() => {
+    const filtered = videos.filter((video) => {
+      const matchesSearch = 
+        video.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        video.description.toLowerCase().includes(searchTerm.toLowerCase())
+
+      const matchesCategory = selectedCategory === "Todos" || video.category === selectedCategory
+
+      return matchesSearch && matchesCategory
+    })
+
+    // Ordenar
+    filtered.sort((a, b) => {
+      switch (sortBy) {
+        case "newest":
+          return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+        case "oldest":
+          return new Date(a.publishedAt).getTime() - new Date(b.publishedAt).getTime()
+        case "most-viewed":
+          return parseInt(b.viewCount.replace(/,/g, '')) - parseInt(a.viewCount.replace(/,/g, ''))
+        case "duration-long":
+          return parseDuration(b.duration) - parseDuration(a.duration)
+        case "duration-short":
+          return parseDuration(a.duration) - parseDuration(b.duration)
+        default:
+          return 0
+      }
+    })
+
+    return filtered
+  }, [videos, searchTerm, selectedCategory, sortBy])
+
+  // Función para convertir duración a segundos
+  const parseDuration = (duration: string): number => {
+    const parts = duration.split(':').map(Number)
+    if (parts.length === 2) {
+      return parts[0] * 60 + parts[1]
+    } else if (parts.length === 3) {
+      return parts[0] * 3600 + parts[1] * 60 + parts[2]
+    }
+    return 0
+  }
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('es-ES', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    })
+  }
+
+  const formatViewCount = (count: string) => {
+    const num = parseInt(count.replace(/,/g, ''))
+    if (num >= 1000000) {
+      return `${(num / 1000000).toFixed(1)}M`
+    } else if (num >= 1000) {
+      return `${(num / 1000).toFixed(1)}k`
+    }
+    return count
+  }
+
+  // Cargar videos reales de YouTube API (opcional)
+    // const loadVideosFromAPI = async () => {
+    //   setIsLoading(true)
+    //   try {
+    //     const response = await fetch('/api/youtube/pastor-videos')
+    //     if (response.ok) {
+    //       const data = await response.json()
+    //       setVideos(data.videos)
+    //     }
+    //   } catch (error) {
+    //     console.error('Error cargando videos:', error)
+    //   } finally {
+    //     setIsLoading(false)
+    //   }
+    // }
+
+  useEffect(() => {
+    // Cargar videos reales si la API está disponible
+    // loadVideosFromAPI()
+  }, [])
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <div className="relative h-[50vh] overflow-hidden">
+        <Image 
+          src="/youtube.png" 
+          alt="Pastor Alfredo Dimiro" 
+          fill 
+          className="object-cover" 
+          priority 
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-church-electric-600/80 to-church-navy-600/80" />
+        <div className="absolute inset-0 bg-black/30" />
+
+        <div className="absolute inset-0 flex items-center justify-center text-white">
+          <div className="text-center max-w-4xl px-4">
+            <h1 className="text-5xl md:text-6xl font-bold mb-6 drop-shadow-lg">VIDEOS DEL PASTOR</h1>
+            <p className="text-xl md:text-2xl opacity-90 drop-shadow-md mb-4">
+              Pastor Alfredo Dimiro
+            </p>
+            <p className="text-lg opacity-80 drop-shadow-md">
+              Biblioteca completa de enseñanzas, conferencias y estudios bíblicos
+            </p>
+          </div>
+        </div>
+
+        <Link
+          href="/"
+          className="absolute top-8 left-8 bg-white/20 backdrop-blur-sm text-white px-6 py-3 rounded-full hover:bg-white hover:text-gray-900 transition-all duration-300 flex items-center space-x-2"
+        >
+          <ArrowLeft className="w-5 h-5" />
+          <span>Volver al Inicio</span>
+        </Link>
+      </div>
+
+      {/* Controles y Filtros */}
+      <div className="container mx-auto px-4 py-8">
+        <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
+          <div className="flex flex-col lg:flex-row gap-6">
+            {/* Búsqueda */}
+            <div className="flex-1 relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <Input
+                placeholder="Buscar videos, temas, palabras clave..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10 h-12 text-lg border-2 border-gray-200 focus:border-church-electric-400"
+              />
+            </div>
+
+            {/* Filtros */}
+            <div className="flex flex-wrap gap-4">
+              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                <SelectTrigger className="w-48 h-12">
+                  <SelectValue placeholder="Categoría" />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.map((category) => (
+                    <SelectItem key={category} value={category}>
+                      {category}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              <Select value={sortBy} onValueChange={setSortBy}>
+                <SelectTrigger className="w-48 h-12">
+                  <SelectValue placeholder="Ordenar por" />
+                </SelectTrigger>
+                <SelectContent>
+                  {sortOptions.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              {/* Modo de Vista */}
+              <div className="flex border border-gray-200 rounded-lg">
+                <Button
+                  variant={viewMode === "grid" ? "default" : "ghost"}
+                  size="sm"
+                  onClick={() => setViewMode("grid")}
+                  className="rounded-r-none"
+                >
+                  <Grid className="w-4 h-4" />
+                </Button>
+                <Button
+                  variant={viewMode === "list" ? "default" : "ghost"}
+                  size="sm"
+                  onClick={() => setViewMode("list")}
+                  className="rounded-l-none"
+                >
+                  <List className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          {/* Estadísticas */}
+          <div className="flex items-center justify-between mt-6 pt-6 border-t border-gray-200">
+            <div className="flex items-center space-x-2 text-church-text-muted">
+              <Filter className="w-5 h-5" />
+              <span>{filteredAndSortedVideos.length} videos encontrados</span>
+            </div>
+            <Link 
+              href="https://youtube.com/@AlfredoDimiroLive" 
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Button variant="outline" className="flex items-center space-x-2">
+                <ExternalLink className="w-4 h-4" />
+                <span>Ver Canal Completo</span>
+              </Button>
+            </Link>
+          </div>
+        </div>
+
+        {/* Videos */}
+        {isLoading ? (
+          <div className="text-center py-16">
+            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-church-electric-600 mx-auto mb-4"></div>
+            <p className="text-church-text-muted">Cargando videos...</p>
+          </div>
+        ) : filteredAndSortedVideos.length === 0 ? (
+          <div className="text-center py-16">
+            <Search className="w-16 h-16 mx-auto text-gray-300 mb-4" />
+            <h3 className="text-2xl font-bold church-text mb-2">No se encontraron videos</h3>
+            <p className="text-church-text-muted">
+              Intenta con otros términos de búsqueda o selecciona una categoría diferente
+            </p>
+          </div>
+        ) : (
+          <div className={viewMode === "grid" 
+            ? "grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" 
+            : "space-y-4"
+          }>
+            {filteredAndSortedVideos.map((video) => (
+              <Card
+                key={video.id}
+                className={`church-card overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:scale-105 cursor-pointer bg-white ${
+                  viewMode === "list" ? "flex" : ""
+                }`}
+                onClick={() => setSelectedVideo(video)}
+              >
+                <div className={`relative ${viewMode === "list" ? "w-80 flex-shrink-0" : "aspect-video"}`}>
+                  <div 
+                    className="absolute inset-0 bg-cover bg-center"
+                    style={{ backgroundImage: `url('${video.thumbnail}')` }}
+                  />
+                  <div className="absolute inset-0 bg-black/30 opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <div className="bg-white/90 p-3 rounded-full">
+                      <Play className="w-6 h-6 text-church-electric-600 fill-current" />
+                    </div>
+                  </div>
+                  
+                  {/* Duration Badge */}
+                  <div className="absolute bottom-2 right-2 bg-black/80 text-white px-2 py-1 rounded text-sm">
+                    {video.duration}
+                  </div>
+
+
+                </div>
+
+                <CardContent className={`p-6 ${viewMode === "list" ? "flex-1" : ""}`}>
+                  <h4 className="font-bold church-text text-lg mb-2 line-clamp-2 leading-tight">
+                    {video.title}
+                  </h4>
+                  <p className={`church-text-muted text-sm mb-4 ${viewMode === "list" ? "line-clamp-3" : "line-clamp-2"}`}>
+                    {video.description}
+                  </p>
+                  
+
+                  
+                  <div className="flex items-center justify-between text-xs church-text-muted">
+                    <div className="flex items-center space-x-1">
+                      <Calendar className="w-3 h-3" />
+                      <span>{formatDate(video.publishedAt)}</span>
+                    </div>
+                    <div className="flex items-center space-x-1">
+                      <Eye className="w-3 h-3" />
+                      <span>{formatViewCount(video.viewCount)} vistas</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
+
+        {/* Modal de Video */}
+        {selectedVideo && (
+          <div 
+            className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
+            onClick={() => setSelectedVideo(null)}
+          >
+            <div 
+              className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-2xl font-bold church-text">Detalles del Video</h3>
+                  <Button
+                    variant="ghost"
+                    onClick={() => setSelectedVideo(null)}
+                    className="rounded-full"
+                  >
+                    ✕
+                  </Button>
+                </div>
+                
+                <div className="aspect-video bg-gray-100 rounded-lg mb-6 flex items-center justify-center">
+                  <div className="text-center">
+                    <Play className="w-16 h-16 text-church-electric-600 mx-auto mb-4" />
+                    <p className="church-text-muted mb-4">
+                      Haz clic para ver el video en YouTube
+                    </p>
+                    <Link 
+                      href={selectedVideo.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Button className="church-button-primary">
+                        <ExternalLink className="w-4 h-4 mr-2" />
+                        Ver en YouTube
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+                
+                <div className="space-y-4">
+                  <div className="flex items-center space-x-4">
+                    <div className="flex items-center space-x-1 text-church-text-muted">
+                      <Clock className="w-4 h-4" />
+                      <span>{selectedVideo.duration}</span>
+                    </div>
+                    <div className="flex items-center space-x-1 text-church-text-muted">
+                      <Eye className="w-4 h-4" />
+                      <span>{selectedVideo.viewCount} vistas</span>
+                    </div>
+                  </div>
+                  
+                  <h4 className="text-xl font-bold church-text">{selectedVideo.title}</h4>
+                  <p className="church-text-muted leading-relaxed">{selectedVideo.description}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Call to Action */}
+        <div className="mt-16 text-center bg-gradient-to-r from-church-electric-500 to-church-navy-600 rounded-2xl p-12 text-white">
+          <h3 className="text-4xl font-bold mb-4">¡Suscríbete al Canal del Pastor!</h3>
+          <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
+            No te pierdas ninguna enseñanza del Pastor Alfredo Dimiro. 
+            Mantente al día con todas sus conferencias y estudios bíblicos.
+          </p>
+          <Link 
+            href="https://youtube.com/@AlfredoDimiroLive?sub_confirmation=1" 
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Button size="lg" className="bg-red-600 hover:bg-red-700 text-white px-8 py-4 text-lg">
+              <Play className="w-6 h-6 mr-3" />
+              Suscribirse a @AlfredoDimiroLive
+            </Button>
+          </Link>
+        </div>
+      </div>
+    </div>
+  )
+}

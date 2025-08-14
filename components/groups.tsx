@@ -20,7 +20,7 @@ const groups: Group[] = [
     id: "invictos-kids",
     name: "INVICTOS KIDS",
     shortDesc: "Diversión y aprendizaje",
-    schedule: "Dom 11:00 AM",
+    schedule: "Sáb 19:30 HS",
     image: "/test.jpg",
     color: "from-blue-600/30 to-cyan-600/30",
     focusPosition: "center center", // Centrado para mostrar al niño
@@ -30,7 +30,7 @@ const groups: Group[] = [
     id: "invictos-teens",
     name: "INVICTOS TEENS",
     shortDesc: "Descubriendo propósito",
-    schedule: "Sáb 18:00 HS",
+    schedule: "Sáb 19:30 HS",
     image: "/fototeens.jpg",
     color: "from-purple-600/30 to-pink-600/30",
     focusPosition: "center center", // Centrado para mostrar a los jóvenes
@@ -40,7 +40,7 @@ const groups: Group[] = [
     id: "invictos",
     name: "INVICTOS",
     shortDesc: "Crecimiento espiritual",
-    schedule: "Jue 20:30 HS",
+    schedule: "Sáb 19:30 HS",
     image: "/INVICTOS.jpg",
     color: "from-church-electric-600/30 to-church-navy-600/30",
     focusPosition: "center center", // Centrado para mostrar el grupo
@@ -50,7 +50,7 @@ const groups: Group[] = [
     id: "gdc",
     name: "GDC",
     shortDesc: "Conexión familiar",
-    schedule: "Mié 19:00 HS",
+    schedule: "Mar 19:00 HS",
     image: "/GDC2.jpg",
     color: "from-orange-600/30 to-red-600/30",
     focusPosition: "center center", // Centrado para mostrar la familia

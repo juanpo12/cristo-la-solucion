@@ -8,6 +8,7 @@ import { Meetings } from "@/components/meetings";
 import { Prayer } from "@/components/prayer";
 import { StoreShowcase } from "@/components/store-showcase";
 import { Vision } from "@/components/vision";
+// import { YouTubeSection } from "@/components/youtube-section";
 
 export default function Home() {
   return (
@@ -18,6 +19,7 @@ export default function Home() {
       <Groups />
       <Meetings />
       <StoreShowcase />
+      {/* <YouTubeSection /> */}
       <Prayer/>
       <GivingSection/>
       {/* <Contact /> */}
