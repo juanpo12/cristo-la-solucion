@@ -199,24 +199,24 @@ export default function VideosPage() {
   }
 
   // Cargar videos reales de YouTube API (opcional)
-    // const loadVideosFromAPI = async () => {
-    //   setIsLoading(true)
-    //   try {
-    //     const response = await fetch('/api/youtube/pastor-videos')
-    //     if (response.ok) {
-    //       const data = await response.json()
-    //       setVideos(data.videos)
-    //     }
-    //   } catch (error) {
-    //     console.error('Error cargando videos:', error)
-    //   } finally {
-    //     setIsLoading(false)
-    //   }
-    // }
+    const loadVideosFromAPI = async () => {
+      setIsLoading(true)
+      try {
+        const response = await fetch('/api/youtube/pastor-videos')
+        if (response.ok) {
+          const data = await response.json()
+          setVideos(data.videos)
+        }
+      } catch (error) {
+        console.error('Error cargando videos:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
 
   useEffect(() => {
     // Cargar videos reales si la API está disponible
-    // loadVideosFromAPI()
+    loadVideosFromAPI()
   }, [])
 
   return (
@@ -235,7 +235,7 @@ export default function VideosPage() {
 
         <div className="absolute inset-0 flex items-center justify-center text-white">
           <div className="text-center max-w-4xl px-4">
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 drop-shadow-lg">VIDEOS DEL PASTOR</h1>
+            <h1 className="text-5xl md:text-6xl font-bold mb-6 drop-shadow-lg">Transmisiones</h1>
             <p className="text-xl md:text-2xl opacity-90 drop-shadow-md mb-4">
               Pastor Alfredo Dimiro
             </p>

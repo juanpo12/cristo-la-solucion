@@ -32,14 +32,6 @@ const storeSections: StoreSection[] = [
     focusPosition: "center center",
   },
   {
-    id: "cls",
-    name: "CLS",
-    shortDesc: "Nuestra identidad",
-    image: "/logo-cls.png",
-    color: "from-church-electric-600/30 to-church-navy-600/30",
-    focusPosition: "center center",
-  },
-  {
     id: "novedades",
     name: "NOVEDADES",
     shortDesc: "Lo más reciente",
