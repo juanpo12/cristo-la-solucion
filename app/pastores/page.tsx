@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { ArrowLeft, Heart, Book, Users, Star } from "lucide-react"
+import { ArrowLeft } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 
@@ -8,7 +7,7 @@ export default function PastoresPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Header con imagen de fondo */}
-      <div className="relative h-[60vh] overflow-hidden">
+      <div className="relative h-[60vh] overflow-hidden -mt-20">
         <Image 
           src="/frente.jpg" 
           alt="Pastores Alfredo y Celina" 
@@ -23,7 +22,7 @@ export default function PastoresPage() {
           <div className="text-center max-w-4xl px-4">
             <h1 className="text-5xl md:text-6xl font-bold mb-6 drop-shadow-lg">NUESTROS PASTORES</h1>
             <p className="text-xl md:text-2xl opacity-90 drop-shadow-md">
-              Líderes dedicados al servicio de Dios y su pueblo
+              ALFREDO DIMIRO y CELINA DEL VALLE LÓPEZ
             </p>
           </div>
         </div>
@@ -41,43 +40,7 @@ export default function PastoresPage() {
       <div className="container mx-auto px-4 py-16">
         <div className="max-w-4xl mx-auto">
           {/* Información de los Pastores */}
-          <Card className="church-card shadow-2xl border-0 overflow-hidden">
-            <div className="grid md:grid-cols-2 gap-0">
-              {/* Imagen de los Pastores */}
-              <div className="relative h-96 md:h-auto">
-                <Image
-                  src="/frente.jpg"
-                  alt="Pastores Alfredo Daniel Dimiro y Celina del Valle López"
-                  fill
-                  className="object-cover"
-                />
-              </div>
 
-              {/* Información */}
-              <CardContent className="p-8 md:p-12 flex flex-col justify-center">
-                <div className="space-y-6">
-                  <div>
-                    <h2 className="text-3xl md:text-4xl font-bold church-text mb-4">
-                      ALFREDO DANIEL DIMIRO
-                    </h2>
-                    <h3 className="text-2xl md:text-3xl font-bold church-text mb-6">
-                      CELINA DEL VALLE LÓPEZ
-                    </h3>
-                  </div>
-
-                  <div className="flex items-center space-x-3 text-church-electric-600">
-                    <Users className="w-6 h-6" />
-                    <span className="text-lg font-semibold">Pastores Principales</span>
-                  </div>
-
-                  <div className="flex items-center space-x-3 text-church-electric-600">
-                    <Star className="w-6 h-6" />
-                    <span className="text-lg font-semibold">Más de 30 años de ministerio</span>
-                  </div>
-                </div>
-              </CardContent>
-            </div>
-          </Card>
 
           {/* Historia y Ministerio */}
           <div className="mt-16 space-y-12">
@@ -102,40 +65,11 @@ export default function PastoresPage() {
               </p>
             </div>
 
-            {/* Características del Ministerio */}
-            <div className="grid md:grid-cols-2 gap-8 mt-16">
-              <Card className="church-card hover:shadow-lg transition-shadow duration-300">
-                <CardContent className="p-8 text-center">
-                  <div className="w-16 h-16 bg-gradient-to-r from-church-electric-500 to-church-navy-500 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <Book className="w-8 h-8 text-white" />
-                  </div>
-                  <h3 className="text-2xl font-bold church-text mb-4">Pastor Alfredo</h3>
-                  <p className="church-text-muted leading-relaxed">
-                    Maestro de las Escrituras, apasionado por el estudio detallado de la Palabra de Dios. 
-                    Autor de múltiples libros que han impactado vidas.
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card className="church-card hover:shadow-lg transition-shadow duration-300">
-                <CardContent className="p-8 text-center">
-                  <div className="w-16 h-16 bg-gradient-to-r from-church-electric-500 to-church-navy-500 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <Heart className="w-8 h-8 text-white" />
-                  </div>
-                  <h3 className="text-2xl font-bold church-text mb-4">Pastora Celina</h3>
-                  <p className="church-text-muted leading-relaxed">
-                    Usada por Dios en oración y consejería, acompañando el ministerio con un corazón 
-                    dedicado al cuidado pastoral de la congregación.
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
-
             {/* Call to Action */}
             <div className="text-center bg-gradient-to-r from-church-electric-500 to-church-navy-600 rounded-2xl p-12 text-white mt-16">
               <h3 className="text-4xl font-bold mb-4">¿Quieres conocer más?</h3>
               <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
-                Te invitamos a ser parte de nuestra comunidad y conocer personalmente a nuestros pastores
+                Te invitamos a ser parte de nuestra comunidad
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button size="lg" className="bg-white text-church-electric-600 hover:bg-gray-100 px-8 py-4 text-lg">

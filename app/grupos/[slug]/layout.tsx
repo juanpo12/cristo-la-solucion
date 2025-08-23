@@ -1,5 +1,3 @@
-import { Footer } from "@/components/footer"
-import { Header } from "@/components/header"
 import type React from "react"
 
 export default function GroupLayout({
@@ -9,9 +7,7 @@ export default function GroupLayout({
 }) {
   return (
     <div className="min-h-screen">
-      <Header />
       {children}
-      <Footer />
     </div>
   )
 }

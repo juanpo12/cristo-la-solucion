@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ArrowLeft, Play, Search, Filter, Calendar, Eye, Clock, ExternalLink, Grid, List } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
+import { YouTubePlayer } from "@/components/youtube-player"
 
 interface PastorVideo {
   id: string
@@ -22,96 +23,7 @@ interface PastorVideo {
 }
 
 // Videos de ejemplo del Pastor Alfredo Dimiro (en producción vendrían de YouTube API)
-const pastorVideos: PastorVideo[] = [
-  {
-    id: "1",
-    title: "El Poder de la Oración - Parte 1",
-    description: "Una enseñanza profunda sobre cómo la oración transforma nuestras vidas y nos conecta con Dios de manera íntima. Descubre los secretos de una vida de oración efectiva.",
-    thumbnail: "/CONFE.jpg",
-    publishedAt: "2024-01-15",
-    duration: "45:30",
-    viewCount: "2,340",
-    url: "https://youtube.com/watch?v=ejemplo1",
-    category: "Enseñanza"
-  },
-  {
-    id: "2",
-    title: "El Poder de la Pasión - Conferencia Completa",
-    description: "Conferencia especial sobre cómo descubrir y vivir con pasión el propósito que Dios tiene para tu vida. Una enseñanza que cambiará tu perspectiva.",
-    thumbnail: "/CONFE.jpg",
-    publishedAt: "2024-01-10",
-    duration: "1:15:20",
-    viewCount: "3,567",
-    url: "https://youtube.com/watch?v=ejemplo2",
-    category: "Conferencia"
-  },
-  {
-    id: "3",
-    title: "Administración Financiera Bíblica",
-    description: "Principios bíblicos para manejar las finanzas de manera sabia. Aprende cómo Dios quiere que administremos los recursos que nos ha dado.",
-    thumbnail: "/CONFE.jpg",
-    publishedAt: "2024-01-05",
-    duration: "38:45",
-    viewCount: "1,890",
-    url: "https://youtube.com/watch?v=ejemplo3",
-    category: "Enseñanza"
-  },
-  {
-    id: "4",
-    title: "Desechando Maldiciones - Serie Completa",
-    description: "Una serie poderosa sobre cómo identificar y romper las maldiciones que pueden estar afectando tu vida. Camina en la libertad que Cristo te dio.",
-    thumbnail: "/CONFE.jpg",
-    publishedAt: "2023-12-28",
-    duration: "52:15",
-    viewCount: "4,123",
-    url: "https://youtube.com/watch?v=ejemplo4",
-    category: "Serie"
-  },
-  {
-    id: "5",
-    title: "El Poder de la Imaginación",
-    description: "Descubre cómo Dios quiere renovar tu mente y transformar tu imaginación para que puedas ver las cosas desde Su perspectiva.",
-    thumbnail: "/CONFE.jpg",
-    publishedAt: "2023-12-20",
-    duration: "41:30",
-    viewCount: "2,756",
-    url: "https://youtube.com/watch?v=ejemplo5",
-    category: "Enseñanza"
-  },
-  {
-    id: "6",
-    title: "Salmo 91 - Protección Divina",
-    description: "Un estudio detallado del Salmo 91 y cómo vivir bajo la protección sobrenatural de Dios en estos tiempos difíciles.",
-    thumbnail: "/CONFE.jpg",
-    publishedAt: "2023-12-15",
-    duration: "47:20",
-    viewCount: "3,234",
-    url: "https://youtube.com/watch?v=ejemplo6",
-    category: "Estudio Bíblico"
-  },
-  {
-    id: "7",
-    title: "El Poder del Trabajo - Prosperidad Bíblica",
-    description: "Entiende los principios bíblicos del trabajo y cómo Dios quiere prosperarte a través de tu labor diaria.",
-    thumbnail: "/CONFE.jpg",
-    publishedAt: "2023-12-10",
-    duration: "43:45",
-    viewCount: "2,890",
-    url: "https://youtube.com/watch?v=ejemplo7",
-    category: "Enseñanza"
-  },
-  {
-    id: "8",
-    title: "El Poder de la Paternidad Espiritual",
-    description: "La importancia de tener padres espirituales y cómo esto impacta nuestro crecimiento en el reino de Dios.",
-    thumbnail: "/CONFE.jpg",
-    publishedAt: "2023-12-05",
-    duration: "39:15",
-    viewCount: "1,567",
-    url: "https://youtube.com/watch?v=ejemplo8",
-    category: "Enseñanza"
-  }
-]
+
 
 const categories = ["Todos", "Enseñanza", "Conferencia", "Serie", "Estudio Bíblico"]
 const sortOptions = [
@@ -123,7 +35,7 @@ const sortOptions = [
 ]
 
 export default function VideosPage() {
-  const [videos, setVideos] = useState<PastorVideo[]>(pastorVideos)
+  const [videos, setVideos] = useState<PastorVideo[]>([])
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("Todos")
   const [sortBy, setSortBy] = useState("newest")
@@ -199,30 +111,30 @@ export default function VideosPage() {
   }
 
   // Cargar videos reales de YouTube API (opcional)
-    // const loadVideosFromAPI = async () => {
-    //   setIsLoading(true)
-    //   try {
-    //     const response = await fetch('/api/youtube/pastor-videos')
-    //     if (response.ok) {
-    //       const data = await response.json()
-    //       setVideos(data.videos)
-    //     }
-    //   } catch (error) {
-    //     console.error('Error cargando videos:', error)
-    //   } finally {
-    //     setIsLoading(false)
-    //   }
-    // }
+    const loadVideosFromAPI = async () => {
+      setIsLoading(true)
+      try {
+        const response = await fetch('/api/youtube/pastor-videos')
+        if (response.ok) {
+          const data = await response.json()
+          setVideos(data.videos)
+        }
+      } catch (error) {
+        console.error('Error cargando videos:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
 
   useEffect(() => {
     // Cargar videos reales si la API está disponible
-    // loadVideosFromAPI()
+    loadVideosFromAPI()
   }, [])
 
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="relative h-[50vh] overflow-hidden">
+      <div className="relative h-[50vh] overflow-hidden -mt-20">
         <Image 
           src="/youtube.png" 
           alt="Pastor Alfredo Dimiro" 
@@ -235,7 +147,7 @@ export default function VideosPage() {
 
         <div className="absolute inset-0 flex items-center justify-center text-white">
           <div className="text-center max-w-4xl px-4">
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 drop-shadow-lg">VIDEOS DEL PASTOR</h1>
+            <h1 className="text-5xl md:text-6xl font-bold mb-6 drop-shadow-lg">Transmisiones</h1>
             <p className="text-xl md:text-2xl opacity-90 drop-shadow-md mb-4">
               Pastor Alfredo Dimiro
             </p>
@@ -414,7 +326,12 @@ export default function VideosPage() {
         {selectedVideo && (
           <div 
             className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
-            onClick={() => setSelectedVideo(null)}
+            onClick={(e) => {
+              // Solo cerrar si se hace clic fuera del contenido del modal
+              if (e.target === e.currentTarget) {
+                setSelectedVideo(null);
+              }
+            }}
           >
             <div 
               className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
@@ -432,23 +349,27 @@ export default function VideosPage() {
                   </Button>
                 </div>
                 
-                <div className="aspect-video bg-gray-100 rounded-lg mb-6 flex items-center justify-center">
-                  <div className="text-center">
-                    <Play className="w-16 h-16 text-church-electric-600 mx-auto mb-4" />
-                    <p className="church-text-muted mb-4">
-                      Haz clic para ver el video en YouTube
-                    </p>
-                    <Link 
-                      href={selectedVideo.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <Button className="church-button-primary">
-                        <ExternalLink className="w-4 h-4 mr-2" />
-                        Ver en YouTube
-                      </Button>
-                    </Link>
+                <div className="aspect-video bg-gray-100 rounded-lg mb-6">
+                  {/* Reproductor de YouTube */}
+                  <div key={selectedVideo.id}>
+                    <YouTubePlayer 
+                      videoId={selectedVideo.url || selectedVideo.id} 
+                      className="rounded-lg overflow-hidden"
+                      autoplay={true}
+                    />
                   </div>
+                </div>
+                <div className="flex justify-end mb-4">
+                  <Link 
+                    href={selectedVideo.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Button variant="outline" size="sm" className="flex items-center">
+                      <ExternalLink className="w-4 h-4 mr-2" />
+                      Ver en YouTube
+                    </Button>
+                  </Link>
                 </div>
                 
                 <div className="space-y-4">

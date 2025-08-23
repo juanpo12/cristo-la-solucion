@@ -2,11 +2,12 @@ import { NextRequest, NextResponse } from 'next/server'
 
 // Configuración para YouTube API
 const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY
-const CHANNEL_ID = process.env.YOUTUBE_CHANNEL_ID || 'UCejy-Y-YJBgQq-o2UpfJaEw' // Reemplazar con el ID real del canal
+const CHANNEL_ID = process.env.PASTOR_CHANNEL_ID // Usamos el canal del pastor que está configurado en .env.local
 
 // Función para obtener videos del canal
 async function getChannelVideos() {
-  if (!YOUTUBE_API_KEY) {
+  if (!YOUTUBE_API_KEY || !CHANNEL_ID) {
+    console.warn('YouTube API Key o Channel ID no configurados')
     // Datos de ejemplo si no hay API key configurada
     return {
       videos: [
@@ -14,7 +15,7 @@ async function getChannelVideos() {
           id: "ejemplo1",
           title: "El Poder de la Oración - Pastor Alfredo Dimiro",
           description: "Una enseñanza profunda sobre cómo la oración transforma nuestras vidas y nos conecta con Dios de manera íntima.",
-          thumbnail: "https://img.youtube.com/vi/ejemplo1/maxresdefault.jpg",
+          thumbnail: "/CONFE.jpg", // Usamos una imagen local para evitar errores
           publishedAt: "2024-01-15T10:00:00Z",
           duration: "PT45M30S",
           viewCount: "1234",
@@ -24,7 +25,7 @@ async function getChannelVideos() {
           id: "ejemplo2",
           title: "Invictos Kids - Historias Bíblicas",
           description: "Los niños aprenden sobre David y Goliat de una manera divertida e interactiva.",
-          thumbnail: "https://img.youtube.com/vi/ejemplo2/maxresdefault.jpg",
+          thumbnail: "/CONFE.jpg", // Usamos una imagen local para evitar errores
           publishedAt: "2024-01-10T19:30:00Z",
           duration: "PT25M15S",
           viewCount: "856",
@@ -44,10 +45,20 @@ async function getChannelVideos() {
     )
     
     if (!videosResponse.ok) {
+      console.error('Error en la respuesta de YouTube API:', await videosResponse.text())
       throw new Error('Error fetching videos from YouTube API')
     }
     
     const videosData = await videosResponse.json()
+    
+    // Verificar si hay resultados
+    if (!videosData.items || videosData.items.length === 0) {
+      console.warn('No se encontraron videos en el canal')
+      return {
+        videos: [],
+        liveStream: { isLive: false }
+      }
+    }
     
     // Obtener detalles adicionales de los videos (duración, vistas)
     const videoIds = videosData.items.map((item: Record<string, unknown>) => (item.id as Record<string, string>).videoId).join(',')
@@ -58,52 +69,106 @@ async function getChannelVideos() {
     const detailsData = await detailsResponse.json()
     
     // Combinar datos
-    const videos = videosData.items.map((item: Record<string, unknown>, index: number) => {
-      const details = detailsData.items[index]
+    const videos = videosData.items.map((item: { id: { videoId: string }, snippet: Record<string, unknown> }) => {
+      const videoId = item.id.videoId
+      
+      // Buscar los detalles correspondientes a este video
+      const details = detailsData.items?.find((detail: { id: string }) => detail.id === videoId)
+      
+      // Asegurarse de que tenemos todos los datos necesarios
+      if (!details) {
+        return {
+          id: videoId,
+          title: item.snippet.title,
+          description: item.snippet.description,
+          thumbnail: item.snippet.thumbnails.high?.url || '/CONFE.jpg',
+          publishedAt: item.snippet.publishedAt,
+          duration: 'PT0M0S',
+          viewCount: '0',
+          url: `https://youtube.com/watch?v=${videoId}`
+        }
+      }
+      
       return {
-        id: item.id.videoId,
+        id: videoId,
         title: item.snippet.title,
         description: item.snippet.description,
-        thumbnail: item.snippet.thumbnails.maxres?.url || item.snippet.thumbnails.high.url,
+        thumbnail: item.snippet.thumbnails.maxres?.url || item.snippet.thumbnails.high?.url || '/CONFE.jpg',
         publishedAt: item.snippet.publishedAt,
-        duration: details.contentDetails.duration,
-        viewCount: details.statistics.viewCount,
-        url: `https://youtube.com/watch?v=${item.id.videoId}`
+        duration: details.contentDetails?.duration || 'PT0M0S',
+        viewCount: details.statistics?.viewCount || '0',
+        url: `https://youtube.com/watch?v=${videoId}`
       }
     })
 
     // Verificar si hay stream en vivo
-    const liveResponse = await fetch(
-      `https://www.googleapis.com/youtube/v3/search?key=${YOUTUBE_API_KEY}&channelId=${CHANNEL_ID}&part=snippet&eventType=live&type=video&maxResults=1`
-    )
-    
-    const liveData = await liveResponse.json()
-    const isLive = liveData.items && liveData.items.length > 0
-    
-    let liveStream = { isLive: false }
-    
-    if (isLive) {
-      const liveVideo = liveData.items[0]
-      
-      // Obtener detalles del stream en vivo
-      const liveDetailsResponse = await fetch(
-        `https://www.googleapis.com/youtube/v3/videos?key=${YOUTUBE_API_KEY}&id=${liveVideo.id.videoId}&part=liveStreamingDetails,statistics`
+    try {
+      const liveResponse = await fetch(
+        `https://www.googleapis.com/youtube/v3/search?key=${YOUTUBE_API_KEY}&channelId=${CHANNEL_ID}&part=snippet&eventType=live&type=video&maxResults=1`
       )
       
-      const liveDetailsData = await liveDetailsResponse.json()
-      const liveDetails = liveDetailsData.items[0]
-      
-      liveStream = {
-        isLive: true,
-        title: liveVideo.snippet.title,
-        description: liveVideo.snippet.description,
-        thumbnail: liveVideo.snippet.thumbnails.maxres?.url || liveVideo.snippet.thumbnails.high.url,
-        url: `https://youtube.com/watch?v=${liveVideo.id.videoId}`,
-        viewerCount: liveDetails.liveStreamingDetails?.concurrentViewers || '0'
+      if (!liveResponse.ok) {
+        console.warn('Error al verificar stream en vivo:', await liveResponse.text())
+        return { videos, liveStream: { isLive: false } }
       }
+      
+      const liveData = await liveResponse.json()
+      const isLive = liveData.items && liveData.items.length > 0
+      
+      let liveStream = { isLive: false }
+      
+      if (isLive) {
+        const liveVideo = liveData.items[0]
+        const videoId = liveVideo.id.videoId
+        
+        try {
+          // Obtener detalles del stream en vivo
+          const liveDetailsResponse = await fetch(
+            `https://www.googleapis.com/youtube/v3/videos?key=${YOUTUBE_API_KEY}&id=${videoId}&part=liveStreamingDetails,statistics`
+          )
+          
+          if (liveDetailsResponse.ok) {
+            const liveDetailsData = await liveDetailsResponse.json()
+            const liveDetails = liveDetailsData.items[0]
+            
+            liveStream = {
+              isLive: true,
+              title: liveVideo.snippet.title,
+              description: liveVideo.snippet.description,
+              thumbnail: liveVideo.snippet.thumbnails.maxres?.url || liveVideo.snippet.thumbnails.high?.url || '/CONFE.jpg',
+              url: `https://youtube.com/watch?v=${videoId}`,
+              viewerCount: liveDetails.liveStreamingDetails?.concurrentViewers || '0'
+            }
+          } else {
+            // Si no podemos obtener los detalles, aún podemos mostrar el stream con información básica
+            liveStream = {
+              isLive: true,
+              title: liveVideo.snippet.title,
+              description: liveVideo.snippet.description,
+              thumbnail: liveVideo.snippet.thumbnails.high?.url || '/CONFE.jpg',
+              url: `https://youtube.com/watch?v=${videoId}`,
+              viewerCount: '0'
+            }
+          }
+        } catch (error) {
+          console.error('Error obteniendo detalles del stream en vivo:', error)
+          // Aún podemos mostrar el stream con información básica
+          liveStream = {
+            isLive: true,
+            title: liveVideo.snippet.title,
+            description: liveVideo.snippet.description,
+            thumbnail: liveVideo.snippet.thumbnails.high?.url || '/CONFE.jpg',
+            url: `https://youtube.com/watch?v=${videoId}`,
+            viewerCount: '0'
+          }
+        }
+      }
+      
+      return { videos, liveStream }
+    } catch (error) {
+      console.error('Error verificando stream en vivo:', error)
+      return { videos, liveStream: { isLive: false } }
     }
-
-    return { videos, liveStream }
 
   } catch {
     throw new Error('Error fetching YouTube data')
@@ -112,6 +177,8 @@ async function getChannelVideos() {
 
 // Función para formatear duración de YouTube (PT45M30S -> 45:30)
 function formatDuration(duration: string): string {
+  if (!duration || typeof duration !== 'string') return '0:00'
+  
   const match = duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/)
   if (!match) return '0:00'
   
@@ -144,7 +211,7 @@ export async function GET(request: NextRequest) {
     const formattedVideos = data.videos.map(video => ({
       ...video,
       duration: formatDuration(video.duration),
-      viewCount: parseInt(video.viewCount).toLocaleString()
+      viewCount: isNaN(parseInt(video.viewCount)) ? '0' : parseInt(video.viewCount).toLocaleString()
     }))
 
     return NextResponse.json({
