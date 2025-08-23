@@ -69,9 +69,11 @@ async function getChannelVideos() {
     const detailsData = await detailsResponse.json()
     
     // Combinar datos
-    const videos = videosData.items.map((item: any, index: number) => {
-      const details = detailsData.items[index]
+    const videos = videosData.items.map((item: { id: { videoId: string }, snippet: Record<string, unknown> }) => {
       const videoId = item.id.videoId
+      
+      // Buscar los detalles correspondientes a este video
+      const details = detailsData.items?.find((detail: { id: string }) => detail.id === videoId)
       
       // Asegurarse de que tenemos todos los datos necesarios
       if (!details) {
@@ -81,7 +83,7 @@ async function getChannelVideos() {
           description: item.snippet.description,
           thumbnail: item.snippet.thumbnails.high?.url || '/CONFE.jpg',
           publishedAt: item.snippet.publishedAt,
-          duration: 'N/A',
+          duration: 'PT0M0S',
           viewCount: '0',
           url: `https://youtube.com/watch?v=${videoId}`
         }
@@ -168,8 +170,6 @@ async function getChannelVideos() {
       return { videos, liveStream: { isLive: false } }
     }
 
-    return { videos, liveStream }
-
   } catch {
     throw new Error('Error fetching YouTube data')
   }
@@ -177,6 +177,8 @@ async function getChannelVideos() {
 
 // Función para formatear duración de YouTube (PT45M30S -> 45:30)
 function formatDuration(duration: string): string {
+  if (!duration || typeof duration !== 'string') return '0:00'
+  
   const match = duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/)
   if (!match) return '0:00'
   
@@ -209,7 +211,7 @@ export async function GET(request: NextRequest) {
     const formattedVideos = data.videos.map(video => ({
       ...video,
       duration: formatDuration(video.duration),
-      viewCount: parseInt(video.viewCount).toLocaleString()
+      viewCount: isNaN(parseInt(video.viewCount)) ? '0' : parseInt(video.viewCount).toLocaleString()
     }))
 
     return NextResponse.json({

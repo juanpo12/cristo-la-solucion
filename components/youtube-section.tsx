@@ -66,7 +66,6 @@ export function YouTubeSection() {
   const [liveStream, setLiveStream] = useState<LiveStream>({ isLive: false })
   const [videos, setVideos] = useState<YouTubeVideo[]>(initialVideos)
   const [selectedVideo, setSelectedVideo] = useState<YouTubeVideo | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
 
   // Función para verificar si hay stream en vivo
   const checkLiveStream = async () => {

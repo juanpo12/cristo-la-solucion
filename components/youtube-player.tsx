@@ -10,14 +10,18 @@ interface YouTubePlayerProps {
 
 declare global {
   interface Window {
-    YT: any
+    YT: {
+      Player: new (element: HTMLElement | string, options: Record<string, unknown>) => {
+        destroy: () => void
+      }
+    }
     onYouTubeIframeAPIReady: () => void
   }
 }
 
 export function YouTubePlayer({ videoId, autoplay = true, className = '' }: YouTubePlayerProps) {
   const playerRef = useRef<HTMLDivElement>(null)
-  const playerInstanceRef = useRef<any>(null)
+  const playerInstanceRef = useRef<{ destroy: () => void } | null>(null)
   
   // Extraer el ID del video si se proporciona una URL completa
   const extractedVideoId = videoId.includes('youtube.com') || videoId.includes('youtu.be') 
@@ -46,11 +50,11 @@ export function YouTubePlayer({ videoId, autoplay = true, className = '' }: YouT
           fs: 1, // Permitir pantalla completa
         },
         events: {
-          onReady: (event: any) => {
+          onReady: () => {
             // El reproductor está listo
             console.log('YouTube player ready')
           },
-          onError: (event: any) => {
+          onError: (event: { data: unknown }) => {
             console.error('YouTube player error:', event.data)
           },
         },
