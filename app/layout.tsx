@@ -3,8 +3,7 @@ import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
 import { Poppins } from 'next/font/google'
-import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
+import { LayoutWrapper } from "@/components/layout-wrapper"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -27,11 +26,9 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className={`${inter.className} ${poppins.variable}`}>
-        <Header />
-        <main className="pt-20">
+        <LayoutWrapper>
           {children}
-        </main>
-        <Footer />
+        </LayoutWrapper>
       </body>
     </html>
   )

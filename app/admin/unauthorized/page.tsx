@@ -1,0 +1,34 @@
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { AlertTriangle } from 'lucide-react'
+import Link from 'next/link'
+
+export default function Unauthorized() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <Card className="w-full max-w-md">
+        <CardHeader className="space-y-1 text-center">
+          <div className="mx-auto w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mb-4">
+            <AlertTriangle className="w-6 h-6 text-red-600" />
+          </div>
+          <CardTitle className="text-2xl font-bold text-red-600">
+            Acceso Denegado
+          </CardTitle>
+          <CardDescription>
+            No tienes permisos para acceder a esta sección
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="text-center">
+          <p className="text-gray-600 mb-6">
+            Necesitas permisos de administrador para acceder al panel de administración.
+          </p>
+          <Button asChild>
+            <Link href="/">
+              Volver al Inicio
+            </Link>
+          </Button>
+        </CardContent>
+      </Card>
+    </div>
+  )
+}

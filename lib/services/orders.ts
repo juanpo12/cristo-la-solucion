@@ -1,106 +1,16 @@
 import { db } from '@/lib/db'
 import { orders, orderItems, type NewOrder, type NewOrderItem } from '@/lib/db/schema'
-import { eq, desc, and, gte, lte, sql } from 'drizzle-orm'
-import { ProductService } from './products'
+import { eq, desc, asc, and, or, like, sql, gte, lte } from 'drizzle-orm'
 
 export class OrderService {
-  // Crear nueva orden
-  static async create(orderData: NewOrder, items: Array<{
-    productId: number
-    quantity: number
-    unitPrice: number
-  }>) {
-    return await db.transaction(async (tx) => {
-      // Crear la orden
-      const [newOrder] = await tx.insert(orders).values(orderData).returning()
-
-      // Crear los items de la orden
-      const orderItemsData: NewOrderItem[] = []
-      
-      for (const item of items) {
-        // Obtener información del producto
-        const product = await ProductService.getById(item.productId)
-        if (!product) {
-          throw new Error(`Producto con ID ${item.productId} no encontrado`)
-        }
-
-        // Verificar stock disponible
-        if (product.stock < item.quantity) {
-          throw new Error(`Stock insuficiente para ${product.name}. Disponible: ${product.stock}, Solicitado: ${item.quantity}`)
-        }
-
-        // Reducir stock del producto
-        await ProductService.reduceStock(item.productId, item.quantity)
-
-        // Preparar item de orden
-        orderItemsData.push({
-          orderId: newOrder.id,
-          productId: item.productId,
-          quantity: item.quantity,
-          unitPrice: item.unitPrice.toString(),
-          totalPrice: (item.unitPrice * item.quantity).toString(),
-          productName: product.name,
-          productAuthor: product.author,
-        })
-      }
-
-      // Insertar items de la orden
-      await tx.insert(orderItems).values(orderItemsData)
-
-      return newOrder
-    })
-  }
-
-  // Obtener orden por ID
-  static async getById(id: number) {
-    const result = await db
-      .select()
-      .from(orders)
-      .where(eq(orders.id, id))
-      .limit(1)
-
-    if (!result[0]) return null
-
-    // Obtener items de la orden
-    const items = await db
-      .select()
-      .from(orderItems)
-      .where(eq(orderItems.orderId, id))
-
-    return {
-      ...result[0],
-      items
-    }
-  }
-
-  // Obtener orden por referencia externa (Mercado Pago)
-  static async getByExternalReference(externalReference: string) {
-    const result = await db
-      .select()
-      .from(orders)
-      .where(eq(orders.externalReference, externalReference))
-      .limit(1)
-
-    if (!result[0]) return null
-
-    // Obtener items de la orden
-    const items = await db
-      .select()
-      .from(orderItems)
-      .where(eq(orderItems.orderId, result[0].id))
-
-    return {
-      ...result[0],
-      items
-    }
-  }
-
   // Obtener todas las órdenes con filtros
   static async getAll(filters?: {
     status?: string
+    search?: string
     dateFrom?: Date
     dateTo?: Date
-    payerEmail?: string
+    sortBy?: 'createdAt' | 'total' | 'status'
+    sortOrder?: 'asc' | 'desc'
     limit?: number
     offset?: number
   }) {
@@ -109,28 +19,51 @@ export class OrderService {
     // Aplicar filtros
     const conditions = []
     
-    if (filters?.status) {
+    if (filters?.status && filters.status !== 'all') {
       conditions.push(eq(orders.status, filters.status))
     }
     
+    if (filters?.search) {
+      conditions.push(
+        or(
+          like(orders.externalReference, `%${filters.search}%`),
+          like(orders.payerEmail, `%${filters.search}%`),
+          like(orders.payerName, `%${filters.search}%`)
+        )
+      )
+    }
+
     if (filters?.dateFrom) {
       conditions.push(gte(orders.createdAt, filters.dateFrom))
     }
-    
+
     if (filters?.dateTo) {
       conditions.push(lte(orders.createdAt, filters.dateTo))
-    }
-    
-    if (filters?.payerEmail) {
-      conditions.push(eq(orders.payerEmail, filters.payerEmail))
     }
 
     if (conditions.length > 0) {
       query = query.where(and(...conditions))
     }
 
-    // Ordenar por fecha de creación (más recientes primero)
-    query = query.orderBy(desc(orders.createdAt))
+    // Aplicar ordenamiento
+    if (filters?.sortBy) {
+      let column
+      switch (filters.sortBy) {
+        case 'total':
+          column = orders.total
+          break
+        case 'status':
+          column = orders.status
+          break
+        case 'createdAt':
+        default:
+          column = orders.createdAt
+      }
+      const order = filters.sortOrder === 'asc' ? asc(column) : desc(column)
+      query = query.orderBy(order)
+    } else {
+      query = query.orderBy(desc(orders.createdAt))
+    }
 
     // Aplicar paginación
     if (filters?.limit) {
@@ -144,25 +77,69 @@ export class OrderService {
     return await query
   }
 
-  // Actualizar estado de orden
-  static async updateStatus(id: number, status: string, paymentData?: {
-    mercadoPagoId?: string
-    paymentMethod?: string
-    paymentType?: string
-    transactionAmount?: number
-    netReceivedAmount?: number
-    totalPaidAmount?: number
-    feeDetails?: Record<string, unknown>
-    dateApproved?: Date
-  }) {
-    const updateData: Record<string, unknown> = {
-      status,
-      lastModified: new Date(),
-      updatedAt: new Date(),
-    }
+  // Obtener orden por ID con items
+  static async getById(id: number) {
+    const order = await db.select().from(orders).where(eq(orders.id, id)).limit(1)
+    if (!order[0]) return null
 
-    if (paymentData) {
-      Object.assign(updateData, paymentData)
+    const items = await db
+      .select()
+      .from(orderItems)
+      .where(eq(orderItems.orderId, id))
+
+    return {
+      ...order[0],
+      items
+    }
+  }
+
+  // Obtener orden por referencia externa
+  static async getByExternalReference(externalReference: string) {
+    const order = await db
+      .select()
+      .from(orders)
+      .where(eq(orders.externalReference, externalReference))
+      .limit(1)
+
+    if (!order[0]) return null
+
+    const items = await db
+      .select()
+      .from(orderItems)
+      .where(eq(orderItems.orderId, order[0].id))
+
+    return {
+      ...order[0],
+      items
+    }
+  }
+
+  // Crear orden
+  static async create(orderData: NewOrder, items: NewOrderItem[]) {
+    const result = await db.transaction(async (tx) => {
+      // Crear la orden
+      const [order] = await tx.insert(orders).values(orderData).returning()
+      
+      // Crear los items de la orden
+      const orderItemsData = items.map(item => ({
+        ...item,
+        orderId: order.id
+      }))
+      
+      await tx.insert(orderItems).values(orderItemsData)
+      
+      return order
+    })
+
+    return result
+  }
+
+  // Actualizar estado de orden
+  static async updateStatus(id: number, status: string, additionalData?: Partial<NewOrder>) {
+    const updateData = {
+      status,
+      updatedAt: new Date(),
+      ...additionalData
     }
 
     const result = await db
@@ -174,25 +151,11 @@ export class OrderService {
     return result[0] || null
   }
 
-  // Actualizar orden por referencia externa
-  static async updateByExternalReference(externalReference: string, status: string, paymentData?: Record<string, unknown>) {
-    const updateData: Record<string, unknown> = {
-      status,
-      lastModified: new Date(),
-      updatedAt: new Date(),
-    }
-
-    if (paymentData) {
-      Object.assign(updateData, paymentData)
-    }
-
-    const result = await db
-      .update(orders)
-      .set(updateData)
-      .where(eq(orders.externalReference, externalReference))
-      .returning()
-
-    return result[0] || null
+  // Marcar orden como entregada
+  static async markAsDelivered(id: number) {
+    return this.updateStatus(id, 'delivered', {
+      dateApproved: new Date()
+    })
   }
 
   // Obtener estadísticas de órdenes
@@ -209,58 +172,47 @@ export class OrderService {
 
     const whereClause = conditions.length > 0 ? and(...conditions) : undefined
 
-    // Total de órdenes
     const totalOrders = await db
       .select({ count: sql<number>`count(*)` })
       .from(orders)
       .where(whereClause)
 
-    // Órdenes por estado
-    const ordersByStatus = await db
-      .select({
-        status: orders.status,
-        count: sql<number>`count(*)`,
-        total: sql<number>`sum(${orders.total}::numeric)`
-      })
+    const pendingOrders = await db
+      .select({ count: sql<number>`count(*)` })
       .from(orders)
-      .where(whereClause)
-      .groupBy(orders.status)
+      .where(and(eq(orders.status, 'pending'), ...(conditions || [])))
 
-    // Ingresos totales
+    const approvedOrders = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(orders)
+      .where(and(eq(orders.status, 'approved'), ...(conditions || [])))
+
+    const deliveredOrders = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(orders)
+      .where(and(eq(orders.status, 'delivered'), ...(conditions || [])))
+
     const totalRevenue = await db
       .select({ 
         total: sql<number>`sum(${orders.total}::numeric)` 
       })
       .from(orders)
-      .where(
-        whereClause 
-          ? and(whereClause, eq(orders.status, 'approved'))
-          : eq(orders.status, 'approved')
-      )
+      .where(and(eq(orders.status, 'approved'), ...(conditions || [])))
 
-    // Orden promedio
-    const averageOrder = await db
+    const averageOrderValue = await db
       .select({ 
-        average: sql<number>`avg(${orders.total}::numeric)` 
+        avg: sql<number>`avg(${orders.total}::numeric)` 
       })
       .from(orders)
-      .where(
-        whereClause 
-          ? and(whereClause, eq(orders.status, 'approved'))
-          : eq(orders.status, 'approved')
-      )
+      .where(and(eq(orders.status, 'approved'), ...(conditions || [])))
 
     return {
       totalOrders: totalOrders[0]?.count || 0,
-      ordersByStatus: ordersByStatus.reduce((acc, item) => {
-        acc[item.status] = {
-          count: item.count,
-          total: item.total || 0
-        }
-        return acc
-      }, {} as Record<string, { count: number; total: number }>),
+      pendingOrders: pendingOrders[0]?.count || 0,
+      approvedOrders: approvedOrders[0]?.count || 0,
+      deliveredOrders: deliveredOrders[0]?.count || 0,
       totalRevenue: totalRevenue[0]?.total || 0,
-      averageOrderValue: averageOrder[0]?.average || 0,
+      averageOrderValue: averageOrderValue[0]?.avg || 0,
     }
   }
 
@@ -273,8 +225,8 @@ export class OrderService {
       .limit(limit)
   }
 
-  // Obtener top productos vendidos
-  static async getTopProducts(limit = 10, dateFrom?: Date, dateTo?: Date) {
+  // Obtener productos más vendidos
+  static async getTopSellingProducts(limit = 10, dateFrom?: Date, dateTo?: Date) {
     let query = db
       .select({
         productId: orderItems.productId,
@@ -306,38 +258,5 @@ export class OrderService {
     }
 
     return await query
-  }
-
-  // Cancelar orden
-  static async cancel(id: number) {
-    return await db.transaction(async (tx) => {
-      // Obtener la orden con sus items
-      const order = await OrderService.getById(id)
-      if (!order) {
-        throw new Error('Orden no encontrada')
-      }
-
-      if (order.status === 'cancelled') {
-        throw new Error('La orden ya está cancelada')
-      }
-
-      // Restaurar stock de los productos
-      for (const item of order.items) {
-        await ProductService.updateStock(item.productId, item.quantity)
-      }
-
-      // Actualizar estado de la orden
-      const result = await tx
-        .update(orders)
-        .set({
-          status: 'cancelled',
-          lastModified: new Date(),
-          updatedAt: new Date(),
-        })
-        .where(eq(orders.id, id))
-        .returning()
-
-      return result[0]
-    })
   }
 }

@@ -88,37 +88,6 @@ export default function FailurePage() {
             </Button>
           </div>
 
-          {/* Ayuda y soporte */}
-          <Card className="border-0 shadow-lg">
-            <CardContent className="p-6">
-              <div className="flex items-center mb-4">
-                <HelpCircle className="w-6 h-6 text-blue-600 mr-2" />
-                <h3 className="font-bold text-lg">¿Necesitas ayuda?</h3>
-              </div>
-              <p className="text-gray-600 mb-4">
-                Si el problema persiste, puedes contactarnos y te ayudaremos a
-                completar tu compra:
-              </p>
-              <div className="space-y-2 text-sm">
-                <p>
-                  <strong>Email:</strong> tienda@cristolasolucion.com
-                </p>
-                <p>
-                  <strong>WhatsApp:</strong> +54 9 11 1234-5678
-                </p>
-                <p>
-                  <strong>Horarios:</strong> Lunes a Viernes 9:00 - 18:00
-                </p>
-              </div>
-
-              <div className="mt-4 p-3 bg-blue-50 rounded-lg">
-                <p className="text-sm text-blue-700">
-                  <strong>Tip:</strong> También puedes realizar tu compra
-                  directamente en la iglesia los domingos después del servicio.
-                </p>
-              </div>
-            </CardContent>
-          </Card>
         </div>
       </div>
     </div>

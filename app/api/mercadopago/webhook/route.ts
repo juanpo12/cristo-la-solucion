@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
             // Si el pago fue aprobado, reducir stock de productos
             if (paymentInfo.status === 'approved' && existingOrder.items) {
               try {
-                const items = existingOrder.items as any[]
+                const items = existingOrder.items as Array<{ name: string; quantity: number; id: number }>
                 for (const item of items) {
                   // Aquí podrías reducir el stock si tienes esa funcionalidad
                   console.log(`📦 Product sold: ${item.name} x${item.quantity}`)

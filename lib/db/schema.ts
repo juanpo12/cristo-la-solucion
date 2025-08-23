@@ -11,7 +11,7 @@ export const products = pgTable('products', {
   price: decimal('price', { precision: 10, scale: 2 }).notNull(),
   originalPrice: decimal('original_price', { precision: 10, scale: 2 }),
   category: varchar('category', { length: 100 }).notNull().default('books'),
-  image: varchar('image', { length: 500 }),
+  image: text('image'),
   featured: boolean('featured').default(false),
   active: boolean('active').default(true),
   stock: integer('stock').default(0),
@@ -72,6 +72,19 @@ export const categories = pgTable('categories', {
   updatedAt: timestamp('updated_at').defaultNow(),
 })
 
+// Tabla de usuarios administradores
+export const adminUsers = pgTable('admin_users', {
+  id: serial('id').primaryKey(),
+  username: varchar('username', { length: 100 }).notNull().unique(),
+  email: varchar('email', { length: 255 }).notNull().unique(),
+  passwordHash: varchar('password_hash', { length: 255 }).notNull(),
+  role: varchar('role', { length: 50 }).notNull().default('admin'), // admin, superadmin
+  active: boolean('active').default(true),
+  lastLogin: timestamp('last_login'),
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
+})
+
 // Tabla de configuración de la tienda
 export const storeConfig = pgTable('store_config', {
   id: serial('id').primaryKey(),
@@ -110,6 +123,12 @@ export const selectOrderSchema = createSelectSchema(orders)
 export const insertCategorySchema = createInsertSchema(categories)
 export const selectCategorySchema = createSelectSchema(categories)
 
+export const insertAdminUserSchema = createInsertSchema(adminUsers, {
+  email: z.string().email(),
+  username: z.string().min(3).max(100),
+})
+export const selectAdminUserSchema = createSelectSchema(adminUsers)
+
 export const insertStoreConfigSchema = createInsertSchema(storeConfig)
 export const selectStoreConfigSchema = createSelectSchema(storeConfig)
 
@@ -124,3 +143,5 @@ export type Category = typeof categories.$inferSelect
 export type NewCategory = typeof categories.$inferInsert
 export type StoreConfig = typeof storeConfig.$inferSelect
 export type NewStoreConfig = typeof storeConfig.$inferInsert
+export type AdminUser = typeof adminUsers.$inferSelect
+export type NewAdminUser = typeof adminUsers.$inferInsert
