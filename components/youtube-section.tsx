@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Play, ExternalLink, Calendar, Eye, Radio } from "lucide-react"
 import Link from "next/link"
+import { YouTubePlayer } from "./youtube-player"
 
 // Tipos para los videos de YouTube
 interface YouTubeVideo {
@@ -27,8 +28,8 @@ interface LiveStream {
   viewerCount?: string
 }
 
-// Videos de ejemplo (en producción estos vendrían de la API de YouTube)
-const sampleVideos: YouTubeVideo[] = [
+// Videos iniciales (se reemplazarán con datos de la API)
+const initialVideos: YouTubeVideo[] = [
   {
     id: "1",
     title: "El Poder de la Oración - Pastor Alfredo Dimiro",
@@ -63,36 +64,52 @@ const sampleVideos: YouTubeVideo[] = [
 
 export function YouTubeSection() {
   const [liveStream, setLiveStream] = useState<LiveStream>({ isLive: false })
-  const [videos] = useState<YouTubeVideo[]>(sampleVideos)
+  const [videos, setVideos] = useState<YouTubeVideo[]>(initialVideos)
   const [selectedVideo, setSelectedVideo] = useState<YouTubeVideo | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
 
   // Función para verificar si hay stream en vivo
   const checkLiveStream = async () => {
     try {
-      // En producción, esto haría una llamada a la API de YouTube
-      // Por ahora, simulamos el estado del stream
-      const isCurrentlyLive = Math.random() > 0.7 // 30% de probabilidad de estar en vivo para demo
-      
-      if (isCurrentlyLive) {
-        setLiveStream({
-          isLive: true,
-          title: "🔴 CULTO EN VIVO - Cristo La Solución",
-          description: "Únete a nosotros en este momento especial de adoración y enseñanza de la Palabra de Dios.",
-          thumbnail: "/CONFE.jpg",
-          url: "https://youtube.com/watch?v=live-stream",
-          viewerCount: "127"
-        })
+      // Llamada a la API de YouTube
+      const response = await fetch('/api/youtube?action=live-status')
+      if (response.ok) {
+        const data = await response.json()
+        setLiveStream(data.liveStream)
       } else {
         setLiveStream({ isLive: false })
       }
     } catch (error) {
       console.error('Error verificando stream en vivo:', error)
+      setLiveStream({ isLive: false })
     }
   }
 
-  // Verificar stream en vivo al cargar y cada 2 minutos
+  // Cargar videos y verificar stream en vivo al cargar
   useEffect(() => {
-    checkLiveStream()
+    const loadVideos = async () => {
+      setIsLoading(true)
+      try {
+        const response = await fetch('/api/youtube')
+        if (response.ok) {
+          const data = await response.json()
+          if (data.videos && data.videos.length > 0) {
+            setVideos(data.videos)
+          }
+          if (data.liveStream) {
+            setLiveStream(data.liveStream)
+          }
+        }
+      } catch (error) {
+        console.error('Error cargando videos:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    loadVideos()
+    
+    // Verificar stream en vivo cada 2 minutos
     const interval = setInterval(checkLiveStream, 120000) // 2 minutos
     return () => clearInterval(interval)
   }, [])
@@ -152,31 +169,44 @@ export function YouTubeSection() {
                     className="absolute inset-0 bg-cover bg-center"
                     style={{ backgroundImage: `url('${liveStream.thumbnail}')` }}
                   />
-                  <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
-                    <Link 
-                      href={liveStream.url || '#'}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="bg-red-600 hover:bg-red-700 text-white p-4 rounded-full transition-all duration-300 transform hover:scale-110"
-                    >
+                  <div 
+                    className="absolute inset-0 bg-black/30 flex items-center justify-center cursor-pointer"
+                    onClick={() => setSelectedVideo({
+                      id: liveStream.url?.split('v=')[1] || 'live',
+                      title: liveStream.title || '🔴 EN VIVO',
+                      description: liveStream.description || 'Transmisión en vivo',
+                      thumbnail: liveStream.thumbnail || '',
+                      publishedAt: new Date().toISOString(),
+                      duration: 'EN VIVO',
+                      viewCount: liveStream.viewerCount || '0',
+                      url: liveStream.url || ''
+                    })}
+                  >
+                    <div className="bg-red-600 hover:bg-red-700 text-white p-4 rounded-full transition-all duration-300 transform hover:scale-110">
                       <Play className="w-8 h-8 fill-current" />
-                    </Link>
+                    </div>
                   </div>
                 </div>
                 
                 <CardContent className="p-8 flex flex-col justify-center">
                   <h3 className="text-2xl font-bold church-text mb-4">{liveStream.title}</h3>
                   <p className="church-text-muted mb-6 leading-relaxed">{liveStream.description}</p>
-                  <Link 
-                    href={liveStream.url || '#'}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <Button 
+                    className="bg-red-600 hover:bg-red-700 text-white"
+                    onClick={() => setSelectedVideo({
+                      id: liveStream.url?.split('v=')[1] || 'live',
+                      title: liveStream.title || '🔴 EN VIVO',
+                      description: liveStream.description || 'Transmisión en vivo',
+                      thumbnail: liveStream.thumbnail || '',
+                      publishedAt: new Date().toISOString(),
+                      duration: 'EN VIVO',
+                      viewCount: liveStream.viewerCount || '0',
+                      url: liveStream.url || ''
+                    })}
                   >
-                    <Button className="bg-red-600 hover:bg-red-700 text-white">
-                      <Play className="w-5 h-5 mr-2" />
-                      Ver Transmisión en Vivo
-                    </Button>
-                  </Link>
+                    <Play className="w-5 h-5 mr-2" />
+                    Ver Transmisión en Vivo
+                  </Button>
                 </CardContent>
               </div>
             </Card>
@@ -204,7 +234,10 @@ export function YouTubeSection() {
               <Card 
                 key={video.id} 
                 className="church-card overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:scale-105 cursor-pointer"
-                onClick={() => setSelectedVideo(video)}
+                onClick={() => {
+                  console.log('Video seleccionado:', video);
+                  setSelectedVideo(video);
+                }}
               >
                 <div className="relative aspect-video">
                   <div 
@@ -251,11 +284,15 @@ export function YouTubeSection() {
         {selectedVideo && (
           <div 
             className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
-            onClick={() => setSelectedVideo(null)}
+            onClick={(e) => {
+              // Solo cerrar si se hace clic fuera del contenido del modal
+              if (e.target === e.currentTarget) {
+                setSelectedVideo(null);
+              }
+            }}
           >
             <div 
               className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
-              onClick={(e) => e.stopPropagation()}
             >
               <div className="p-6">
                 <div className="flex items-center justify-between mb-4">
@@ -269,23 +306,27 @@ export function YouTubeSection() {
                   </Button>
                 </div>
                 
-                <div className="aspect-video bg-gray-100 rounded-lg mb-4 flex items-center justify-center">
-                  <div className="text-center">
-                    <Play className="w-16 h-16 text-church-electric-600 mx-auto mb-4" />
-                    <p className="church-text-muted mb-4">
-                      Haz clic para ver el video en YouTube
-                    </p>
-                    <Link 
-                      href={selectedVideo.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <Button className="church-button-primary">
-                        <ExternalLink className="w-4 h-4 mr-2" />
-                        Ver en YouTube
-                      </Button>
-                    </Link>
+                <div className="aspect-video bg-gray-100 rounded-lg mb-4">
+                  {/* Reproductor de YouTube */}
+                  <div key={selectedVideo.id}>
+                    <YouTubePlayer 
+                      videoId={selectedVideo.url || selectedVideo.id} 
+                      className="rounded-lg overflow-hidden"
+                      autoplay={true}
+                    />
                   </div>
+                </div>
+                <div className="flex justify-end mb-4">
+                  <Link 
+                    href={selectedVideo.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Button variant="outline" size="sm" className="flex items-center">
+                      <ExternalLink className="w-4 h-4 mr-2" />
+                      Ver en YouTube
+                    </Button>
+                  </Link>
                 </div>
                 
                 <h4 className="text-xl font-bold church-text mb-2">{selectedVideo.title}</h4>
