@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createPreference, type CreatePreferenceData } from '@/lib/mercadopago'
-import { OrderService } from '@/lib/services/orders'
+import { db } from '@/lib/db'
+import { orders } from '@/lib/db/schema'
 
 export async function POST(request: NextRequest) {
   try {
@@ -38,23 +39,21 @@ export async function POST(request: NextRequest) {
 
     // Crear la orden en la base de datos
     const orderData = {
-      customerName: body.customerInfo?.name || body.payer?.name || 'Cliente',
-      customerEmail: body.customerInfo?.email || body.payer?.email || '',
-      customerPhone: body.customerInfo?.phone || body.payer?.phone?.number || '',
-      total: totalAmount.toString(),
-      status: 'pending',
-      mercadopagoPreferenceId: preference.id,
       externalReference: preference.external_reference || `order_${Date.now()}`,
+      status: 'pending',
+      total: totalAmount.toString(),
+      currency: 'ARS',
+      payerEmail: body.customerInfo?.email || body.payer?.email || '',
+      payerName: body.customerInfo?.name || body.payer?.name || 'Cliente',
+      payerSurname: body.payer?.surname || '',
+      payerPhone: body.customerInfo?.phone || body.payer?.phone?.number || '',
+      items: body.items, // Guardar los items como JSON
+      mercadoPagoId: null, // Se actualizará cuando se procese el pago
     }
 
-    const orderItems = body.items.map(item => ({
-      productId: item.id,
-      quantity: item.quantity,
-      unitPrice: item.price,
-    }))
-
     try {
-      const order = await OrderService.create(orderData, orderItems)
+      // Usar inserción directa en lugar del servicio complejo
+      const [order] = await db.insert(orders).values(orderData).returning()
       console.log('Order created successfully:', order.id)
     } catch (orderError) {
       console.error('Error creating order in database:', orderError)

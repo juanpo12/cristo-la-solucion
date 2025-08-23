@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { MercadoPagoConfig, Payment } from 'mercadopago'
-import { OrderService } from '@/lib/services/orders'
+import { db } from '@/lib/db'
+import { orders } from '@/lib/db/schema'
+import { eq } from 'drizzle-orm'
 
 const client = new MercadoPagoConfig({
   accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN!,
@@ -30,35 +32,53 @@ export async function POST(request: NextRequest) {
       })
       
       // Buscar si ya existe una orden con esta referencia externa
-      const existingOrder = paymentInfo.external_reference 
-        ? await OrderService.getByExternalReference(paymentInfo.external_reference)
-        : null
-      
-      if (existingOrder) {
-        // Actualizar orden existente
-        await OrderService.updateByExternalReference(
-          paymentInfo.external_reference!,
-          paymentInfo.status || 'pending',
-          {
-            mercadoPagoId: paymentInfo.id?.toString(),
-            paymentMethod: paymentInfo.payment_method_id,
-            paymentType: paymentInfo.payment_type_id,
-            transactionAmount: paymentInfo.transaction_amount,
-            netReceivedAmount: paymentInfo.transaction_details?.net_received_amount,
-            totalPaidAmount: paymentInfo.transaction_details?.total_paid_amount,
-            dateApproved: paymentInfo.date_approved ? new Date(paymentInfo.date_approved) : undefined,
-          }
-        )
-        console.log('Order updated:', existingOrder.id)
-      } else if (paymentInfo.status === 'approved' && paymentInfo.external_reference) {
-        // Crear nueva orden si el pago fue aprobado y no existe la orden
+      if (paymentInfo.external_reference) {
         try {
-          // Aquí necesitarías obtener los items del carrito de alguna manera
-          // Por ahora, registramos que necesitamos implementar esto
-          console.log('Need to create new order for external_reference:', paymentInfo.external_reference)
-          console.log('Payment approved but no existing order found')
-        } catch (error) {
-          console.error('Error creating order:', error)
+          const [existingOrder] = await db
+            .select()
+            .from(orders)
+            .where(eq(orders.externalReference, paymentInfo.external_reference))
+            .limit(1)
+          
+          if (existingOrder) {
+            // Actualizar orden existente
+            const updateData = {
+              status: paymentInfo.status || 'pending',
+              mercadoPagoId: paymentInfo.id?.toString(),
+              paymentMethod: paymentInfo.payment_method_id,
+              paymentType: paymentInfo.payment_type_id,
+              transactionAmount: paymentInfo.transaction_amount?.toString(),
+              netReceivedAmount: paymentInfo.transaction_details?.net_received_amount?.toString(),
+              totalPaidAmount: paymentInfo.transaction_details?.total_paid_amount?.toString(),
+              dateApproved: paymentInfo.date_approved ? new Date(paymentInfo.date_approved) : null,
+              lastModified: new Date(),
+              updatedAt: new Date(),
+            }
+
+            await db
+              .update(orders)
+              .set(updateData)
+              .where(eq(orders.externalReference, paymentInfo.external_reference))
+
+            console.log('✅ Order updated successfully:', existingOrder.id)
+            
+            // Si el pago fue aprobado, reducir stock de productos
+            if (paymentInfo.status === 'approved' && existingOrder.items) {
+              try {
+                const items = existingOrder.items as any[]
+                for (const item of items) {
+                  // Aquí podrías reducir el stock si tienes esa funcionalidad
+                  console.log(`📦 Product sold: ${item.name} x${item.quantity}`)
+                }
+              } catch (stockError) {
+                console.error('Error updating stock:', stockError)
+              }
+            }
+          } else {
+            console.log('⚠️ Order not found for external_reference:', paymentInfo.external_reference)
+          }
+        } catch (dbError) {
+          console.error('❌ Database error in webhook:', dbError)
         }
       }
       
