@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input"
 import { useCart } from "@/lib/hooks/use-cart"
 import { useFavorites } from "@/lib/hooks/use-favorites"
 import { useShare } from "@/lib/hooks/use-share"
-import { MercadoPagoStatus } from "@/components/mercadopago-status"
+// import { MercadoPagoStatus } from "@/components/mercadopago-status"
 import type { Product } from "@/lib/db/schema"
 import Image from "next/image"
 
@@ -192,8 +192,8 @@ export default function TiendaPage() {
           </p>
         </div>
 
-        {/* Estado de Mercado Pago */}
-        <MercadoPagoStatus />
+        {/* Estado de Mercado Pago
+        <MercadoPagoStatus /> */}
 
         {/* Barra de búsqueda y filtros */}
         <div className="flex flex-col lg:flex-row gap-6 mb-12">

@@ -78,10 +78,7 @@ export default function SuccessPage() {
               <div className="bg-blue-50 rounded-lg p-4">
                 <h3 className="font-semibold text-blue-800 mb-2">¿Qué sigue?</h3>
                 <ul className="text-sm text-blue-700 space-y-1 text-left">
-                  <li>• Recibirás un email de confirmación</li>
-                  <li>• Te contactaremos para coordinar la entrega</li>
                   <li>• Los libros físicos se entregan en la iglesia</li>
-                  <li>• Tiempo estimado: 2-3 días hábiles</li>
                 </ul>
               </div>
             </CardContent>
@@ -102,21 +99,6 @@ export default function SuccessPage() {
               </Link>
             </Button>
           </div>
-
-          {/* Información de contacto */}
-          <Card className="mt-8 border-0 shadow-lg">
-            <CardContent className="p-6">
-              <h3 className="font-bold text-lg mb-4">¿Necesitas ayuda?</h3>
-              <p className="text-gray-600 mb-4">
-                Si tienes alguna pregunta sobre tu pedido, no dudes en contactarnos:
-              </p>
-              <div className="space-y-2 text-sm">
-                <p><strong>Email:</strong> tienda@cristolasolucion.com</p>
-                <p><strong>WhatsApp:</strong> +54 9 11 1234-5678</p>
-                <p><strong>Horarios:</strong> Lunes a Viernes 9:00 - 18:00</p>
-              </div>
-            </CardContent>
-          </Card>
         </div>
       </div>
     </div>

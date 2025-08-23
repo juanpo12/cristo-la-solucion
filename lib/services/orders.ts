@@ -1,6 +1,6 @@
 import { db } from '@/lib/db'
-import { orders, orderItems, products, type Order, type NewOrder, type NewOrderItem } from '@/lib/db/schema'
-import { eq, desc, and, gte, lte, sql, between } from 'drizzle-orm'
+import { orders, orderItems, type NewOrder, type NewOrderItem } from '@/lib/db/schema'
+import { eq, desc, and, gte, lte, sql } from 'drizzle-orm'
 import { ProductService } from './products'
 
 export class OrderService {
@@ -152,10 +152,10 @@ export class OrderService {
     transactionAmount?: number
     netReceivedAmount?: number
     totalPaidAmount?: number
-    feeDetails?: any
+    feeDetails?: Record<string, unknown>
     dateApproved?: Date
   }) {
-    const updateData: any = {
+    const updateData: Record<string, unknown> = {
       status,
       lastModified: new Date(),
       updatedAt: new Date(),
@@ -175,8 +175,8 @@ export class OrderService {
   }
 
   // Actualizar orden por referencia externa
-  static async updateByExternalReference(externalReference: string, status: string, paymentData?: any) {
-    const updateData: any = {
+  static async updateByExternalReference(externalReference: string, status: string, paymentData?: Record<string, unknown>) {
+    const updateData: Record<string, unknown> = {
       status,
       lastModified: new Date(),
       updatedAt: new Date(),
@@ -309,7 +309,7 @@ export class OrderService {
   }
 
   // Cancelar orden
-  static async cancel(id: number, reason?: string) {
+  static async cancel(id: number) {
     return await db.transaction(async (tx) => {
       // Obtener la orden con sus items
       const order = await OrderService.getById(id)
