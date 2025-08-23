@@ -1,27 +1,33 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { useSearchParams } from "next/navigation"
-import { XCircle, RefreshCw, Home, HelpCircle } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import Link from "next/link"
+import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { XCircle, RefreshCw, Home, HelpCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import Link from "next/link";
+
+interface PaymentData {
+  paymentId: string | null;
+  status: string | null;
+  externalReference: string | null;
+}
 
 export default function FailurePage() {
-  const searchParams = useSearchParams()
-  const [paymentData, setPaymentData] = useState<any>(null)
+  const searchParams = useSearchParams();
+  const [paymentData, setPaymentData] = useState<PaymentData | null>(null);
 
   useEffect(() => {
-    const paymentId = searchParams.get('payment_id')
-    const status = searchParams.get('status')
-    const externalReference = searchParams.get('external_reference')
+    const paymentId = searchParams.get("payment_id");
+    const status = searchParams.get("status");
+    const externalReference = searchParams.get("external_reference");
 
     setPaymentData({
       paymentId,
       status,
-      externalReference
-    })
-  }, [searchParams])
+      externalReference,
+    });
+  }, [searchParams]);
 
   return (
     <div className="min-h-screen bg-gray-50 pt-20">
@@ -33,7 +39,7 @@ export default function FailurePage() {
               <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto">
                 <XCircle className="w-12 h-12 text-red-600" />
               </div>
-              
+
               <div>
                 <h1 className="text-3xl font-bold text-red-600 mb-2">
                   Pago No Procesado
@@ -44,7 +50,9 @@ export default function FailurePage() {
               </div>
 
               <div className="bg-red-50 rounded-lg p-4">
-                <h3 className="font-semibold text-red-800 mb-2">Posibles causas:</h3>
+                <h3 className="font-semibold text-red-800 mb-2">
+                  Posibles causas:
+                </h3>
                 <ul className="text-sm text-red-700 space-y-1 text-left">
                   <li>• Fondos insuficientes en la tarjeta</li>
                   <li>• Datos de la tarjeta incorrectos</li>
@@ -88,18 +96,25 @@ export default function FailurePage() {
                 <h3 className="font-bold text-lg">¿Necesitas ayuda?</h3>
               </div>
               <p className="text-gray-600 mb-4">
-                Si el problema persiste, puedes contactarnos y te ayudaremos a completar tu compra:
+                Si el problema persiste, puedes contactarnos y te ayudaremos a
+                completar tu compra:
               </p>
               <div className="space-y-2 text-sm">
-                <p><strong>Email:</strong> tienda@cristolasolucion.com</p>
-                <p><strong>WhatsApp:</strong> +54 9 11 1234-5678</p>
-                <p><strong>Horarios:</strong> Lunes a Viernes 9:00 - 18:00</p>
+                <p>
+                  <strong>Email:</strong> tienda@cristolasolucion.com
+                </p>
+                <p>
+                  <strong>WhatsApp:</strong> +54 9 11 1234-5678
+                </p>
+                <p>
+                  <strong>Horarios:</strong> Lunes a Viernes 9:00 - 18:00
+                </p>
               </div>
-              
+
               <div className="mt-4 p-3 bg-blue-50 rounded-lg">
                 <p className="text-sm text-blue-700">
-                  <strong>Tip:</strong> También puedes realizar tu compra directamente en la iglesia 
-                  los domingos después del servicio.
+                  <strong>Tip:</strong> También puedes realizar tu compra
+                  directamente en la iglesia los domingos después del servicio.
                 </p>
               </div>
             </CardContent>
@@ -107,5 +122,5 @@ export default function FailurePage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

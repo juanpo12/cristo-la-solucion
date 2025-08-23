@@ -32,12 +32,12 @@ export async function POST(request: NextRequest) {
       init_point: preference.init_point,
       sandbox_init_point: preference.sandbox_init_point
     })
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error creating preference:', error)
     
     // Proporcionar más detalles del error
-    const errorMessage = error?.message || 'Failed to create preference'
-    const errorDetails = error?.cause || error?.response?.data || error
+    const errorMessage = error instanceof Error ? error.message : 'Failed to create preference'
+    const errorDetails = error instanceof Error ? error.cause : error
     
     return NextResponse.json(
       { 

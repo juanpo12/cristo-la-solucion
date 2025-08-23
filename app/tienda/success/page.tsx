@@ -7,9 +7,16 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import Link from "next/link"
 
+interface PaymentData {
+  paymentId: string | null
+  status: string | null
+  externalReference: string | null
+  merchantOrderId: string | null
+}
+
 export default function SuccessPage() {
   const searchParams = useSearchParams()
-  const [paymentData, setPaymentData] = useState<any>(null)
+  const [paymentData, setPaymentData] = useState<PaymentData | null>(null)
 
   useEffect(() => {
     // Obtener parámetros de la URL
