@@ -222,7 +222,7 @@ export default function VideosPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="relative h-[50vh] overflow-hidden">
+      <div className="relative h-[50vh] overflow-hidden -mt-20">
         <Image 
           src="/youtube.png" 
           alt="Pastor Alfredo Dimiro" 

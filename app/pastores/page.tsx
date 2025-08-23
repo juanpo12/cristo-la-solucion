@@ -7,7 +7,7 @@ export default function PastoresPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Header con imagen de fondo */}
-      <div className="relative h-[60vh] overflow-hidden">
+      <div className="relative h-[60vh] overflow-hidden -mt-20">
         <Image 
           src="/frente.jpg" 
           alt="Pastores Alfredo y Celina" 
