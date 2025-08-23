@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input"
 import { useCart } from "@/lib/hooks/use-cart"
 import { useFavorites } from "@/lib/hooks/use-favorites"
 import { useShare } from "@/lib/hooks/use-share"
+import { MercadoPagoStatus } from "@/components/mercadopago-status"
 import Image from "next/image"
 
 const categories = [
@@ -253,6 +254,9 @@ export default function TiendaPage() {
             Descubre libros del Pastor Alfredo Dimiro que fortalecerán tu fe y te ayudarán en tu crecimiento espiritual
           </p>
         </div>
+
+        {/* Estado de Mercado Pago */}
+        <MercadoPagoStatus />
 
         {/* Barra de búsqueda y filtros */}
         <div className="flex flex-col lg:flex-row gap-6 mb-12">

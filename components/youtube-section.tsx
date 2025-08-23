@@ -87,7 +87,6 @@ export function YouTubeSection() {
   // Cargar videos y verificar stream en vivo al cargar
   useEffect(() => {
     const loadVideos = async () => {
-      setIsLoading(true)
       try {
         const response = await fetch('/api/youtube')
         if (response.ok) {
@@ -101,8 +100,6 @@ export function YouTubeSection() {
         }
       } catch (error) {
         console.error('Error cargando videos:', error)
-      } finally {
-        setIsLoading(false)
       }
     }
 
