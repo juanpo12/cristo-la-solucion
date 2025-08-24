@@ -72,18 +72,8 @@ export const categories = pgTable('categories', {
   updatedAt: timestamp('updated_at').defaultNow(),
 })
 
-// Tabla de usuarios administradores
-export const adminUsers = pgTable('admin_users', {
-  id: serial('id').primaryKey(),
-  username: varchar('username', { length: 100 }).notNull().unique(),
-  email: varchar('email', { length: 255 }).notNull().unique(),
-  passwordHash: varchar('password_hash', { length: 255 }).notNull(),
-  role: varchar('role', { length: 50 }).notNull().default('admin'), // admin, superadmin
-  active: boolean('active').default(true),
-  lastLogin: timestamp('last_login'),
-  createdAt: timestamp('created_at').defaultNow(),
-  updatedAt: timestamp('updated_at').defaultNow(),
-})
+// Admin users are now managed through Supabase Auth
+// Users with admin role have user_metadata.role = 'admin' or 'superadmin'
 
 // Tabla de configuración de la tienda
 export const storeConfig = pgTable('store_config', {
@@ -98,10 +88,16 @@ export const storeConfig = pgTable('store_config', {
 
 // Schemas de validación con Zod
 export const insertProductSchema = createInsertSchema(products, {
-  price: z.string().transform((val) => parseFloat(val)),
-  originalPrice: z.string().optional().transform((val) => val ? parseFloat(val) : undefined),
+  price: z.string().regex(/^\d+(\.\d{1,2})?$/, "Price must be a valid decimal with up to 2 decimal places"),
+  originalPrice: z.string().optional().nullable().refine(
+    (val) => !val || /^\d+(\.\d{1,2})?$/.test(val),
+    "Original price must be a valid decimal with up to 2 decimal places"
+  ),
   stock: z.number().int().min(0),
-  rating: z.string().optional().transform((val) => val ? parseFloat(val) : 0),
+  rating: z.string().optional().nullable().refine(
+    (val) => !val || /^\d+(\.\d{1,2})?$/.test(val),
+    "Rating must be a valid decimal with up to 2 decimal places"
+  ).transform((val) => val || "0"),
 })
 
 export const selectProductSchema = createSelectSchema(products)
@@ -123,11 +119,7 @@ export const selectOrderSchema = createSelectSchema(orders)
 export const insertCategorySchema = createInsertSchema(categories)
 export const selectCategorySchema = createSelectSchema(categories)
 
-export const insertAdminUserSchema = createInsertSchema(adminUsers, {
-  email: z.string().email(),
-  username: z.string().min(3).max(100),
-})
-export const selectAdminUserSchema = createSelectSchema(adminUsers)
+// Admin user schemas removed - using Supabase Auth
 
 export const insertStoreConfigSchema = createInsertSchema(storeConfig)
 export const selectStoreConfigSchema = createSelectSchema(storeConfig)
@@ -143,5 +135,4 @@ export type Category = typeof categories.$inferSelect
 export type NewCategory = typeof categories.$inferInsert
 export type StoreConfig = typeof storeConfig.$inferSelect
 export type NewStoreConfig = typeof storeConfig.$inferInsert
-export type AdminUser = typeof adminUsers.$inferSelect
-export type NewAdminUser = typeof adminUsers.$inferInsert
+// AdminUser types removed - using Supabase Auth types

@@ -12,10 +12,16 @@ export async function GET() {
       )
     }
 
-    return NextResponse.json({ user })
-
+    return NextResponse.json({
+      user: {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+        username: user.user_metadata?.username || user.email.split('@')[0]
+      }
+    })
   } catch (error) {
-    console.error('Error verificando autenticación:', error)
+    console.error('Error obteniendo usuario:', error)
     return NextResponse.json(
       { error: 'Error interno del servidor' },
       { status: 500 }

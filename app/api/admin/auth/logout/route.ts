@@ -1,12 +1,25 @@
 import { NextResponse } from 'next/server'
-import { AuthService } from '@/lib/auth'
+import { createClient } from '@/lib/supabase/server'
 
 export async function POST() {
-  const response = NextResponse.json({ success: true })
-  
-  // Eliminar cookie de autenticación
-  const logoutCookie = AuthService.createLogoutCookie()
-  response.cookies.set(logoutCookie)
-  
-  return response
+  try {
+    const supabase = await createClient()
+    
+    const { error } = await supabase.auth.signOut()
+    
+    if (error) {
+      return NextResponse.json(
+        { error: 'Error al cerrar sesión' },
+        { status: 500 }
+      )
+    }
+
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error('Error en logout:', error)
+    return NextResponse.json(
+      { error: 'Error interno del servidor' },
+      { status: 500 }
+    )
+  }
 }

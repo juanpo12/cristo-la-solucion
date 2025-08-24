@@ -8,7 +8,10 @@ export async function middleware(request: NextRequest) {
   // Rutas que requieren autenticación de admin
   if (pathname.startsWith("/admin")) {
     // Rutas públicas del admin
-    const publicAdminRoutes = ["/admin/login", "/admin/unauthorized"];
+    const publicAdminRoutes = [
+      "/admin/login",
+      "/admin/unauthorized",
+    ];
 
     if (publicAdminRoutes.includes(pathname)) {
       return NextResponse.next();

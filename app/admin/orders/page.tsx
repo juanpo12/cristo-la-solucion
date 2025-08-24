@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 
 interface AdminUser {
-  id: number;
+  id: string;
   username: string;
   email: string;
   role: string;
