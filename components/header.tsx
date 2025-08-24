@@ -28,12 +28,10 @@ export function Header() {
     // Si estamos en la página principal, hacer scroll normal
     const element = document.getElementById(sectionId)
     if (element) {
-      const headerHeight = 80
-      const elementPosition = element.offsetTop - headerHeight
-
-      window.scrollTo({
-        top: elementPosition,
+      // Usar scrollIntoView con offset personalizado
+      element.scrollIntoView({
         behavior: "smooth",
+        block: "start"
       })
     }
     setIsMobileMenuOpen(false)
@@ -47,11 +45,9 @@ export function Header() {
         setTimeout(() => {
           const element = document.getElementById(hash)
           if (element) {
-            const headerHeight = 80
-            const elementPosition = element.offsetTop - headerHeight
-            window.scrollTo({
-              top: elementPosition,
+            element.scrollIntoView({
               behavior: "smooth",
+              block: "start"
             })
           }
         }, 100) // Pequeño delay para asegurar que la página se haya cargado
@@ -68,26 +64,34 @@ export function Header() {
 
   // Detectar scroll y sección activa
   useEffect(() => {
+    let ticking = false
+
     const handleScroll = () => {
-      const scrollPosition = window.scrollY
-      setIsScrolled(scrollPosition > 50)
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const scrollPosition = window.scrollY
+          setIsScrolled(scrollPosition > 50)
 
-      const sections = ["vision", "grupos", "reuniones", "dar", "oracion", "contacto"]
-      const currentScrollPosition = scrollPosition + 100
+          const sections = ["vision", "grupos", "reuniones", "dar", "oracion", "contacto"]
+          const currentScrollPosition = scrollPosition + 100
 
-      for (const section of sections) {
-        const element = document.getElementById(section)
-        if (element) {
-          const { offsetTop, offsetHeight } = element
-          if (currentScrollPosition >= offsetTop && currentScrollPosition < offsetTop + offsetHeight) {
-            setActiveSection(section)
-            break
+          for (const section of sections) {
+            const element = document.getElementById(section)
+            if (element) {
+              const { offsetTop, offsetHeight } = element
+              if (currentScrollPosition >= offsetTop && currentScrollPosition < offsetTop + offsetHeight) {
+                setActiveSection(section)
+                break
+              }
+            }
           }
-        }
+          ticking = false
+        })
+        ticking = true
       }
     }
 
-    window.addEventListener("scroll", handleScroll)
+    window.addEventListener("scroll", handleScroll, { passive: true })
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
@@ -132,10 +136,10 @@ export function Header() {
 
   return (
     <header
-      className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 w-full z-50 fixed-element transition-all duration-300 ${
         isScrolled
-          ? "bg-gray-900/80 backdrop-blur-md"
-          : "bg-gray-900/80 backdrop-blur-md"
+          ? "bg-gray-900/95 backdrop-blur-sm shadow-lg"
+          : "bg-gray-900/90 backdrop-blur-sm"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

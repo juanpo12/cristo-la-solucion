@@ -5,10 +5,12 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { ShoppingCart, X, Plus, Minus, Trash2 } from "lucide-react"
 import { useCart } from "@/lib/hooks/use-cart"
+import { CheckoutModal } from "@/components/checkout-modal"
 import Image from "next/image"
 
 export function Cart() {
   const [isOpen, setIsOpen] = useState(false)
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false)
   const { state, dispatch } = useCart()
 
   const updateQuantity = (id: number, quantity: number) => {
@@ -135,7 +137,12 @@ export function Cart() {
               </div>
 
               <div className="space-y-3">
-                <Button className="w-full church-button-primary h-12 text-lg">Proceder al Pago</Button>
+                <Button 
+                  onClick={() => setIsCheckoutOpen(true)}
+                  className="w-full church-button-primary h-12 text-lg"
+                >
+                  Proceder al Pago
+                </Button>
                 <Button
                   variant="outline"
                   onClick={clearCart}
@@ -148,6 +155,12 @@ export function Cart() {
           )}
         </div>
       </div>
+
+      {/* Modal de Checkout */}
+      <CheckoutModal 
+        isOpen={isCheckoutOpen} 
+        onClose={() => setIsCheckoutOpen(false)} 
+      />
     </>
   )
 }

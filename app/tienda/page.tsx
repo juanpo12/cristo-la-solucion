@@ -10,6 +10,8 @@ import { Input } from "@/components/ui/input"
 import { useCart } from "@/lib/hooks/use-cart"
 import { useFavorites } from "@/lib/hooks/use-favorites"
 import { useShare } from "@/lib/hooks/use-share"
+// import { MercadoPagoStatus } from "@/components/mercadopago-status"
+import type { Product } from "@/lib/db/schema"
 import Image from "next/image"
 
 const categories = [
@@ -19,113 +21,12 @@ const categories = [
   { id: "apparel", name: "Ropa", icon: Shirt },
 ]
 
-const products = [
-  {
-    id: 1,
-    name: "EL PODER DE LA ORACIÓN",
-    author: "Alfredo Dimiro",
-    price: 25.99,
-    originalPrice: 32.99,
-    category: "books",
-    image: "/LIBROS DEL PASTOR ALFREDO DIMIRO0000.png",
-    rating: 4.8,
-    reviews: 124,
-    description:
-      "La oración es el principal medio de comunicación que el hombre tiene para entrar en contacto con el ser más importante del universo. Dios ha inclinado su oído hacia usted.",
-    featured: true,
-  },
-  {
-    id: 2,
-    name: "EL PODER DE LA PASIÓN",
-    author: "Alfredo Dimiro",
-    price: 18.99,
-    category: "books",
-    image: "/LIBROS DEL PASTOR ALFREDO DIMIRO0001.png",
-    rating: 4.9,
-    reviews: 89,
-    description:
-      "Al descubrir su contenido usted comprenderá los valores y conceptos que Dios ha puesto a nuestra disposición, entendiendo como utilizar el poder de la pasión.",
-  },
-  {
-    id: 3,
-    name: "EL PODER DE LA IMAGINACIÓN",
-    author: "Alfredo Dimiro",
-    price: 15.99,
-    category: "books",
-    image: "/LIBROS DEL PASTOR ALFREDO DIMIRO0002.png",
-    rating: 4.7,
-    reviews: 45,
-    description:
-      "Muchos cristianos fueron engañados y formados con una imagen derrotada y empobrecida, pero la revelación de la palabra nos despierta a la genuina y correcta imagen del Dios verdadero.",
-  },
-  {
-    id: 4,
-    name: "SALMO 91",
-    author: "Alfredo Dimiro",
-    price: 12.99,
-    category: "books",
-    image: "/LIBROS DEL PASTOR ALFREDO DIMIRO0003.png",
-    rating: 4.6,
-    reviews: 67,
-    description:
-      "El Salmos 91 no es una metáfora, es un diseño de vida que está activo para este tiempo. En el libro, va a encontrar un estudio de cada versículo de este salmo para aprender a vivir en la protección divina de nuestro Dios.",
-  },
-  {
-    id: 5,
-    name: "EL PODER DEL TRABAJO",
-    author: "Alfredo Dimiro",
-    price: 45.99,
-    originalPrice: 55.99,
-    category: "books",
-    image: "/LIBROS DEL PASTOR ALFREDO DIMIRO0004.png",
-    rating: 4.9,
-    reviews: 156,
-    description:
-      "Muchos trabajan, trabajan, trabajan, y nunca pueden superarse. Nunca pueden aumentar sus ingresos; nunca pueden aumentar sus realizaciones; nunca pueden aumentar sus cosas, cuando Dios es un Dios de aumento. Comprender el poder del trabajo es vital para cada creyente.",
-    featured: true,
-  },
-  {
-    id: 6,
-    name: "EL PODER DE LA PATERNIDAD",
-    author: "Alfredo Dimiro",
-    price: 8.99,
-    category: "books",
-    image: "/LIBROS DEL PASTOR ALFREDO DIMIRO0005.png",
-    rating: 4.5,
-    reviews: 23,
-    description:
-      "Tener una padre espiritual es de gran valor. El estar conectado apropiadamente produce mucho fruto y trae bendiciones sin límites. Es un imperativo para ser exitoso en la vida y en el ministerio.",
-  },
-  {
-    id: 7,
-    name: "EL PODER DE LAS PRIMICIAS",
-    author: "Alfredo Dimiro",
-    price: 22.99,
-    category: "books",
-    image: "/LIBROS DEL PASTOR ALFREDO DIMIRO0006.png",
-    rating: 4.7,
-    reviews: 78,
-    description:
-      "Ponerlo a Dios primero en todo es la clave de una vida fructífera y próspera. El beneficio de que pongamos a Dios primero es que se establezca la bendición, una habilidad para tener éxito y triunfar.",
-  },
-  {
-    id: 8,
-    name: "CAMINO HACIA LA SANIDAD",
-    author: "Alfredo Dimiro",
-    price: 12.99,
-    category: "books",
-    image: "/LIBROS DEL PASTOR ALFREDO DIMIRO0007.png",
-    rating: 4.4,
-    reviews: 34,
-    description:
-      "Muchas personas que están enfermas aceptan con resignación su condición. No hay razón para resignarse, usted puede encontrar el camino hacia su sanidad. No hay razón para agotarse en búsquedas, tan infructuosas como solitarias, Dios ha provisto para usted la salud que anhela.",
-  },
-]
-
 export default function TiendaPage() {
+  const [products, setProducts] = useState<Product[]>([])
+  const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("all")
-  const [selectedProduct, setSelectedProduct] = useState<(typeof products)[0] | null>(null)
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [quantity, setQuantity] = useState(1)
   const [shareMessage, setShareMessage] = useState("")
@@ -134,10 +35,33 @@ export default function TiendaPage() {
   const { shareProduct } = useShare()
   const searchParams = useSearchParams()
 
+  // Cargar productos desde la API
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true)
+        const response = await fetch('/api/products?active=true')
+        const data = await response.json()
+        
+        if (data.success) {
+          setProducts(data.data)
+        } else {
+          console.error('Error fetching products:', data.error)
+        }
+      } catch (error) {
+        console.error('Error fetching products:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchProducts()
+  }, [])
+
   // Detectar producto compartido en URL y abrir modal automáticamente
   useEffect(() => {
     const productId = searchParams.get('product')
-    if (productId) {
+    if (productId && products.length > 0) {
       const product = products.find(p => p.id === parseInt(productId))
       if (product) {
         setSelectedProduct(product)
@@ -149,7 +73,7 @@ export default function TiendaPage() {
         window.history.replaceState({}, '', url.toString())
       }
     }
-  }, [searchParams])
+  }, [searchParams, products])
 
   // Filtrar productos basado en búsqueda y categoría
   const filteredProducts = useMemo(() => {
@@ -163,22 +87,22 @@ export default function TiendaPage() {
 
       return matchesSearch && matchesCategory
     })
-  }, [searchTerm, selectedCategory])
+  }, [products, searchTerm, selectedCategory])
 
-  const addToCart = (product: (typeof products)[0]) => {
+  const addToCart = (product: Product) => {
     dispatch({
       type: "ADD_ITEM",
       payload: {
         id: product.id,
         name: product.name,
         author: product.author,
-        price: product.price,
-        image: product.image,
+        price: parseFloat(product.price),
+        image: product.image || '',
       },
     })
   }
 
-  const openProductModal = (product: (typeof products)[0]) => {
+  const openProductModal = (product: Product) => {
     setSelectedProduct(product)
     setIsModalOpen(true)
   }
@@ -192,7 +116,7 @@ export default function TiendaPage() {
   const increaseQuantity = () => setQuantity(prev => prev + 1)
   const decreaseQuantity = () => setQuantity(prev => prev > 1 ? prev - 1 : 1)
 
-  const addToCartWithQuantity = (product: (typeof products)[0], qty: number) => {
+  const addToCartWithQuantity = (product: Product, qty: number) => {
     for (let i = 0; i < qty; i++) {
       dispatch({
         type: "ADD_ITEM",
@@ -200,33 +124,33 @@ export default function TiendaPage() {
           id: product.id,
           name: product.name,
           author: product.author,
-          price: product.price,
-          image: product.image,
+          price: parseFloat(product.price),
+          image: product.image || '',
         },
       })
     }
     closeModal()
   }
 
-  const handleToggleFavorite = (e: React.MouseEvent, product: (typeof products)[0]) => {
+  const handleToggleFavorite = (e: React.MouseEvent, product: Product) => {
     e.stopPropagation() // Evitar que se abra el modal
     toggleFavorite({
       id: product.id,
       name: product.name,
       author: product.author,
-      price: product.price,
-      image: product.image,
+      price: parseFloat(product.price),
+      image: product.image || '',
     })
   }
 
-  const handleShare = async (product: (typeof products)[0]) => {
+  const handleShare = async (product: Product) => {
     const result = await shareProduct({
       id: product.id,
       name: product.name,
       author: product.author,
-      price: product.price,
-      originalPrice: product.originalPrice,
-      image: product.image,
+      price: parseFloat(product.price),
+      originalPrice: product.originalPrice ? parseFloat(product.originalPrice) : undefined,
+      image: product.image || '',
       description: product.description,
     })
 
@@ -243,6 +167,20 @@ export default function TiendaPage() {
     }
   }
 
+  // Mostrar loading mientras se cargan los productos
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 pt-20">
+        <div className="container mx-auto px-4 py-12">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-church-electric-600 mx-auto mb-4"></div>
+            <p className="text-church-text-muted">Cargando productos...</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 pt-20">
       <div className="container mx-auto px-4 py-12">
@@ -253,6 +191,9 @@ export default function TiendaPage() {
             Descubre libros del Pastor Alfredo Dimiro que fortalecerán tu fe y te ayudarán en tu crecimiento espiritual
           </p>
         </div>
+
+        {/* Estado de Mercado Pago
+        <MercadoPagoStatus /> */}
 
         {/* Barra de búsqueda y filtros */}
         <div className="flex flex-col lg:flex-row gap-6 mb-12">
@@ -328,13 +269,13 @@ export default function TiendaPage() {
                                 <Star
                                   key={i}
                                   className={`w-4 h-4 ${
-                                    i < Math.floor(product.rating) ? "text-yellow-400 fill-current" : "text-gray-300"
+                                    i < Math.floor(parseFloat(product.rating || '0')) ? "text-yellow-400 fill-current" : "text-gray-300"
                                   }`}
                                 />
                               ))}
                             </div>
                             <span className="text-sm church-text-muted">
-                              {product.rating} ({product.reviews} reseñas)
+                              {product.rating} ({product.reviewCount} reseñas)
                             </span>
                           </div>
                           <p className="church-text-muted mb-4 leading-relaxed text-sm">{product.description}</p>
@@ -434,12 +375,12 @@ export default function TiendaPage() {
                           <Star
                             key={i}
                             className={`w-3 h-3 ${
-                              i < Math.floor(product.rating) ? "text-yellow-400 fill-current" : "text-gray-300"
+                              i < Math.floor(parseFloat(product.rating || '0')) ? "text-yellow-400 fill-current" : "text-gray-300"
                             }`}
                           />
                         ))}
                       </div>
-                      <span className="text-xs church-text-muted">({product.reviews})</span>
+                      <span className="text-xs church-text-muted">({product.reviewCount})</span>
                     </div>
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center space-x-2">
@@ -567,7 +508,7 @@ export default function TiendaPage() {
                           <Star
                             key={i}
                             className={`w-5 h-5 ${
-                              i < Math.floor(selectedProduct.rating) 
+                              i < Math.floor(parseFloat(selectedProduct.rating || '0')) 
                                 ? "text-yellow-400 fill-current" 
                                 : "text-gray-300"
                             }`}
@@ -578,7 +519,7 @@ export default function TiendaPage() {
                     </div>
                     <div className="flex items-center text-church-text-muted">
                       <Award className="w-4 h-4 mr-1" />
-                      <span>({selectedProduct.reviews} reseñas)</span>
+                      <span>({selectedProduct.reviewCount} reseñas)</span>
                     </div>
                   </div>
 
@@ -595,7 +536,7 @@ export default function TiendaPage() {
                       </span>
                       {selectedProduct.originalPrice && (
                         <Badge className="bg-green-100 text-green-800 text-sm">
-                          Ahorra ${(selectedProduct.originalPrice - selectedProduct.price).toFixed(2)}
+                          Ahorra ${(parseFloat(selectedProduct.originalPrice || '0') - parseFloat(selectedProduct.price)).toFixed(2)}
                         </Badge>
                       )}
                     </div>
@@ -655,7 +596,7 @@ export default function TiendaPage() {
                     <div className="flex items-center justify-between text-xl font-bold church-text">
                       <span>Total:</span>
                       <span className="text-church-electric-600">
-                        ${(selectedProduct.price * quantity).toFixed(2)}
+                        ${(parseFloat(selectedProduct.price) * quantity).toFixed(2)}
                       </span>
                     </div>
 

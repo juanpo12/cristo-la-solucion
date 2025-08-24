@@ -41,6 +41,37 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Prevent layout shifts and improve performance */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  overflow-x: hidden;
+  /* Prevent scroll bounce on iOS */
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Fix for fixed header issues */
+.fixed-header-offset {
+  scroll-margin-top: 80px;
+}
+
+/* Improve fixed element performance */
+.fixed-element {
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Prevent layout shifts during scroll */
+main {
+  position: relative;
+  z-index: 1;
+}
+
 /* Custom scrollbar styling */
 ::-webkit-scrollbar {
   width: 8px;
