@@ -105,7 +105,7 @@ export default async function GroupPage({ params }: { params: { slug: string } }
       {/* Header con imagen de fondo */}
       <div className="relative h-[60vh] overflow-hidden">
         <Image src={group.image || "/placeholder.svg"} alt={group.name} fill className="object-cover" priority />
-        <div className={`absolute inset-0 bg-gradient-to-r ${group.color} opacity-80`} />
+        <div className={`absolute inset-0 bg-gradient-to-r ${group.color} opacity-30`} />
         <div className="absolute inset-0 bg-black/30" />
 
         <div className="absolute inset-0 flex items-center justify-center text-white">
@@ -199,12 +199,6 @@ export default async function GroupPage({ params }: { params: { slug: string } }
                   </div>
                 </div>
 
-                <div className="mt-8 space-y-4">
-                  <Button className="w-full church-button-primary">Únete a este grupo</Button>
-                  <Button variant="outline" className="w-full">
-                    Más información
-                  </Button>
-                </div>
               </CardContent>
             </Card>
           </div>
