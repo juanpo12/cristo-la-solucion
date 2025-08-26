@@ -33,7 +33,7 @@ const storeSections: StoreSection[] = [
   },
   {
     id: "novedades",
-    name: " NOVEDADES ",
+    name: " EVENTOS ",
     shortDesc:
       "¡No te pierdas las últimas actualizaciones y eventos especiales!",
     image: "/CONFE.jpg",

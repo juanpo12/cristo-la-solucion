@@ -15,7 +15,7 @@ export default function NovedadesPage() {
           className="object-cover object-center"
           priority
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-orange-500/80 to-red-600/80" />
+        <div className="absolute inset-0 bg-gradient-to-r from-orange-500/40 to-red-600/80" />
         <div className="absolute inset-0 bg-black/30" />
 
         <div className="absolute inset-0 flex items-center justify-center text-white">
@@ -24,10 +24,10 @@ export default function NovedadesPage() {
               <Zap className="w-16 h-16 text-white drop-shadow-lg animate-pulse" />
             </div>
             <h1 className="text-5xl md:text-6xl font-bold mb-6 drop-shadow-lg">
-              🔥 NOVEDADES 🔥
+              🔥 EVENTOS 🔥
             </h1>
             <p className="text-xl md:text-2xl opacity-90 drop-shadow-md">
-              ¡Las últimas actualizaciones de nuestra comunidad!
+              ¡Descubre los eventos especiales y actividades programadas!
             </p>
           </div>
         </div>
@@ -120,31 +120,6 @@ export default function NovedadesPage() {
               <Link href="/grupos">
                 <Button className="w-full bg-green-600 hover:bg-green-700">
                   Más información
-                </Button>
-              </Link>
-            </div>
-          </div>
-
-          {/* Call to Action */}
-          <div className="text-center bg-gradient-to-r from-orange-500 to-red-600 rounded-2xl p-12 text-white">
-            <h3 className="text-4xl font-bold mb-4">¡Mantente Conectado!</h3>
-            <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
-              No te pierdas ninguna novedad. Síguenos en nuestras redes sociales y 
-              mantente al día con todas las actividades de nuestra comunidad.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button
-                size="lg"
-                className="bg-white text-orange-600 hover:bg-gray-100 px-8 py-4 text-lg"
-              >
-                Seguir en Redes
-              </Button>
-              <Link href="/contacto">
-                <Button
-                  size="lg"
-                  className="bg-white/20 backdrop-blur-sm border-2 border-white text-white hover:bg-white hover:text-orange-600 px-8 py-4 text-lg font-semibold transition-all duration-300"
-                >
-                  Contáctanos
                 </Button>
               </Link>
             </div>
