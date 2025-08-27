@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { createContact } from '@/lib/services/contacts'
 
 // Función para enviar email con Resend (Opción 1 - Recomendada)
 async function sendWithResend(data: Record<string, unknown>) {
@@ -124,12 +125,34 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Preparar datos
-    const contactData = {
+    // Guardar en la base de datos usando el servicio
+    let savedContact
+    try {
+      const contactData = {
+        name,
+        email,
+        phone: phone || null,
+        subject: subject || null,
+        message,
+        type
+      }
+
+      savedContact = await createContact(contactData)
+      console.log('✅ Contacto guardado en la base de datos con ID:', savedContact.id)
+    } catch (dbError) {
+      console.error('❌ Error al guardar en la base de datos:', dbError)
+      return NextResponse.json(
+        { error: 'Error guardando la petición en la base de datos' },
+        { status: 500 }
+      )
+    }
+
+    // Preparar datos para email
+    const emailData = {
       name,
-      email,
-      phone,
-      subject,
+      email: email || 'no email',
+      phone: phone || null,
+      subject: subject || null,
       message,
       type,
       timestamp: new Date().toISOString()
@@ -141,7 +164,7 @@ export async function POST(request: NextRequest) {
     // Opción 1: Resend (si está configurado)
     if (process.env.RESEND_API_KEY && !emailSent) {
       try {
-        await sendWithResend(contactData)
+        await sendWithResend(emailData)
         emailSent = true
         console.log('Email enviado con Resend')
       } catch {
@@ -152,7 +175,7 @@ export async function POST(request: NextRequest) {
     // Opción 2: Formspree (si está configurado)
     if (process.env.FORMSPREE_FORM_ID && !emailSent) {
       try {
-        await sendWithFormspree(contactData)
+        await sendWithFormspree(emailData)
         emailSent = true
         console.log('Email enviado con Formspree')
       } catch {
@@ -160,12 +183,12 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Opción 3: Guardar en archivo (siempre como backup)
+    // Opción 3: Guardar en archivo (como backup adicional)
     try {
-      await saveToFile(contactData)
-      console.log('Petición guardada en archivo')
+      await saveToFile(emailData)
+      console.log('Petición guardada en archivo como backup')
     } catch {
-      console.log('Error guardando en archivo')
+      console.log('Error guardando en archivo backup')
     }
 
     // Respuesta exitosa

@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { X, Package, Star, Calendar, DollarSign, Archive } from 'lucide-react'
+import Image from 'next/image'
 
 interface Product {
   id: number
@@ -65,9 +66,11 @@ export function ProductViewModal({ product, isOpen, onClose, onEdit }: ProductVi
           <div className="flex flex-col md:flex-row gap-6">
             <div className="w-full md:w-48 h-48 bg-gray-200 rounded-lg flex items-center justify-center overflow-hidden">
               {product.image ? (
-                <img 
+                <Image 
                   src={product.image} 
                   alt={product.name}
+                  width={192}
+                  height={192}
                   className="w-full h-full object-cover"
                 />
               ) : (
