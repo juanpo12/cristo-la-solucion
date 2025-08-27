@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Loader2 } from 'lucide-react'
@@ -27,32 +27,7 @@ export default function AdminLayout({
   const publicRoutes = ['/admin/login', '/admin/unauthorized']
   const isPublicRoute = publicRoutes.includes(pathname)
 
-  useEffect(() => {
-    if (isPublicRoute) {
-      setLoading(false)
-      return
-    }
-
-    checkAuth()
-
-    // Escuchar cambios en la autenticación
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        if (event === 'SIGNED_OUT' || !session) {
-          setUser(null)
-          if (!isPublicRoute) {
-            router.push('/admin/login')
-          }
-        } else if (event === 'SIGNED_IN' && session) {
-          checkAuth()
-        }
-      }
-    )
-
-    return () => subscription.unsubscribe()
-  }, [pathname, isPublicRoute])
-
-  const checkAuth = async () => {
+  const checkAuth = useCallback(async () => {
     try {
       const { data: { user: supabaseUser }, error } = await supabase.auth.getUser()
       
@@ -88,7 +63,32 @@ export default function AdminLayout({
     } finally {
       setLoading(false)
     }
-  }
+  }, [isPublicRoute, router, supabase.auth])
+
+  useEffect(() => {
+    if (isPublicRoute) {
+      setLoading(false)
+      return
+    }
+
+    checkAuth()
+
+    // Escuchar cambios en la autenticación
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        if (event === 'SIGNED_OUT' || !session) {
+          setUser(null)
+          if (!isPublicRoute) {
+            router.push('/admin/login')
+          }
+        } else if (event === 'SIGNED_IN' && session) {
+          checkAuth()
+        }
+      }
+    )
+
+    return () => subscription.unsubscribe()
+  }, [pathname, isPublicRoute, checkAuth, router, supabase.auth])
 
   if (loading) {
     return (

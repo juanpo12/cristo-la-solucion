@@ -1,5 +1,4 @@
 import { notFound } from "next/navigation"
-import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 // import { Badge } from "@/components/ui/badge"
 import { ArrowLeft, Calendar, MapPin, Users, Heart, Star, Target } from "lucide-react"

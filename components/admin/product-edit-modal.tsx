@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 import { X, Save, Loader2, Upload, Star } from 'lucide-react'
+import Image from 'next/image'
 
 interface Product {
   id: number
@@ -126,9 +127,11 @@ export function ProductEditModal({ product, isOpen, onClose, onSave }: ProductEd
             <div className="flex items-center gap-4">
               <div className="w-24 h-24 bg-gray-200 rounded-lg flex items-center justify-center overflow-hidden">
                 {imagePreview ? (
-                  <img 
+                  <Image 
                     src={imagePreview} 
                     alt="Preview"
+                    width={96}
+                    height={96}
                     className="w-full h-full object-cover"
                   />
                 ) : (

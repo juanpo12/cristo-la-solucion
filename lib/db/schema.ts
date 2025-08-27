@@ -75,6 +75,20 @@ export const categories = pgTable('categories', {
 // Admin users are now managed through Supabase Auth
 // Users with admin role have user_metadata.role = 'admin' or 'superadmin'
 
+// Tabla de contactos/peticiones
+export const contacts = pgTable('contacts', {
+  id: serial('id').primaryKey(),
+  name: varchar('name', { length: 255 }).notNull(),
+  email: varchar('email', { length: 255 }).notNull(),
+  phone: varchar('phone', { length: 50 }),
+  subject: varchar('subject', { length: 255 }),
+  message: text('message').notNull(),
+  type: varchar('type', { length: 50 }).notNull().default('general'), // general, prayer, pastoral, group
+  status: varchar('status', { length: 50 }).default('pending'), // pending, read, responded, closed
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
+})
+
 // Tabla de configuración de la tienda
 export const storeConfig = pgTable('store_config', {
   id: serial('id').primaryKey(),
@@ -121,6 +135,13 @@ export const selectCategorySchema = createSelectSchema(categories)
 
 // Admin user schemas removed - using Supabase Auth
 
+export const insertContactSchema = createInsertSchema(contacts, {
+  email: z.string().email("Email must be valid"),
+  type: z.enum(['general', 'prayer', 'pastoral', 'group']),
+  status: z.enum(['pending', 'read', 'responded', 'closed']).optional(),
+})
+export const selectContactSchema = createSelectSchema(contacts)
+
 export const insertStoreConfigSchema = createInsertSchema(storeConfig)
 export const selectStoreConfigSchema = createSelectSchema(storeConfig)
 
@@ -133,6 +154,8 @@ export type OrderItem = typeof orderItems.$inferSelect
 export type NewOrderItem = typeof orderItems.$inferInsert
 export type Category = typeof categories.$inferSelect
 export type NewCategory = typeof categories.$inferInsert
+export type Contact = typeof contacts.$inferSelect
+export type NewContact = typeof contacts.$inferInsert
 export type StoreConfig = typeof storeConfig.$inferSelect
 export type NewStoreConfig = typeof storeConfig.$inferInsert
 // AdminUser types removed - using Supabase Auth types

@@ -1,9 +1,13 @@
+'use client'
+
+import { useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { ChurchIcon as Praying, Heart, Users, Star } from "lucide-react"
+import { ChurchIcon as Praying, Heart, Users, Star, CheckCircle, AlertCircle } from "lucide-react"
+import { usePrayerForm, type PrayerFormData } from '@/lib/hooks/use-prayer-form'
 
 const prayerCategories = [
   { name: "Sanidad", icon: Heart, color: "bg-red-100 text-red-600" },
@@ -13,6 +17,62 @@ const prayerCategories = [
 ]
 
 export function Prayer() {
+  const { submitPrayer, isLoading, isSuccess, error, resetForm } = usePrayerForm()
+  const [formData, setFormData] = useState<PrayerFormData>({
+    name: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    category: '',
+    message: ''
+  })
+  const [selectedCategory, setSelectedCategory] = useState<string>('')
+
+  const handleInputChange = (field: keyof PrayerFormData, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }))
+  }
+
+  const handleCategorySelect = (category: string) => {
+    setSelectedCategory(category)
+    handleInputChange('category', category)
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    if (!formData.name || !formData.lastName || !formData.category || !formData.message) {
+      return
+    }
+    
+    await submitPrayer(formData)
+    
+    if (!error) {
+      // Reset form on success
+      setFormData({
+        name: '',
+        lastName: '',
+        email: '',
+        phone: '',
+        category: '',
+        message: ''
+      })
+      setSelectedCategory('')
+    }
+  }
+
+  const handleNewPrayer = () => {
+    resetForm()
+    setFormData({
+      name: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      category: '',
+      message: ''
+    })
+    setSelectedCategory('')
+  }
+
   return (
     <section id="oracion" className="py-20 bg-gradient-to-br from-church-electric-50 to-blue-50 scroll-mt-20">
       <div className="container mx-auto px-4">
@@ -42,43 +102,98 @@ export function Prayer() {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <form className="space-y-6">
-                    <div className="grid grid-cols-2 gap-4">
-                      <Input placeholder="Nombre" className="church-card h-12" />
-                      <Input placeholder="Apellido" className="church-card h-12" />
+                  {isSuccess ? (
+                    <div className="text-center py-8">
+                      <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
+                      <h3 className="text-2xl font-bold church-text mb-2">¡Petición Enviada!</h3>
+                      <p className="church-text-muted mb-6">
+                        Tu petición de oración ha sido recibida. Estaremos orando por vos.
+                      </p>
+                      <Button 
+                        onClick={handleNewPrayer}
+                        className="church-button-primary"
+                      >
+                        Enviar Nueva Petición
+                      </Button>
                     </div>
-                    <Input type="email" placeholder="Email (opcional)" className="church-card h-12" />
-                    <Input placeholder="Teléfono (opcional)" className="church-card h-12" />
-
-                    <div>
-                      <label className="block text-sm font-semibold church-text mb-3">Categoría de oración:</label>
-                      <div className="flex flex-wrap gap-2">
-                        {prayerCategories.map((category) => (
-                          <Badge
-                            key={category.name}
-                            variant="secondary"
-                            className={`${category.color} cursor-pointer hover:scale-105 transition-transform duration-200 px-3 py-2`}
-                          >
-                            <category.icon className="w-4 h-4 mr-2" />
-                            {category.name}
-                          </Badge>
-                        ))}
+                  ) : (
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                      <div className="grid grid-cols-2 gap-4">
+                        <Input 
+                          placeholder="Nombre" 
+                          className="church-card h-12" 
+                          value={formData.name}
+                          onChange={(e) => handleInputChange('name', e.target.value)}
+                          required
+                        />
+                        <Input 
+                          placeholder="Apellido" 
+                          className="church-card h-12" 
+                          value={formData.lastName}
+                          onChange={(e) => handleInputChange('lastName', e.target.value)}
+                          required
+                        />
                       </div>
-                    </div>
+                      <Input 
+                        type="email" 
+                        placeholder="Email (opcional)" 
+                        className="church-card h-12" 
+                        value={formData.email}
+                        onChange={(e) => handleInputChange('email', e.target.value)}
+                      />
+                      <Input 
+                        placeholder="Teléfono (opcional)" 
+                        className="church-card h-12" 
+                        value={formData.phone}
+                        onChange={(e) => handleInputChange('phone', e.target.value)}
+                      />
 
-                    <Textarea placeholder="Comparte tu petición de oración..." rows={6} className="church-card" />
+                      <div>
+                        <label className="block text-sm font-semibold church-text mb-3">Categoría de oración: *</label>
+                        <div className="flex flex-wrap gap-2">
+                          {prayerCategories.map((category) => (
+                            <Badge
+                              key={category.name}
+                              variant="secondary"
+                              className={`${
+                                selectedCategory === category.name 
+                                  ? 'bg-church-electric-500 text-white' 
+                                  : category.color
+                              } cursor-pointer hover:scale-105 transition-transform duration-200 px-3 py-2`}
+                              onClick={() => handleCategorySelect(category.name)}
+                            >
+                              <category.icon className="w-4 h-4 mr-2" />
+                              {category.name}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
 
-                    {/* <div className="flex items-center space-x-2">
-                      <input type="checkbox" id="anonymous" className="rounded" />
-                      <label htmlFor="anonymous" className="text-sm church-text-muted">
-                        Mantener mi petición anónima
-                      </label>
-                    </div> */}
+                      <Textarea 
+                        placeholder="Comparte tu petición de oración..." 
+                        rows={6} 
+                        className="church-card" 
+                        value={formData.message}
+                        onChange={(e) => handleInputChange('message', e.target.value)}
+                        required
+                      />
 
-                    <Button className="w-full church-button-primary h-12 text-lg font-semibold">
-                      Enviar Petición de Oración
-                    </Button>
-                  </form>
+                      {error && (
+                        <div className="flex items-center space-x-2 text-red-600 bg-red-50 p-3 rounded-lg">
+                          <AlertCircle className="w-5 h-5" />
+                          <span className="text-sm">{error}</span>
+                        </div>
+                      )}
+
+                      <Button 
+                        type="submit"
+                        className="w-full church-button-primary h-12 text-lg font-semibold"
+                        disabled={isLoading || !formData.name || !formData.lastName || !formData.category || !formData.message}
+                      >
+                        {isLoading ? 'Enviando...' : 'Enviar Petición de Oración'}
+                      </Button>
+                    </form>
+                  )}
                 </CardContent>
               </Card>
             </div>

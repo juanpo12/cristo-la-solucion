@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Palette, Music, Theater, Users } from "lucide-react";
+import { ArrowLeft, Palette, Music, Theater } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image";
 
 export default function ArtePage() {
   return (

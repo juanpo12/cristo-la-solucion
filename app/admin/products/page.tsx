@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { AdminSidebar } from '@/components/admin/admin-sidebar'
 import { ProductEditModal } from '@/components/admin/product-edit-modal'
 import { ProductViewModal } from '@/components/admin/product-view-modal'
@@ -11,6 +11,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { createClient } from '@/lib/supabase/client'
 import { Loader2 } from 'lucide-react'
+import Image from 'next/image'
 import { 
   Plus, 
   Search, 
@@ -60,11 +61,28 @@ export default function AdminProductsPage() {
   const [createModalOpen, setCreateModalOpen] = useState(false)
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
 
-  useEffect(() => {
-    loadUserAndProducts()
-  }, [])
+  const loadProducts = useCallback(async () => {
+    try {
+      const params = new URLSearchParams()
+      if (searchTerm) params.append('search', searchTerm)
+      if (selectedCategory !== 'all') params.append('category', selectedCategory)
+      if (selectedStatus !== 'all') params.append('active', selectedStatus)
 
-  const loadUserAndProducts = async () => {
+      const response = await fetch(`/api/admin/products?${params}`)
+      if (response.ok) {
+        const data = await response.json()
+        setProducts(data.products || [])
+      } else {
+        console.error('Error cargando productos:', response.statusText)
+        setProducts([])
+      }
+    } catch (error) {
+      console.error('Error cargando productos:', error)
+      setProducts([])
+    }
+  }, [searchTerm, selectedCategory, selectedStatus])
+
+  const loadUserAndProducts = useCallback(async () => {
     try {
       // Obtener información del usuario desde Supabase
       const supabase = createClient()
@@ -90,34 +108,17 @@ export default function AdminProductsPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [loadProducts])
 
-  const loadProducts = async () => {
-    try {
-      const params = new URLSearchParams()
-      if (searchTerm) params.append('search', searchTerm)
-      if (selectedCategory !== 'all') params.append('category', selectedCategory)
-      if (selectedStatus !== 'all') params.append('active', selectedStatus)
-
-      const response = await fetch(`/api/admin/products?${params}`)
-      if (response.ok) {
-        const data = await response.json()
-        setProducts(data.products || [])
-      } else {
-        console.error('Error cargando productos:', response.statusText)
-        setProducts([])
-      }
-    } catch (error) {
-      console.error('Error cargando productos:', error)
-      setProducts([])
-    }
-  }
+  useEffect(() => {
+    loadUserAndProducts()
+  }, [loadUserAndProducts])
 
   useEffect(() => {
     if (!loading) {
       loadProducts()
     }
-  }, [searchTerm, selectedCategory, selectedStatus])
+  }, [loading, loadProducts])
 
   const formatCurrency = (amount: string) => {
     return new Intl.NumberFormat('es-AR', {
@@ -306,9 +307,11 @@ export default function AdminProductsPage() {
                         {/* Imagen del producto */}
                         <div className="w-full lg:w-20 h-48 lg:h-20 bg-gray-200 rounded-lg flex-shrink-0 flex items-center justify-center">
                           {product.image ? (
-                            <img 
+                            <Image 
                               src={product.image} 
                               alt={product.name}
+                              width={80}
+                              height={80}
                               className="w-full h-full object-cover rounded-lg"
                             />
                           ) : (
