@@ -141,11 +141,6 @@ export default function ContactoPage() {
               </CardContent>
             </Card>
           </div>
-
-          {/* Formulario de Contacto */}
-          <div>
-            <ContactForm />
-          </div>
         </div>
       </div>
     </div>
