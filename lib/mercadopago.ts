@@ -49,6 +49,10 @@ export async function createPreference(data: CreatePreferenceData) {
         unit_price: item.price,
         currency_id: "ARS",
       })),
+      shipments: {
+        mode: "me2", // 🚀 activa Mercado Envíos
+        local_pickup: true, // opcional: permitir "retiro en el local"
+      },
       back_urls: {
         success: `${baseUrl}/tienda/success`,
         failure: `${baseUrl}/tienda/failure`,
