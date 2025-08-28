@@ -112,10 +112,10 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
                   href={item.href}
                   onClick={() => setSidebarOpen(false)}
                   className={cn(
-                    "flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors",
+                    "flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all duration-200 relative",
                     isActive
-                      ? "bg-church-electric text-white"
-                      : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                      ? "bg-church-electric-600 text-white shadow-md border-l-4 border-church-electric-800 font-semibold"
+                      : "text-gray-700 hover:bg-gray-100 hover:text-gray-900 hover:border-l-4 hover:border-gray-300"
                   )}
                 >
                   <item.icon className="mr-3 h-5 w-5" />
