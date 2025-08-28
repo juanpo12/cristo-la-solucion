@@ -136,7 +136,7 @@ export function Prayer() {
                       </div>
                       <Input 
                         type="email" 
-                        placeholder="Email (opcional)" 
+                        placeholder="Email" 
                         className="church-card h-12" 
                         value={formData.email}
                         onChange={(e) => handleInputChange('email', e.target.value)}
@@ -188,7 +188,7 @@ export function Prayer() {
                       <Button 
                         type="submit"
                         className="w-full church-button-primary h-12 text-lg font-semibold"
-                        disabled={isLoading || !formData.name || !formData.lastName || !formData.category || !formData.message}
+                        disabled={isLoading || !formData.name || !formData.lastName || !formData.category || !formData.message || !selectedCategory || !formData.email} 
                       >
                         {isLoading ? 'Enviando...' : 'Enviar Petición de Oración'}
                       </Button>
