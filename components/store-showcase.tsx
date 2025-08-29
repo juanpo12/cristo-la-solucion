@@ -25,7 +25,7 @@ const storeSections: StoreSection[] = [
   },
   {
     id: "arte",
-    name: "LABORATORIO DE ARTE",
+    name: "ARTE CLS",
     shortDesc: "Canto, dibujo, teatro y danza ¡Para toda la familia!",
     image: "/DSC02510.jpg",
     color: "from-pink-600/30 to-rose-600/30",
