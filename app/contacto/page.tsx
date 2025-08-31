@@ -1,6 +1,6 @@
-import { ContactForm } from "@/components/contact-form"
 import { Card, CardContent } from "@/components/ui/card"
-import { ArrowLeft, MapPin, Phone, Mail, Clock } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { MapPin, Phone, Mail, MessageCircle } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 
@@ -27,14 +27,6 @@ export default function ContactoPage() {
             </p>
           </div>
         </div>
-
-        <Link
-          href="/"
-          className="absolute top-8 left-8 bg-white/20 backdrop-blur-sm text-white px-6 py-3 rounded-full hover:bg-white hover:text-gray-900 transition-all duration-300 flex items-center space-x-2"
-        >
-          <ArrowLeft className="w-5 h-5" />
-          <span>Volver al Inicio</span>
-        </Link>
       </div>
 
       {/* Contenido principal */}
@@ -96,50 +88,22 @@ export default function ContactoPage() {
                   </div>
                 </CardContent>
               </Card>
-
-              <Card className="church-card">
-                <CardContent className="p-6">
-                  <div className="flex items-start space-x-4">
-                    <div className="w-12 h-12 bg-gradient-to-r from-church-electric-500 to-church-navy-500 rounded-full flex items-center justify-center">
-                      <Clock className="w-6 h-6 text-white" />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold church-text mb-2">Horarios de Atención</h3>
-                      <div className="church-text-muted space-y-1">
-                        <p>Lunes a Viernes: 9:00 - 18:00</p>
-                        <p>Sábados: 16:00 - 21:00</p>
-                        <p>Domingos: 9:00 - 13:00</p>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
             </div>
 
-            {/* Tipos de Peticiones */}
-            <Card className="church-card">
-              <CardContent className="p-6">
-                <h3 className="text-2xl font-bold church-text mb-4">Tipos de Peticiones</h3>
-                <div className="space-y-3 church-text-muted">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-2 h-2 bg-church-electric-500 rounded-full" />
-                    <span><strong>Consulta General:</strong> Información sobre la iglesia y actividades</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <div className="w-2 h-2 bg-church-electric-500 rounded-full" />
-                    <span><strong>Petición de Oración:</strong> Solicita oración por situaciones específicas</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <div className="w-2 h-2 bg-church-electric-500 rounded-full" />
-                    <span><strong>Consejería Pastoral:</strong> Solicita una cita con nuestros pastores</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <div className="w-2 h-2 bg-church-electric-500 rounded-full" />
-                    <span><strong>Información de Grupos:</strong> Conoce más sobre nuestros ministerios</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            {/* Botones de Acción */}
+            <div className="space-y-4">
+              <Link
+                href="https://wa.link/fpg6lr"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full"
+              >
+                <Button className="w-full bg-green-600 hover:bg-green-700 text-white py-6 text-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-xl">
+                  <MessageCircle className="w-6 h-6 mr-3" />
+                  Contáctanos por WhatsApp
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </div>
