@@ -75,31 +75,7 @@ export default function ArtePage() {
             </div>
 
           </div>
-
-          {/* Call to Action */}
-          <div className="text-center bg-gradient-to-r from-church-electric-500 to-church-navy-600 rounded-2xl p-12 text-white">
-            <h3 className="text-4xl font-bold mb-4">¡Únete a Nosotros!</h3>
-            <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
-              No importa tu edad o nivel de experiencia. Ven y descubre tu talento artístico en un ambiente familiar y acogedor.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button
-                size="lg"
-                className="bg-white text-church-electric-600 hover:bg-gray-100 px-8 py-4 text-lg"
-              >
-                Más Información
-              </Button>
-              <Link href="/contacto">
-                <Button
-                  size="lg"
-                  className="bg-white/20 backdrop-blur-sm border-2 border-white text-white hover:bg-white hover:text-church-electric-600 px-8 py-4 text-lg font-semibold transition-all duration-300"
-                >
-                  Contáctanos
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </div>
+      </div>
       </div>
     </div>
   );
