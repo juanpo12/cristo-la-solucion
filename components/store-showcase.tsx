@@ -39,7 +39,7 @@ const storeSections: StoreSection[] = [
     image: "/CONFE.jpg",
     color: "from-orange-500/40 to-red-600/40",
     focusPosition: "center center",
-  },
+  }
 ];
 
 export function StoreShowcase() {
@@ -61,8 +61,10 @@ export function StoreShowcase() {
       // Estado normal: cada sección muestra su parte más representativa
       return storeSections[sectionIndex].focusPosition;
     } else {
-      // Estado hover: mostrar la imagen completa dividida
-      return `${sectionIndex * 33.33}% center`;
+      // Estado hover: dividir la imagen entre las secciones
+      // Cada sección muestra una parte específica de la imagen
+      const percentage = (sectionIndex / (storeSections.length - 1)) * 100;
+      return `${percentage}% center`;
     }
   };
 
@@ -71,8 +73,10 @@ export function StoreShowcase() {
       // Estado normal: imagen centrada y bien proporcionada
       return "cover";
     } else {
-      // Estado hover: imagen completa dividida
-      return "400% auto";
+      // Estado hover: imagen escalada para cubrir todas las secciones
+      // Usamos el ancho total necesario para que se vea completa dividida
+      const totalSections = storeSections.length;
+      return `${totalSections * 100}% auto`;
     }
   };
 
