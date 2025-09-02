@@ -82,9 +82,9 @@ const groupsData = {
     name: "GDC - GRUPOS DE CONEXIÓN",
     subtitle: "Familia, fe y comunión íntima",
     description:
-      "Contamos con grupos de conexión (+36 años) los días martes a las 19:00 hs. La visión de estos grupos es que la gente pueda ser formada en la palabra de Dios; que puedan conectar con otras personas y juntos descubrir la misión que tienen sus vidas, que es vivir por una causa más importante; que esto los lleve a invitar y alcanzar a aquellos que nunca asistieron a la iglesia.",
+      "Contamos con grupos de conexión (+36 años) los días martes a las 19:30 hs. La visión de estos grupos es que la gente pueda ser formada en la palabra de Dios; que puedan conectar con otras personas y juntos descubrir la misión que tienen sus vidas, que es vivir por una causa más importante; que esto los lleve a invitar y alcanzar a aquellos que nunca asistieron a la iglesia.",
     image: "/GDC.jpg",
-    schedule: "Martes 19:00 HS",
+    schedule: "Martes 19:30 HS",
     location: "Auditorio Principal",
     ageRange: "+36 años",
     color: "from-orange-500 to-red-500",

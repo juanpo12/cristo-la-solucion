@@ -50,7 +50,7 @@ const groups: Group[] = [
     id: "gdc",
     name: "GDC",
     shortDesc: "Conexión familiar",
-    schedule: "Mar 19:00 HS",
+    schedule: "Mar 19:30 HS",
     image: "/GDC2.jpg",
     color: "from-orange-600/30 to-red-600/30",
     focusPosition: "center center", // Centrado para mostrar la familia
