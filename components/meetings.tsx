@@ -3,13 +3,23 @@ import { Clock } from "lucide-react"
 
 const meetings = [
   {
+    day: "Martes",
+    time: "19:00 HS",
+    description: "Reunión en YouTube para líderes y servidores. Impulsamos juntos la visión.",
+  },	
+  {
     day: "JUEVES",
     time: "20:30 HS",
-    description: "Reunión en YouTube para líderes y servidores. Impulsamos juntos la visión.",
+    description: "Día del Señor. Nos congregamos para adorar en uno de los dos horarios disponibles.",
   },
   {
     day: "DOMINGO",
     time: "11 Y 18 HS",
+    description: "Día del Señor. Nos congregamos para adorar en uno de los dos horarios disponibles.",
+  },
+  {
+    day: "SABADO",
+    time: "19:30 HS",
     description: "Día del Señor. Nos congregamos para adorar en uno de los dos horarios disponibles.",
   }
 ]
@@ -20,7 +30,7 @@ export function Meetings() {
       <div className="absolute inset-0 bg-black/20"></div>
       <div className="container mx-auto px-4 relative z-10">
         <h2 className="text-5xl font-bold text-center mb-16">NUESTRAS REUNIONES</h2>
-        <div className="grid md:grid-cols-2 gap-8 max-w-3xl mx-auto">
+        <div className="grid md:grid-cols-4 gap-8  mx-auto">
           {meetings.map((meeting, index) => (
             <Card
               key={index}

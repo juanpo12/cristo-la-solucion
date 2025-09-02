@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button"
 import { ArrowRight, MapPin, Clock } from "lucide-react"
 import Image from "next/image"
+import Link from "next/link"
 
 export function Hero() {
   const scrollToSection = (sectionId: string) => {
@@ -63,10 +64,12 @@ export function Hero() {
               <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center md:justify-start items-center pt-3 md:pt-4">
                 <Button
                   size="lg"
-                  onClick={() => scrollToSection("contacto")}
+                  asChild
                   className="bg-white text-gray-900 hover:bg-gray-100 px-6 md:px-8 py-3 md:py-4 text-base md:text-lg font-medium shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 w-full sm:w-auto"
                 >
-                  Únete a nosotros
+                  <Link href="/contacto">
+                    Únete a nosotros
+                  </Link>
                 </Button>
                 <Button
                   size="lg"
