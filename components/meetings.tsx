@@ -5,12 +5,12 @@ const meetings = [
   {
     day: "MARTES",
     time: "19:30 HS",
-    description: "Reunión en YouTube para líderes y servidores. Impulsamos juntos la visión.",
+    description: "El dia para conectar con otros, para mayores de 36 años.",
   },	
   {
     day: "JUEVES",
     time: "20:30 HS",
-    description: "Día del Señor. Nos congregamos para adorar en uno de los dos horarios disponibles.",
+    description: "Reunión en YouTube para líderes y servidores. Impulsamos juntos la visión.",
   },
   {
     day: "DOMINGO",
@@ -20,7 +20,7 @@ const meetings = [
   {
     day: "SABADO",
     time: "19:30 HS",
-    description: "Día del Señor. Nos congregamos para adorar en uno de los dos horarios disponibles.",
+    description: "Actividades para niños, adolescentes y jovenes de 3 a 35 años.",
   }
 ]
 
