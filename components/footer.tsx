@@ -86,12 +86,14 @@ export function Footer() {
                    <Instagram className="w-5 h-5 text-white" />
                  </Link>
                 <Link
-                   href="#"
-                   className="w-10 h-10 bg-gray-700 hover:bg-blue-600 rounded-full flex items-center justify-center transition-colors duration-300 group"
-                   aria-label="Facebook"
-                 >
-                   <Facebook className="w-5 h-5 text-white" />
-                 </Link>
+                    href="https://www.facebook.com/AlfredoDimiro"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-10 h-10 bg-gray-700 hover:bg-blue-600 rounded-full flex items-center justify-center transition-colors duration-300 group"
+                    aria-label="Facebook"
+                  >
+                    <Facebook className="w-5 h-5 text-white" />
+                  </Link>
                  <Link
                    href="https://wa.link/fpg6lr"
                    target="_blank"
