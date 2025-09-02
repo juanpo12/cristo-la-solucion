@@ -12,15 +12,15 @@ const meetings = [
     time: "20:30 HS",
     description: "Reunión en YouTube para líderes y servidores. Impulsamos juntos la visión.",
   },
+    {
+    day: "SABADO",
+    time: "19:30 HS",
+    description: "Actividades para niños, adolescentes y jóvenes de 3 a 35 años.",
+  },
   {
     day: "DOMINGO",
     time: "11 Y 18 HS",
     description: "Día del Señor. Nos congregamos para adorar en uno de los dos horarios disponibles.",
-  },
-  {
-    day: "SABADO",
-    time: "19:30 HS",
-    description: "Actividades para niños, adolescentes y jovenes de 3 a 35 años.",
   }
 ]
 

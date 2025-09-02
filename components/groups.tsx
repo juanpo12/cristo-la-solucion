@@ -24,7 +24,7 @@ const groups: Group[] = [
     image: "/test.jpg",
     color: "from-blue-600/30 to-cyan-600/30",
     focusPosition: "center center", // Centrado para mostrar al niño
-    ageRange: "3 a 8 años",
+    ageRange: "3 a 9 años",
   },
   {
     id: "invictos-teens",
@@ -34,7 +34,7 @@ const groups: Group[] = [
     image: "/fototeens.jpg",
     color: "from-purple-600/30 to-pink-600/30",
     focusPosition: "center center", // Centrado para mostrar a los jóvenes
-    ageRange: "9 a 17 años",
+    ageRange: "10 a 17 años",
   },
   {
     id: "invictos",
