@@ -23,7 +23,7 @@ export default function PastoresPage() {
               NUESTROS PASTORES
             </h1>
             <p className="text-xl md:text-2xl opacity-90 drop-shadow-md">
-              ALFREDO DIMIRO y CELINA DEL VALLE LÓPEZ
+              ALFREDO y CELINA DIMIRO. 
             </p>
           </div>
         </div>

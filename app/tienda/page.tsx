@@ -143,6 +143,17 @@ export default function TiendaPage() {
     })
   }
 
+  // Función para formatear precios en pesos argentinos
+  const formatPrice = (price: string | number): string => {
+    const numPrice = typeof price === 'string' ? parseFloat(price) : price
+    return numPrice.toLocaleString('es-AR', {
+      style: 'currency',
+      currency: 'ARS',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    })
+  }
+
   const handleShare = async (product: Product) => {
     const result = await shareProduct({
       id: product.id,
@@ -284,9 +295,9 @@ export default function TiendaPage() {
                           <div className="flex items-center justify-between mb-4">
                             <div className="flex items-center space-x-2">
                               {product.originalPrice && (
-                                <span className="text-base md:text-lg text-gray-400 line-through">${product.originalPrice}</span>
+                                <span className="text-base md:text-lg text-gray-400 line-through">{formatPrice(product.originalPrice)}</span>
                               )}
-                              <span className="text-2xl md:text-3xl font-bold text-church-electric-600">${product.price}</span>
+                              <span className="text-2xl md:text-3xl font-bold text-church-electric-600">{formatPrice(product.price)}</span>
                             </div>
                           </div>
                           <Button
@@ -385,9 +396,9 @@ export default function TiendaPage() {
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center space-x-2">
                         {product.originalPrice && (
-                          <span className="text-sm text-gray-400 line-through">${product.originalPrice}</span>
+                          <span className="text-sm text-gray-400 line-through">{formatPrice(product.originalPrice)}</span>
                         )}
-                        <span className="text-xl font-bold text-church-electric-600">${product.price}</span>
+                        <span className="text-xl font-bold text-church-electric-600">{formatPrice(product.price)}</span>
                       </div>
                     </div>
                     <Button 
@@ -528,15 +539,15 @@ export default function TiendaPage() {
                     <div className="flex items-center space-x-3">
                       {selectedProduct.originalPrice && (
                         <span className="text-2xl text-gray-400 line-through">
-                          ${selectedProduct.originalPrice}
+                          {formatPrice(selectedProduct.originalPrice)}
                         </span>
                       )}
                       <span className="text-4xl font-bold text-church-electric-600">
-                        ${selectedProduct.price}
+                        {formatPrice(selectedProduct.price)}
                       </span>
                       {selectedProduct.originalPrice && (
                         <Badge className="bg-green-100 text-green-800 text-sm">
-                          Ahorra ${(parseFloat(selectedProduct.originalPrice || '0') - parseFloat(selectedProduct.price)).toFixed(2)}
+                          Ahorra {formatPrice((parseFloat(selectedProduct.originalPrice || '0') - parseFloat(selectedProduct.price)).toString())}
                         </Badge>
                       )}
                     </div>
