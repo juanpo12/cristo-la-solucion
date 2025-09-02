@@ -14,7 +14,7 @@ const groupsData = {
     image: "/test.jpg",
     schedule: "Sábados 19:30 HS",
     location: "Auditorio Principal",
-    ageRange: "3 a 8 años",
+    ageRange: "3 a 9 años",
     color: "from-blue-500 to-cyan-500",
     activities: [
       "Historias bíblicas interactivas",
@@ -35,10 +35,10 @@ const groupsData = {
     subtitle: "Descubriendo tu identidad en Cristo",
     description:
       "Estamos llamados a guiar a los adolescentes a que puedan desarrollar una relación personal con Dios, libre de toda tradición y religión. Nos esforzamos en trasmitir los principios de la Palabra utilizando todos los medios disponibles para alcanzar a la mayor cantidad posible.",
-    image: "/TEENS.jpg",
+    image: "/fototeens.jpg",
     schedule: "Sábados 19:30 HS",
     location: "Auditorio Principal",
-    ageRange: "9 a 17 años",
+    ageRange: "10 a 17 años",
     color: "from-purple-500 to-pink-500",
     activities: [
       "Estudios bíblicos relevantes",
