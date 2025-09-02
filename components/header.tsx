@@ -127,7 +127,7 @@ export function Header() {
     { href: "/videos", label: "Videos", type: "link" },
     { href: "dar", label: "Dar", type: "scroll" },
     { href: "oracion", label: "Oración", type: "scroll" },
-    { href: "contacto", label: "Contacto", type: "scroll" },
+    { href: "/contacto", label: "Contacto", type: "link" },
   ]
 
   const toggleMobileMenu = () => {

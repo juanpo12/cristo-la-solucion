@@ -182,7 +182,7 @@ export default function TiendaPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-20">
+    <div className="min-h-screen bg-gray-50 pt-20 overflow-x-hidden">
       <div className="container mx-auto px-4 py-12">
         {/* Header de la tienda */}
         <div className="text-center mb-12">
@@ -196,29 +196,29 @@ export default function TiendaPage() {
         <MercadoPagoStatus /> */}
 
         {/* Barra de búsqueda y filtros */}
-        <div className="flex flex-col lg:flex-row gap-6 mb-12">
-          <div className="flex-1 relative">
+        <div className="flex flex-col gap-4 sm:gap-6 mb-12">
+          <div className="w-full relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
             <Input
               placeholder="Buscar libros..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 h-12 text-lg border-2 border-gray-200 focus:border-church-electric-400"
+              className="pl-10 h-12 text-base sm:text-lg border-2 border-gray-200 focus:border-church-electric-400 w-full"
             />
           </div>
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap gap-2 sm:gap-3 justify-center sm:justify-start">
             {categories.map((category) => (
               <Button
                 key={category.id}
                 variant={selectedCategory === category.id ? "default" : "outline"}
                 onClick={() => setSelectedCategory(category.id)}
-                className={`flex items-center space-x-2 px-6 py-3 h-12 rounded-full border-2 transition-all duration-300 ${
+                className={`flex items-center space-x-2 px-4 sm:px-6 py-2 sm:py-3 h-10 sm:h-12 rounded-full border-2 transition-all duration-300 text-sm sm:text-base ${
                   selectedCategory === category.id
                     ? "bg-church-electric-600 text-white border-church-electric-600"
                     : "border-church-electric-200 hover:bg-church-electric-50 hover:border-church-electric-400 bg-transparent"
                 }`}
               >
-                <category.icon className="w-4 h-4" />
+                <category.icon className="w-3 h-3 sm:w-4 sm:h-4" />
                 <span>{category.name}</span>
               </Button>
             ))}
@@ -232,7 +232,7 @@ export default function TiendaPage() {
               <Star className="w-8 h-8 text-yellow-500 mr-3" />
               Productos Destacados
             </h2>
-            <div className="grid lg:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
               {filteredProducts
                 .filter((product) => product.featured)
                 .map((product) => (
@@ -331,7 +331,7 @@ export default function TiendaPage() {
               </p>
             </div>
           ) : (
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
               {filteredProducts.map((product) => (
                 <Card
                   key={product.id}
@@ -422,29 +422,29 @@ export default function TiendaPage() {
       {/* Modal del Producto */}
       {isModalOpen && selectedProduct && (
         <div 
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4"
           onClick={closeModal}
         >
           <div 
-            className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl"
+            className="bg-white rounded-lg sm:rounded-2xl max-w-4xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-y-auto shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header del Modal */}
-            <div className="sticky top-0 bg-white border-b border-gray-200 p-4 flex items-center justify-between rounded-t-2xl">
-              <h2 className="text-2xl font-bold church-text">Detalles del Producto</h2>
+            <div className="sticky top-0 bg-white border-b border-gray-200 p-3 sm:p-4 flex items-center justify-between rounded-t-lg sm:rounded-t-2xl">
+              <h2 className="text-lg sm:text-2xl font-bold church-text">Detalles del Producto</h2>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={closeModal}
-                className="rounded-full p-2 hover:bg-gray-100"
+                className="rounded-full p-2 hover:bg-gray-100 h-8 w-8 sm:h-10 sm:w-10"
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4 sm:w-5 sm:h-5" />
               </Button>
             </div>
 
             {/* Contenido del Modal */}
-            <div className="p-6">
-              <div className="grid md:grid-cols-2 gap-8">
+            <div className="p-4 sm:p-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
                 {/* Imagen del Producto */}
                 <div className="space-y-4">
                   <div className="relative aspect-[3/4] rounded-xl overflow-hidden bg-gray-100">
