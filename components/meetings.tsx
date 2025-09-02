@@ -3,8 +3,8 @@ import { Clock } from "lucide-react"
 
 const meetings = [
   {
-    day: "Martes",
-    time: "19:00 HS",
+    day: "MARTES",
+    time: "19:30 HS",
     description: "Reunión en YouTube para líderes y servidores. Impulsamos juntos la visión.",
   },	
   {

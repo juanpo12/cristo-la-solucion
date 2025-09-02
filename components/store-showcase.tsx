@@ -39,6 +39,14 @@ const storeSections: StoreSection[] = [
     image: "/CONFE.jpg",
     color: "from-orange-500/40 to-red-600/40",
     focusPosition: "center center",
+  },
+  {
+    id: "sedes",
+    name: "SEDES",
+    shortDesc: "TENEMOS DOS LUGARES MAS",
+    image: "/sedesv2.jpg",
+    color: "from-blue-600/30 to-sky-600/30",
+    focusPosition: "center center",
   }
 ];
 
