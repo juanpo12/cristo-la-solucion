@@ -24,41 +24,100 @@ export function YouTubePlayer({ videoId, autoplay = true, className = '' }: YouT
   const playerInstanceRef = useRef<{ destroy: () => void } | null>(null)
   
   // Extraer el ID del video si se proporciona una URL completa
-  const extractedVideoId = videoId.includes('youtube.com') || videoId.includes('youtu.be') 
-    ? videoId.split(/[/=]/).pop() || videoId 
-    : videoId
+  const extractVideoId = (url: string): string => {
+    if (!url) return ''
+    
+    // Si ya es un ID simple (11 caracteres), devolverlo
+    if (url.length === 11 && !/[/=]/.test(url)) {
+      return url
+    }
+    
+    // Patrones para diferentes formatos de URL de YouTube
+    const patterns = [
+      /(?:youtube\.com\/watch\?v=)([^&\n?#]+)/,
+      /(?:youtube\.com\/embed\/)([^&\n?#]+)/,
+      /(?:youtu\.be\/)([^&\n?#]+)/,
+      /(?:youtube\.com\/v\/)([^&\n?#]+)/
+    ]
+    
+    for (const pattern of patterns) {
+      const match = url.match(pattern)
+      if (match && match[1]) {
+        return match[1]
+      }
+    }
+    
+    // Si no coincide con ningún patrón, intentar extraer de la URL
+    const urlParts = url.split(/[/=&?]/).filter(part => part.length === 11)
+    return urlParts[0] || url
+  }
+  
+  const extractedVideoId = extractVideoId(videoId)
 
   useEffect(() => {
     // Función para inicializar el reproductor
     const initPlayer = () => {
-      if (!playerRef.current) return
+      if (!playerRef.current || !extractedVideoId) {
+        console.warn('No se puede inicializar el reproductor: elemento o videoId faltante')
+        return
+      }
+
+      // Validar que el videoId tenga el formato correcto (11 caracteres)
+      if (extractedVideoId.length !== 11) {
+        console.error('ID de video inválido:', extractedVideoId)
+        return
+      }
 
       // Si ya existe un reproductor, destruirlo
       if (playerInstanceRef.current) {
-        playerInstanceRef.current.destroy()
+        try {
+          playerInstanceRef.current.destroy()
+        } catch (error) {
+          console.warn('Error al destruir reproductor anterior:', error)
+        }
       }
 
-      // Crear un nuevo reproductor
-      playerInstanceRef.current = new window.YT.Player(playerRef.current, {
-        videoId: extractedVideoId,
-        playerVars: {
-          autoplay: autoplay ? 1 : 0,
-          modestbranding: 1,
-          rel: 0,
-          showinfo: 0,
-          controls: 1,
-          fs: 1, // Permitir pantalla completa
-        },
-        events: {
-          onReady: () => {
-            // El reproductor está listo
-            console.log('YouTube player ready')
+      try {
+        // Crear un nuevo reproductor
+        playerInstanceRef.current = new window.YT.Player(playerRef.current, {
+          width: '100%',
+          height: '100%',
+          videoId: extractedVideoId,
+          playerVars: {
+            autoplay: autoplay ? 1 : 0,
+            modestbranding: 1,
+            rel: 0,
+            showinfo: 0,
+            controls: 1,
+            fs: 1, // Permitir pantalla completa
+            playsinline: 1, // Reproducir inline en iOS
+            enablejsapi: 1, // Habilitar API de JavaScript
+            origin: window.location.origin, // Origen para seguridad
+            widget_referrer: window.location.href, // Referrer para analytics
           },
-          onError: (event: { data: unknown }) => {
-            console.error('YouTube player error:', event.data)
+          events: {
+            onReady: () => {
+              console.log('YouTube player ready for video:', extractedVideoId)
+            },
+            onError: (event: { data: unknown }) => {
+              console.error('YouTube player error:', event.data, 'for video:', extractedVideoId)
+              // Mostrar mensaje de error más amigable
+              if (playerRef.current) {
+                playerRef.current.innerHTML = `
+                  <div class="flex items-center justify-center h-full bg-gray-100 text-gray-600">
+                    <div class="text-center">
+                      <p class="mb-2">Error al cargar el video</p>
+                      <p class="text-sm">ID: ${extractedVideoId}</p>
+                    </div>
+                  </div>
+                `
+              }
+            },
           },
-        },
-      })
+        })
+      } catch (error) {
+        console.error('Error al crear reproductor YouTube:', error)
+      }
     }
 
     // Cargar la API de YouTube si aún no está cargada

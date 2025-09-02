@@ -325,7 +325,7 @@ export default function VideosPage() {
         {/* Modal de Video */}
         {selectedVideo && (
           <div 
-            className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-2 sm:p-4"
             onClick={(e) => {
               // Solo cerrar si se hace clic fuera del contenido del modal
               if (e.target === e.currentTarget) {
@@ -334,30 +334,42 @@ export default function VideosPage() {
             }}
           >
             <div 
-              className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+              className="bg-white rounded-lg sm:rounded-2xl w-full max-w-5xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-2xl font-bold church-text">Detalles del Video</h3>
+              <div className="p-3 sm:p-6">
+                <div className="flex items-center justify-between mb-3 sm:mb-4">
+                  <h3 className="text-lg sm:text-2xl font-bold church-text">Detalles del Video</h3>
                   <Button
                     variant="ghost"
                     onClick={() => setSelectedVideo(null)}
-                    className="rounded-full"
+                    className="rounded-full h-8 w-8 sm:h-10 sm:w-10 p-0"
                   >
                     ✕
                   </Button>
                 </div>
                 
-                <div className="aspect-video bg-gray-100 rounded-lg mb-6">
+                <div className="aspect-video bg-gray-100 rounded-lg mb-4 sm:mb-6 relative">
                   {/* Reproductor de YouTube */}
-                  <div key={selectedVideo.id}>
-                    <YouTubePlayer 
-                      videoId={selectedVideo.url || selectedVideo.id} 
-                      className="rounded-lg overflow-hidden"
-                      autoplay={true}
-                    />
-                  </div>
+                  {selectedVideo.url && selectedVideo.url !== '#' ? (
+                    <div key={selectedVideo.id} className="absolute inset-0">
+                      <YouTubePlayer 
+                        videoId={selectedVideo.url || selectedVideo.id} 
+                        className="rounded-lg overflow-hidden w-full h-full"
+                        autoplay={true}
+                      />
+                    </div>
+                  ) : (
+                    <div className="absolute inset-0 flex items-center justify-center bg-gray-200 rounded-lg">
+                      <div className="text-center text-gray-600">
+                        <div className="w-16 h-16 mx-auto mb-4 bg-gray-300 rounded-full flex items-center justify-center">
+                          <Play className="w-8 h-8" />
+                        </div>
+                        <p className="text-lg font-medium mb-2">Video no disponible</p>
+                        <p className="text-sm">Este video aún no está configurado</p>
+                      </div>
+                    </div>
+                  )}
                 </div>
                 <div className="flex justify-end mb-4">
                   <Link 
