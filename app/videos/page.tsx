@@ -132,7 +132,7 @@ export default function VideosPage() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 overflow-x-hidden">
       {/* Header */}
       <div className="relative h-[50vh] overflow-hidden -mt-20">
         <Image 
@@ -168,49 +168,51 @@ export default function VideosPage() {
 
       {/* Controles y Filtros */}
       <div className="container mx-auto px-4 py-8">
-        <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
-          <div className="flex flex-col lg:flex-row gap-6">
+        <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 mb-8">
+          <div className="flex flex-col gap-4 sm:gap-6">
             {/* Búsqueda */}
-            <div className="flex-1 relative">
+            <div className="w-full relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
               <Input
                 placeholder="Buscar videos, temas, palabras clave..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 h-12 text-lg border-2 border-gray-200 focus:border-church-electric-400"
+                className="pl-10 h-12 text-base sm:text-lg border-2 border-gray-200 focus:border-church-electric-400 w-full"
               />
             </div>
 
             {/* Filtros */}
-            <div className="flex flex-wrap gap-4">
-              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                <SelectTrigger className="w-48 h-12">
-                  <SelectValue placeholder="Categoría" />
-                </SelectTrigger>
-                <SelectContent>
-                  {categories.map((category) => (
-                    <SelectItem key={category} value={category}>
-                      {category}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+            <div className="flex flex-col sm:flex-row gap-4 w-full">
+              <div className="flex flex-col sm:flex-row gap-4 flex-1">
+                <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                  <SelectTrigger className="w-full sm:w-48 h-12">
+                    <SelectValue placeholder="Categoría" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {categories.map((category) => (
+                      <SelectItem key={category} value={category}>
+                        {category}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
 
-              <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="w-48 h-12">
-                  <SelectValue placeholder="Ordenar por" />
-                </SelectTrigger>
-                <SelectContent>
-                  {sortOptions.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                <Select value={sortBy} onValueChange={setSortBy}>
+                  <SelectTrigger className="w-full sm:w-48 h-12">
+                    <SelectValue placeholder="Ordenar por" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {sortOptions.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
 
               {/* Modo de Vista */}
-              <div className="flex border border-gray-200 rounded-lg">
+              <div className="flex border border-gray-200 rounded-lg w-fit">
                 <Button
                   variant={viewMode === "grid" ? "default" : "ghost"}
                   size="sm"
@@ -266,7 +268,7 @@ export default function VideosPage() {
           </div>
         ) : (
           <div className={viewMode === "grid" 
-            ? "grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" 
+            ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6" 
             : "space-y-4"
           }>
             {filteredAndSortedVideos.map((video) => (
@@ -277,7 +279,7 @@ export default function VideosPage() {
                 }`}
                 onClick={() => setSelectedVideo(video)}
               >
-                <div className={`relative ${viewMode === "list" ? "w-80 flex-shrink-0" : "aspect-video"}`}>
+                <div className={`relative ${viewMode === "list" ? "w-full sm:w-80 flex-shrink-0" : "aspect-video"}`}>
                   <div 
                     className="absolute inset-0 bg-cover bg-center"
                     style={{ backgroundImage: `url('${video.thumbnail}')` }}
