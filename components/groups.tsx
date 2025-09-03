@@ -31,7 +31,7 @@ const groups: Group[] = [
     name: "INVICTOS TEENS",
     shortDesc: "Descubriendo propósito",
     schedule: "Sáb 19:30 HS",
-    image: "/TEENS.jpg",
+    image: "/fototeens.jpg",
     color: "from-purple-600/30 to-pink-600/30",
     focusPosition: "center center", // Centrado para mostrar a los jóvenes
     ageRange: "10 a 17 años",
