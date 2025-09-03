@@ -2,6 +2,7 @@ import { MercadoPagoConfig, Preference } from "mercadopago";
 
 // Configuración de Mercado Pago
 const accessToken = process.env.MERCADOPAGO_ACCESS_TOKEN!;
+
 const isSandbox = accessToken.startsWith("TEST-");
 
 const client = new MercadoPagoConfig({
