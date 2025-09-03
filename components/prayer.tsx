@@ -96,7 +96,7 @@ export function Prayer() {
                     <div>
                       <CardTitle className="church-text text-2xl">Envía tu petición</CardTitle>
                       <CardDescription className="church-text-muted text-lg">
-                        Oraremos por vos con amor y fe
+                        Oraremos por vos
                       </CardDescription>
                     </div>
                   </div>

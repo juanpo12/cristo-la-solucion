@@ -32,7 +32,7 @@ const storeSections: StoreSection[] = [
     focusPosition: "center center",
   },
   {
-    id: "novedades",
+    id: "eventos",
     name: " EVENTOS ",
     shortDesc:
       "¡No te pierdas las últimas actualizaciones y eventos especiales!",

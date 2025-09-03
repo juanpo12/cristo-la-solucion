@@ -31,7 +31,7 @@ const groups: Group[] = [
     name: "INVICTOS TEENS",
     shortDesc: "Descubriendo propósito",
     schedule: "Sáb 19:30 HS",
-    image: "/fototeens.jpg",
+    image: "/TEENS.jpg",
     color: "from-purple-600/30 to-pink-600/30",
     focusPosition: "center center", // Centrado para mostrar a los jóvenes
     ageRange: "10 a 17 años",
@@ -39,7 +39,7 @@ const groups: Group[] = [
   {
     id: "invictos",
     name: "INVICTOS",
-    shortDesc: "Crecimiento espiritual",
+    shortDesc: "CONOCER PARA DAR A CONOCER",
     schedule: "Sáb 19:30 HS",
     image: "/INVICTOS.jpg",
     color: "from-church-electric-600/30 to-church-navy-600/30",

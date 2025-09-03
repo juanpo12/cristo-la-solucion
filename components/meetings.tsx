@@ -10,7 +10,7 @@ const meetings = [
   {
     day: "JUEVES",
     time: "20:30 HS",
-    description: "Reunión en YouTube para líderes y servidores. Impulsamos juntos la visión.",
+    description: "Reunión online a través de YouTube orientada a líderes y servidores... ¡Juntos impulsamos la visión!",
   },
     {
     day: "SABADO",
@@ -20,7 +20,7 @@ const meetings = [
   {
     day: "DOMINGO",
     time: "11 Y 18 HS",
-    description: "Día del Señor. Nos congregamos para adorar en uno de los dos horarios disponibles.",
+    description: "Contamos con dos horarios disponibles para que cada persona pueda asistir a las reuniones y ser parte de lo que Dios está haciendo en nuestra iglesia.",
   }
 ]
 
