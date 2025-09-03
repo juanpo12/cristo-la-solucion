@@ -30,35 +30,35 @@ export default function EventosPage() {
     {
       id: "velorio-cancelado",
       title: "VELORIO CANCELADO",
-      description: "Así llamamos Semana Santa en nuestra casa. Es la parte del año donde la gente está más dispuesta a conocer a Jesús. Tomamos un tiempo para evangelizar a nuestra ciudad llevando el mensaje de salvación. Tenemos reuniones especiales de sanidad y ministración, donde también compartimos la mesa del Señor.",
+      description: "Celebramos Semana Santa a través de reuniones especiales que tienen como centro dar a conocer a Cristo Jesús y su mensaje de salvación, sanidad y libertad. Además, recordamos su muerte y su resurrección a través de la Santa Cena, como Él dijo: 'Hagan esto en memoria de mí'.",
       icon: Cross,
       color: "from-amber-500 to-orange-600"
     },
     {
       id: "semana-familia",
       title: "SEMANA DE LA FAMILIA",
-      description: "Dedicamos una semana para ministrar acerca de familia. Todos los días tenemos un encuentro donde exponemos el modelo de la Palabra con respecto a la familia.",
+      description: "Apartamos una semana para ser enseñados acerca de familia. Todos los días tenemos un encuentro único y especial en donde exponemos el modelo de la Palabra respecto a los diferentes roles, funciones y problemáticas que se pueda estar atravesando en un hogar.",
       icon: Home,
       color: "from-green-500 to-emerald-600"
     },
     {
       id: "operacion-mateo",
       title: "OPERACIÓN MATEO",
-      description: "Así como Mateo invito a sus amigos a una cena en su casa para conocer a Jesús, como iglesia creamos una excusa para invitar a nuestros amigos con el fin de impartirle el mensaje de Salvación.",
+      description: "Al igual que Mateo, quien realizó una cena en su casa e invitó a sus amigos para que puedan conocer a Jesús, como iglesia armamos una excusa para invitar a nuestros allegados con el fin de compartirles las buenas noticias.",
       icon: UserCheck,
       color: "from-teal-500 to-cyan-600"
     },
     {
       id: "bautismo",
       title: "BAUTISMO",
-      description: "Un domingo al año lo apartamos para bautizar en aguas a todos los hermanos que sumaron a nuestra familia espiritual.",
+      description: "Todos los años apartamos un día para que aquellos hermanos que se sumaron a la vida de fe puedan celebrarlo a través de la confirmación pública, es decir, del bautismo en aguas.",
       icon: Droplets,
       color: "from-blue-400 to-blue-600"
     },
     {
       id: "rotonda",
       title: "ROTONDA",
-      description: "Frente de la Rotonda de San Justo estamos reconstruyendo un edificio propio totalmente equipado para congregar a nuestros niños, adolescentes y jóvenes. También contara con una confitería para conectar con otros y espacios de star para disfrutar de los grupos.",
+      description: "Frente a la rotonda de San Justo adquirimos un nuevo lugar que momentáneamente se encuentra en reconstrucción. El objetivo es terminar de equiparlo con todo lo necesario para que niños, adolescentes y jóvenes de nuestra congregación puedan asistir a las actividades diarias realizadas por la iglesia. También, contará con una cafetería y diversos espacios para disfrutar y compartir con otras personas.",
       icon: Building2,
       color: "from-indigo-500 to-purple-600"
     }
