@@ -37,8 +37,8 @@ export default function ContactoPage() {
             <div>
               <h2 className="text-4xl font-bold church-text mb-6">¿Cómo podemos ayudarte?</h2>
               <p className="text-xl church-text-muted leading-relaxed">
-                Nos encantaría escuchar de ti. Ya sea que tengas una pregunta, necesites oración, 
-                o quieras conocer más sobre nuestra iglesia, estamos aquí para ti.
+                Nos encantaría saber de ti. Ya sea que tengas una pregunta, necesites oración, 
+                o quieras conocer más sobre nuestra iglesia, estamos aquí para ayudarte.
               </p>
             </div>
 
@@ -88,6 +88,57 @@ export default function ContactoPage() {
                   </div>
                 </CardContent>
               </Card>
+
+              <Card className="church-card">
+                <CardContent className="p-6">
+                  <div className="flex items-start space-x-4">
+                    <div className="w-12 h-12 bg-gradient-to-r from-church-electric-500 to-church-navy-500 rounded-full flex items-center justify-center">
+                      <Phone className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold church-text mb-2">Horarios de atención</h3>
+                      <p className="church-text-muted">
+                        Lunes a Viernes: 13:00 - 19:00 HS
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Tipos de peticiones */}
+            <div className="bg-white rounded-xl p-6 shadow-lg">
+              <h3 className="text-2xl font-bold church-text mb-6">Tipos de peticiones</h3>
+              <div className="space-y-4">
+                <div className="flex items-start space-x-3">
+                  <div className="w-2 h-2 bg-church-electric-600 rounded-full mt-2"></div>
+                  <div>
+                    <h4 className="font-semibold church-text">Consulta general:</h4>
+                    <p className="church-text-muted">Información sobre la iglesia y actividades.</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <div className="w-2 h-2 bg-church-electric-600 rounded-full mt-2"></div>
+                  <div>
+                    <h4 className="font-semibold church-text">Petición de oración:</h4>
+                    <p className="church-text-muted">Solicita oración por situaciones específicas.</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <div className="w-2 h-2 bg-church-electric-600 rounded-full mt-2"></div>
+                  <div>
+                    <h4 className="font-semibold church-text">Consejería pastoral:</h4>
+                    <p className="church-text-muted">Solicita una cita con nuestros pastores.</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <div className="w-2 h-2 bg-church-electric-600 rounded-full mt-2"></div>
+                  <div>
+                    <h4 className="font-semibold church-text">Información de grupos:</h4>
+                    <p className="church-text-muted">Conoce más sobre nuestros ministerios.</p>
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* Botones de Acción */}
@@ -100,7 +151,7 @@ export default function ContactoPage() {
               >
                 <Button className="w-full bg-green-600 hover:bg-green-700 text-white py-6 text-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-xl">
                   <MessageCircle className="w-6 h-6 mr-3" />
-                  Contáctanos por WhatsApp
+                  ENVÍA TU PETICIÓN
                 </Button>
               </Link>
             </div>

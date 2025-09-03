@@ -23,7 +23,7 @@ export default function PastoresPage() {
               NUESTROS PASTORES
             </h1>
             <p className="text-xl md:text-2xl opacity-90 drop-shadow-md">
-              ALFREDO y CELINA DIMIRO. 
+              ALFREDO Y CELINA DIMIRO. 
             </p>
           </div>
         </div>
@@ -46,7 +46,7 @@ export default function PastoresPage() {
           <div className="mt-16 space-y-12">
             <div className="text-center">
               <h2 className="text-4xl font-bold church-text mb-8">
-                Su Historia y Ministerio
+                Su historia y ministerio
               </h2>
             </div>
 
@@ -93,7 +93,7 @@ export default function PastoresPage() {
                     size="lg"
                     className="bg-white/20 backdrop-blur-sm border-2 border-white text-white hover:bg-white hover:text-church-electric-600 px-8 py-4 text-lg font-semibold transition-all duration-300"
                   >
-                    Ver Libros del Pastor
+                    Ver libros del pastor
                   </Button>
                 </Link>
               </div>

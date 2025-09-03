@@ -67,12 +67,12 @@ export default function GivingSection() {
         </div>
 
         <div className="bg-blue-600 rounded-2xl p-12 text-center text-white">
-          <h3 className="text-3xl font-bold mb-4">CADA APORTE CUENTA</h3>
+          <h3 className="text-3xl font-bold mb-4">Cada aporte cuenta</h3>
           <p className="text-blue-100 mb-8 max-w-2xl mx-auto">
             No importa el monto, tu generosidad marca la diferencia en la vida de muchas personas.
           </p>
           <button className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors">
-            DAR AHORA
+            Dar ahora
           </button>
         </div>
       </div>
