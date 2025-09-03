@@ -310,26 +310,20 @@ export function Header() {
             }`}
             aria-label="Toggle menu"
           >
-            <div className="w-6 h-6 flex flex-col justify-center items-center">
+            <div className="w-6 h-6 flex flex-col justify-center items-center relative">
               <span
-                className={`w-5 h-0.5 transition-all duration-300 ${
-                  isScrolled ? "bg-white" : "bg-white"
-                } ${
-                  isMobileMenuOpen ? "rotate-45 translate-y-1" : ""
+                className={`w-5 h-0.5 bg-white transition-all duration-300 absolute ${
+                  isMobileMenuOpen ? "rotate-45" : "translate-y-[-4px]"
                 }`}
               />
               <span
-                className={`w-5 h-0.5 transition-all duration-300 mt-1 ${
-                  isScrolled ? "bg-white" : "bg-white"
-                } ${
-                  isMobileMenuOpen ? "opacity-0" : ""
+                className={`w-5 h-0.5 bg-white transition-all duration-300 ${
+                  isMobileMenuOpen ? "opacity-0" : "opacity-100"
                 }`}
               />
               <span
-                className={`w-5 h-0.5 transition-all duration-300 mt-1 ${
-                  isScrolled ? "bg-white" : "bg-white"
-                } ${
-                  isMobileMenuOpen ? "-rotate-45 -translate-y-1" : ""
+                className={`w-5 h-0.5 bg-white transition-all duration-300 absolute ${
+                  isMobileMenuOpen ? "-rotate-45" : "translate-y-[4px]"
                 }`}
               />
             </div>
@@ -344,13 +338,13 @@ export function Header() {
               : "max-h-0 opacity-0 overflow-hidden"
           }`}
         >
-          <div className="py-6 space-y-2 border-t border-white/10">
+          <div className="py-6 px-4 space-y-2 border-t border-white/10">
             {navItems.map((item) => (
               <div key={item.href}>
                 {item.type === "link" ? (
                   <Link
                     href={item.href}
-                    className={`block px-6 py-4 text-center rounded-xl transition-all duration-200 mx-4 ${
+                    className={`block px-6 py-4 text-center rounded-xl transition-all duration-200 ${
                       pathname === item.href
                         ? "bg-white/20 text-white font-semibold"
                         : "text-white/90 hover:bg-white/10 hover:text-white"
@@ -362,7 +356,7 @@ export function Header() {
                 ) : (
                   <button
                     onClick={() => scrollToSection(item.href)}
-                    className={`block w-full px-6 py-4 text-center rounded-xl transition-all duration-200 mx-4 ${
+                    className={`block w-full px-6 py-4 text-center rounded-xl transition-all duration-200 ${
                       activeSection === item.href 
                         ? "bg-white/20 text-white font-semibold" 
                         : "text-white/90 hover:bg-white/10 hover:text-white"
@@ -375,7 +369,7 @@ export function Header() {
             ))}
             
             {/* Dropdown Nosotros Mobile - Simplificado */}
-            <div className="mx-4">
+            <div>
               <button
                 onClick={() => setIsMobileNosotrosOpen(!isMobileNosotrosOpen)}
                 className="flex items-center justify-center w-full px-6 py-4 text-white/90 hover:bg-white/10 hover:text-white rounded-xl transition-all duration-200"
@@ -390,7 +384,7 @@ export function Header() {
                   isMobileNosotrosOpen ? "max-h-32 opacity-100 mt-2" : "max-h-0 opacity-0"
                 }`}
               >
-                <div className="space-y-2">
+                <div className="space-y-2 px-4">
                   <Link
                     href="/pastores"
                     className="block px-6 py-3 text-center text-white/80 hover:bg-white/10 hover:text-white rounded-lg transition-all duration-200"
