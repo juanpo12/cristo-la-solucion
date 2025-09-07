@@ -32,7 +32,7 @@ const groupsData = {
   },
   "invictos-teens": {
     name: "INVICTOS TEENS",
-    subtitle: "Descubriendo tu identidad en Cristo",
+    subtitle: "Conociendo tu identidad en Cristo",
     description:
       "Estamos llamados a guiar a los adolescentes a que puedan desarrollar una relación personal con Dios, libre de toda tradición y religión. Nos esforzamos en trasmitir los principios de la Palabra utilizando todos los medios disponibles para alcanzar a la mayor cantidad posible.",
     image: "/fototeens.jpg",

@@ -26,7 +26,7 @@ const storeSections: StoreSection[] = [
   {
     id: "arte",
     name: "ARTE CLS",
-    shortDesc: "Canto, dibujo, teatro y danza ¡Para toda la familia!",
+    shortDesc: "Canto, dibujo, teatro y danza ¡para toda la familia!",
     image: "/DSC02510.jpg",
     color: "from-pink-600/30 to-rose-600/30",
     focusPosition: "center center",
@@ -43,7 +43,7 @@ const storeSections: StoreSection[] = [
   {
     id: "sedes",
     name: "SEDES",
-    shortDesc: "TENEMOS DOS LUGARES MAS",
+    shortDesc: "Tenemos dos lugares más",
     image: "/sedesv2.jpg",
     color: "from-blue-600/30 to-sky-600/30",
     focusPosition: "center center",

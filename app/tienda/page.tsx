@@ -199,7 +199,7 @@ export default function TiendaPage() {
         <div className="text-center mb-12">
           <h1 className="text-6xl font-bold church-text mb-6">TIENDA MINISTERIAL</h1>
           <p className="text-xl church-text-muted max-w-3xl mx-auto leading-relaxed">
-            Descubre libros del Pastor Alfredo Dimiro que fortalecerán tu fe y te ayudarán en tu crecimiento espiritual
+            Descubre libros del pastor Alfredo Dimiro que fortalecerán tu fe y te ayudarán en tu crecimiento espiritual
           </p>
         </div>
 

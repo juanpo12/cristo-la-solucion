@@ -23,7 +23,7 @@ export default function PastoresPage() {
               NUESTROS PASTORES
             </h1>
             <p className="text-xl md:text-2xl opacity-90 drop-shadow-md">
-              ALFREDO Y CELINA DIMIRO. 
+              ALFREDO Y CELINA DIMIRO
             </p>
           </div>
         </div>
@@ -54,9 +54,9 @@ export default function PastoresPage() {
               <p className="text-xl church-text-muted leading-relaxed text-justify">
                 Pastorean la iglesia{" "}
                 <strong className="church-text">
-                  Cristo La Solución, San Justo
+                  Cristo La Solución, San Justo,  <em></em> 
                 </strong>
-                , hace más de treinta años. Alfredo es un maestro de las
+                  hace más de treinta años. Alfredo es un maestro de las
                 Escrituras, le apasiona desmenuzar los versos bíblicos y
                 estudiarlos detalladamente para enseñárselo a las personas.
                 Algunos de sus estudios pueden encontrarse en los libros que

@@ -63,16 +63,12 @@ export default function VideosPage() {
     // Ordenar
     filtered.sort((a, b) => {
       switch (sortBy) {
-        case "newest":
+        case "nuevos":
           return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
-        case "oldest":
+        case "antiguos":
           return new Date(a.publishedAt).getTime() - new Date(b.publishedAt).getTime()
-        case "most-viewed":
+        case "Más visto":
           return parseInt(b.viewCount.replace(/,/g, '')) - parseInt(a.viewCount.replace(/,/g, ''))
-        case "duration-long":
-          return parseDuration(b.duration) - parseDuration(a.duration)
-        case "duration-short":
-          return parseDuration(a.duration) - parseDuration(b.duration)
         default:
           return 0
       }
@@ -147,10 +143,7 @@ export default function VideosPage() {
 
         <div className="absolute inset-0 flex items-center justify-center text-white">
           <div className="text-center max-w-4xl px-4">
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 drop-shadow-lg">Transmisiones</h1>
-            <p className="text-xl md:text-2xl opacity-90 drop-shadow-md mb-4">
-              Pastor Alfredo Dimiro
-            </p>
+            <h1 className="text-5xl md:text-6xl font-bold mb-6 drop-shadow-lg">TRANSMISIONES</h1>
             <p className="text-lg opacity-80 drop-shadow-md">
               Biblioteca completa de enseñanzas, conferencias y estudios bíblicos
             </p>

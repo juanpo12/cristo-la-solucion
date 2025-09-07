@@ -87,24 +87,10 @@ export function Hero() {
       </div>
 
       {/* Información de horarios mejorada - Ajustada para móvil */}
-      <div className="absolute bottom-16 md:bottom-8 left-1/2 transform -translate-x-1/2 z-20 px-4">
-        <div className="bg-white/10 backdrop-blur-md rounded-2xl px-4 md:px-6 py-3 md:py-4 border border-white/20">
-          <div className="flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-6 text-white">
-            <div className="flex items-center space-x-2">
-              <Clock className="w-4 h-4" />
-              <span className="text-sm font-medium">Domingos 11:00 y 18:00</span>
-            </div>
-            <div className="hidden sm:block w-px h-4 bg-white/30" />
-            <div className="flex items-center space-x-2">
-              <MapPin className="w-4 h-4" />
-              <span className="text-sm font-medium">Presencial</span>
-            </div>
-          </div>
-        </div>
-      </div>
+     
 
       {/* Indicador de scroll - Oculto en móvil para evitar superposición */}
-      <div className="hidden md:block absolute bottom-24 left-1/2 transform -translate-x-1/2 z-10 animate-bounce">
+      <div className="hidden md:block absolute bottom-10 left-1/2 transform -translate-x-1/2 z-10 animate-bounce">
         <div className="w-6 h-10 border-2 border-white/40 rounded-full flex justify-center">
           <div className="w-1 h-3 bg-white/60 rounded-full mt-2 animate-pulse" />
         </div>

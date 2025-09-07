@@ -9,21 +9,21 @@ export default function EventosPage() {
     {
       id: "inmersion",
       title: "INMERSIÓN",
-      description: "Inmersión es la conferencia para preadolescentes, adolescentes y jóvenes de 10 a 35 años, que tiene como finalidad acercar a esta generación a los pies de Jesús para que las vidas sean transformadas, y luego manifestarlo en las distintas esferas de la sociedad.",
+      description: "Es la conferencia para preadolescentes, adolescentes y jóvenes de 10 a 35 años, que tiene como finalidad acercar a esta generación a los pies de Jesús para que las vidas sean transformadas, y luego manifestarlo en las distintas esferas de la sociedad.",
       icon: Users,
       color: "from-blue-500 to-blue-600"
     },
     {
       id: "corazon-corazon",
       title: "DE CORAZÓN A CORAZÓN",
-      description: "De corazón a corazón es una experiencia diseñada para toda la iglesia, que tiene el objetivo de edificar, fortalecer y equipar a cada miembro de nuestra comunidad, a través de momentos de alabanza, adoración y enseñanzas que marcan el rumbo de sus vidas y confirman lo que Dios está hablando en la temporada actual.",
+      description: "Es una experiencia diseñada para toda la iglesia, que tiene el objetivo de edificar, fortalecer y equipar a cada miembro de nuestra comunidad, a través de momentos de alabanza, adoración y enseñanzas que marcan el rumbo de sus vidas.",
       icon: Heart,
       color: "from-red-500 to-pink-600"
     },
     {
       id: "nosotras",
       title: "NOSOTRAS",
-      description: "Es un tiempo apartado para las mujeres de nuestra iglesia, en donde compartimos palabra con el fin del levantarlas y equiparlas.",
+      description: "Es un tiempo apartado para las mujeres de nuestra iglesia, en donde compartimos palabra con el fin de levantarlas y equiparlas.",
       icon: Heart,
       color: "from-purple-500 to-pink-500"
     },
@@ -51,14 +51,14 @@ export default function EventosPage() {
     {
       id: "bautismo",
       title: "BAUTISMO",
-      description: "Todos los años apartamos un día para que aquellos hermanos que se sumaron a la vida de fe puedan celebrarlo a través de la confirmación pública, es decir, del bautismo en aguas.",
+      description: "Todos los años apartamos un día para que aquellos hermanos, que recibieron a Jesús como su Señor y Salvador, tengan la posibilidad de celebrarlo a través de la confirmación pública, es decir, del bautismo en aguas.\n\nPara más información contáctanos.",
       icon: Droplets,
       color: "from-blue-400 to-blue-600"
     },
     {
       id: "rotonda",
       title: "ROTONDA",
-      description: "Frente a la rotonda de San Justo adquirimos un nuevo lugar que momentáneamente se encuentra en reconstrucción. El objetivo es terminar de equiparlo con todo lo necesario para que niños, adolescentes y jóvenes de nuestra congregación puedan asistir a las actividades diarias realizadas por la iglesia. También, contará con una cafetería y diversos espacios para disfrutar y compartir con otras personas.",
+      description: "Frente a la rotonda de San Justo adquirimos un nuevo lugar que momentáneamente se encuentra en reconstrucción. El objetivo es terminar de equiparlo con todo lo necesario para que niños, adolescentes y jóvenes de nuestra congregación puedan asistir a las actividades diarias realizadas por la iglesia.",
       icon: Building2,
       color: "from-indigo-500 to-purple-600"
     }
@@ -117,7 +117,7 @@ export default function EventosPage() {
               </CardHeader>
               
               <CardContent className="pt-0">
-                <p className="church-text-muted leading-relaxed text-base">
+                <p className="church-text-muted leading-relaxed text-base whitespace-pre-line">
                   {evento.description}
                 </p>
               </CardContent>

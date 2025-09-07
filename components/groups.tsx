@@ -39,12 +39,12 @@ const groups: Group[] = [
   {
     id: "invictos",
     name: "INVICTOS",
-    shortDesc: "CONOCER PARA DAR A CONOCER",
+    shortDesc: "Conocer para dar a conocer",
     schedule: "Sáb 19:30 HS",
     image: "/INVICTOS.jpg",
     color: "from-church-electric-600/30 to-church-navy-600/30",
     focusPosition: "center center", // Centrado para mostrar el grupo
-    ageRange: "18 a 35 años",
+    ageRange: "18 a 34 años",
   },
   {
     id: "gdc",
@@ -54,7 +54,7 @@ const groups: Group[] = [
     image: "/GDC2.jpg",
     color: "from-orange-600/30 to-red-600/30",
     focusPosition: "center center", // Centrado para mostrar la familia
-    ageRange: "+36 años",
+    ageRange: "+35 años",
   },
 ]
 

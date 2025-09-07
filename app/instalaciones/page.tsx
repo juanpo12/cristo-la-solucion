@@ -50,7 +50,7 @@ export default function InstalacionesPage() {
           <div className="text-center max-w-4xl px-4">
             <h1 className="text-5xl md:text-6xl font-bold mb-6 drop-shadow-lg">INSTALACIONES</h1>
             <p className="text-xl md:text-2xl opacity-90 drop-shadow-md">
-              Conoce nuestros espacios diseñados para servir a la comunidad
+              Nuestros espacios diseñados para servir a la comunidad
             </p>
           </div>
         </div>
@@ -111,7 +111,7 @@ export default function InstalacionesPage() {
           {/* Google Maps */}
           <div className="aspect-video rounded-xl overflow-hidden shadow-lg">
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3282.8234567890123!2d-58.5678901234567!3d-34.6789012345678!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzTCsDQwJzQ0LjAiUyA1OMKwMzQnMDQuNCJX!5e0!3m2!1ses!2sar!4v1234567890123!5m2!1ses!2sar"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3280.7526004077745!2d-58.56511212445445!3d-34.68619297292483!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95bcc623af501339%3A0xc605a8a195d8ce69!2sAv.%20Brig.%20Gral.%20Juan%20Manuel%20de%20Rosas%204357%2C%20B1754FVB%20San%20Justo%2C%20Provincia%20de%20Buenos%20Aires!5e0!3m2!1ses-419!2sar!4v1757106329998!5m2!1ses-419!2sar"
               width="100%"
               height="100%"
               style={{ border: 0 }}
@@ -123,18 +123,6 @@ export default function InstalacionesPage() {
           </div>
         </div>
 
-        {/* Call to Action */}
-        <div className="text-center bg-gradient-to-r from-church-electric-500 to-church-navy-600 rounded-2xl p-12 text-white">
-          <h3 className="text-4xl font-bold mb-4">¡Te esperamos!</h3>
-          <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
-            Ven y conoce nuestras instalaciones. Estamos aquí para servirte y acompañarte en tu crecimiento espiritual.
-          </p>
-          <Link href="/contacto">
-            <Button size="lg" className="bg-white text-church-electric-600 hover:bg-gray-100 px-8 py-4 text-lg">
-              Contáctanos
-            </Button>
-          </Link>
-        </div>
       </div>
     </div>
   )

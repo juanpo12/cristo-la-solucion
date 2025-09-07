@@ -5,7 +5,7 @@ const meetings = [
   {
     day: "MARTES",
     time: "19:30 HS",
-    description: "El dia para conectar con otros, para mayores de 36 años.",
+    description: "Día apartado para compartir y conectar con otros mediante grupos. Para mayores de 35 años.",
   },	
   {
     day: "JUEVES",
@@ -13,14 +13,14 @@ const meetings = [
     description: "Reunión online a través de YouTube orientada a líderes y servidores... ¡Juntos impulsamos la visión!",
   },
     {
-    day: "SABADO",
+    day: "SÁBADOS",
     time: "19:30 HS",
-    description: "Actividades para niños, adolescentes y jóvenes de 3 a 35 años.",
+    description: "Actividades en grupos y Palabra para niños, adolescentes y jóvenes de 3 a 34 años.",
   },
   {
-    day: "DOMINGO",
+    day: "DOMINGOS",
     time: "11 Y 18 HS",
-    description: "Contamos con dos horarios disponibles para que cada persona pueda asistir a las reuniones y ser parte de lo que Dios está haciendo en nuestra iglesia.",
+    description: "Esperamos que puedas asistir a las reuniones y seas parte de lo que Dios está haciendo en nuestra iglesia.",
   }
 ]
 
