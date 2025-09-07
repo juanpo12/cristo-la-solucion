@@ -72,18 +72,24 @@ export function Header() {
           const scrollPosition = window.scrollY
           setIsScrolled(scrollPosition > 50)
 
-          const sections = ["vision", "grupos", "reuniones", "dar", "oracion", "contacto"]
-          const currentScrollPosition = scrollPosition + 100
+          // Solo detectar secciones activas si estamos en la página principal
+          if (pathname === '/') {
+            const sections = ["vision", "grupos", "reuniones", "dar", "oracion", "contacto"]
+            const currentScrollPosition = scrollPosition + 100
 
-          for (const section of sections) {
-            const element = document.getElementById(section)
-            if (element) {
-              const { offsetTop, offsetHeight } = element
-              if (currentScrollPosition >= offsetTop && currentScrollPosition < offsetTop + offsetHeight) {
-                setActiveSection(section)
-                break
+            for (const section of sections) {
+              const element = document.getElementById(section)
+              if (element) {
+                const { offsetTop, offsetHeight } = element
+                if (currentScrollPosition >= offsetTop && currentScrollPosition < offsetTop + offsetHeight) {
+                  setActiveSection(section)
+                  break
+                }
               }
             }
+          } else {
+            // Limpiar activeSection si no estamos en la página principal
+            setActiveSection("")
           }
           ticking = false
         })
@@ -93,7 +99,7 @@ export function Header() {
 
     window.addEventListener("scroll", handleScroll, { passive: true })
     return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
+  }, [pathname])
 
   // Cerrar menú móvil cuando se redimensiona la ventana
   useEffect(() => {
@@ -220,10 +226,14 @@ export function Header() {
                 {item.type === "link" ? (
                   <Link
                     href={item.href}
-                    className={`font-medium transition-colors duration-200 relative group text-white hover:text-gray-200"`}
+                    className={`font-medium transition-colors duration-200 relative group text-white hover:text-gray-200`}
                   >
                     {item.label}
-                    <span className={`absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full bg-white`} />
+                    <span className={`absolute bottom-0 left-0 h-0.5 transition-all duration-300 ${
+                      isScrolled ? "bg-blue-600" : "bg-white"
+                    } ${
+                      pathname === item.href ? "w-full" : "w-0 group-hover:w-full"
+                    }`} />
                   </Link>
                 ) : (
                   <button
