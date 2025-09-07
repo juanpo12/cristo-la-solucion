@@ -131,8 +131,8 @@ export function Header() {
     { href: "reuniones", label: "Reuniones", type: "scroll" },
     { href: "/tienda", label: "Tienda", type: "link" },
     { href: "/videos", label: "Videos", type: "link" },
-    { href: "dar", label: "Dar", type: "scroll" },
     { href: "oracion", label: "Oración", type: "scroll" },
+    { href: "dar", label: "Dar", type: "scroll" },
     { href: "/contacto", label: "Contacto", type: "link" },
   ]
 
@@ -296,19 +296,7 @@ export function Header() {
             </div>
           </div>
 
-          {/* CTA Button Desktop */}
-          <div className="hidden lg:block">
-            <Link
-              href="/contacto"
-              className={`px-6 py-2.5 rounded-lg font-medium transition-all duration-200 inline-block ${
-                isScrolled 
-                  ? "bg-blue-600 text-white hover:bg-blue-700" 
-                  : "bg-white text-gray-900 hover:bg-gray-100"
-              }`}
-            >
-              Contáctanos
-            </Link>
-          </div>
+
 
           {/* Botón Hamburguesa */}
           <button
