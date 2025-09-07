@@ -9,6 +9,7 @@ export class ProductService {
     category?: string
     featured?: boolean
     active?: boolean
+    inStock?: boolean
     search?: string
     sortBy?: 'name' | 'price' | 'rating' | 'createdAt'
     sortOrder?: 'asc' | 'desc'
@@ -31,6 +32,10 @@ export class ProductService {
       
       if (filters?.active !== undefined) {
         conditions.push(eq(products.active, filters.active))
+      }
+      
+      if (filters?.inStock !== undefined && filters.inStock) {
+        conditions.push(sql`${products.stock} > 0`)
       }
       
       if (filters?.search) {

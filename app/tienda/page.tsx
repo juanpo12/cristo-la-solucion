@@ -10,6 +10,8 @@ import { Input } from "@/components/ui/input"
 import { useCart } from "@/lib/hooks/use-cart"
 import { useFavorites } from "@/lib/hooks/use-favorites"
 import { useShare } from "@/lib/hooks/use-share"
+import { useProductsInStock } from "@/lib/hooks/use-products"
+import { ProductGridSkeleton } from "@/components/product-skeleton"
 // import { MercadoPagoStatus } from "@/components/mercadopago-status"
 import type { Product } from "@/lib/db/schema"
 import Image from "next/image"
@@ -22,8 +24,6 @@ const categories = [
 ]
 
 export default function TiendaPage() {
-  const [products, setProducts] = useState<Product[]>([])
-  const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("all")
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
@@ -35,28 +35,21 @@ export default function TiendaPage() {
   const { shareProduct } = useShare()
   const searchParams = useSearchParams()
 
-  // Cargar productos desde la API
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        setLoading(true)
-        const response = await fetch('/api/products?active=true')
-        const data = await response.json()
-        
-        if (data.success) {
-          setProducts(data.data)
-        } else {
-          console.error('Error fetching products:', data.error)
-        }
-      } catch (error) {
-        console.error('Error fetching products:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchProducts()
-  }, [])
+  // Usar el hook optimizado para cargar productos
+  const { 
+    data: products = [], 
+    isLoading: loading, 
+    error,
+    refetch 
+  } = useProductsInStock({
+    category: selectedCategory !== 'all' ? selectedCategory : undefined,
+    search: searchTerm.length > 2 ? searchTerm : undefined,
+    sortBy: 'createdAt',
+    sortOrder: 'desc'
+  }, {
+    enabled: true,
+    staleTime: 5 * 60 * 1000, // 5 minutos
+  })
 
   // Detectar producto compartido en URL y abrir modal automáticamente
   useEffect(() => {
@@ -75,19 +68,20 @@ export default function TiendaPage() {
     }
   }, [searchParams, products])
 
-  // Filtrar productos basado en búsqueda y categoría
+  // Los productos ya vienen filtrados del hook, solo necesitamos memoizar para optimización
   const filteredProducts = useMemo(() => {
-    return products.filter((product) => {
-      const matchesSearch =
-        product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.description.toLowerCase().includes(searchTerm.toLowerCase())
-
-      const matchesCategory = selectedCategory === "all" || product.category === selectedCategory
-
-      return matchesSearch && matchesCategory
-    })
-  }, [products, searchTerm, selectedCategory])
+    // Si hay búsqueda local adicional (menos de 3 caracteres)
+    if (searchTerm.length > 0 && searchTerm.length <= 2) {
+      return products.filter((product) => {
+        const matchesSearch =
+          product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          product.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          product.description.toLowerCase().includes(searchTerm.toLowerCase())
+        return matchesSearch
+      })
+    }
+    return products
+  }, [products, searchTerm])
 
   const addToCart = (product: Product) => {
     dispatch({
@@ -178,14 +172,19 @@ export default function TiendaPage() {
     }
   }
 
-  // Mostrar loading mientras se cargan los productos
-  if (loading) {
+  // Mostrar error si hay problemas cargando productos
+  if (error) {
     return (
       <div className="min-h-screen bg-gray-50 pt-20">
         <div className="container mx-auto px-4 py-12">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-church-electric-600 mx-auto mb-4"></div>
-            <p className="text-church-text-muted">Cargando productos...</p>
+            <div className="text-red-600 mb-4">
+              <h2 className="text-2xl font-bold mb-2">Error al cargar productos</h2>
+              <p className="text-gray-600 mb-4">Hubo un problema cargando los productos. Por favor, intenta nuevamente.</p>
+              <Button onClick={() => refetch()} className="bg-church-electric-600 hover:bg-church-electric-700">
+                Reintentar
+              </Button>
+            </div>
           </div>
         </div>
       </div>
@@ -333,7 +332,9 @@ export default function TiendaPage() {
             </div>
           </div>
 
-          {filteredProducts.length === 0 ? (
+          {loading ? (
+            <ProductGridSkeleton count={8} />
+          ) : filteredProducts.length === 0 ? (
             <div className="text-center py-16">
               <Search className="w-16 h-16 mx-auto text-gray-300 mb-4" />
               <h3 className="text-2xl font-bold church-text mb-2">No se encontraron productos</h3>
