@@ -17,9 +17,7 @@ export class ProductService {
     offset?: number
   }) {
     try {
-      let query = db.select().from(products)
-
-      // Aplicar filtros
+      // Construir condiciones de filtro
       const conditions = []
       
       if (filters?.category && filters.category !== 'all') {
@@ -48,11 +46,16 @@ export class ProductService {
         )
       }
 
-      if (conditions.length > 0) {
-        query = query.where(and(...conditions))
-      }
+      // Construir query de manera más compatible
+      const baseQuery = db.select().from(products)
+      
+      // Aplicar filtros
+      const queryWithFilters = conditions.length > 0 
+        ? baseQuery.where(and(...conditions))
+        : baseQuery
 
       // Aplicar ordenamiento
+      let queryWithOrder
       if (filters?.sortBy) {
         let column
         switch (filters.sortBy) {
@@ -72,21 +75,22 @@ export class ProductService {
             column = products.createdAt
         }
         const order = filters.sortOrder === 'desc' ? desc(column) : asc(column)
-        query = query.orderBy(order)
+        queryWithOrder = queryWithFilters.orderBy(order)
       } else {
-        query = query.orderBy(desc(products.createdAt))
+        queryWithOrder = queryWithFilters.orderBy(desc(products.createdAt))
       }
 
       // Aplicar paginación
+      let finalQuery = queryWithOrder
       if (filters?.limit) {
-        query = query.limit(filters.limit)
+        finalQuery = finalQuery.limit(filters.limit)
       }
       
       if (filters?.offset) {
-        query = query.offset(filters.offset)
+        finalQuery = finalQuery.offset(filters.offset)
       }
 
-      return await query
+      return await finalQuery
     } catch (error) {
       console.error('Error in ProductService.getAll, using fallback data:', error)
       

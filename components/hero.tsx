@@ -1,6 +1,6 @@
 'use client'
 import { Button } from "@/components/ui/button"
-import { ArrowRight, MapPin, Clock } from "lucide-react"
+import { ArrowRight } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 

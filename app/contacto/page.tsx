@@ -1,8 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
 import { MapPin, Phone, Mail, MessageCircle } from "lucide-react"
 import Link from "next/link"
-import Image from "next/image"
 
 export default function ContactoPage() {
   return (

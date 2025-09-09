@@ -77,16 +77,7 @@ export default function VideosPage() {
     return filtered
   }, [videos, searchTerm, selectedCategory, sortBy])
 
-  // Función para convertir duración a segundos
-  const parseDuration = (duration: string): number => {
-    const parts = duration.split(':').map(Number)
-    if (parts.length === 2) {
-      return parts[0] * 60 + parts[1]
-    } else if (parts.length === 3) {
-      return parts[0] * 3600 + parts[1] * 60 + parts[2]
-    }
-    return 0
-  }
+
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('es-ES', {
