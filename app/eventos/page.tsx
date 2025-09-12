@@ -23,7 +23,7 @@ export default function EventosPage() {
     {
       id: "nosotras",
       title: "NOSOTRAS",
-      description: "Es un tiempo apartado para las mujeres de nuestra iglesia, en donde compartimos palabra con el fin de levantarlas y equiparlas.",
+      description: "Es un evento diseñado para las mujeres de nuestra iglesia, en donde compartimos Palabra con el fin de levantarlas y equiparlas, para que luego puedan compartir con libertad lo que Dios ha hecho, y continúa haciendo, en ellas.",
       icon: Heart,
       color: "from-purple-500 to-pink-500"
     },

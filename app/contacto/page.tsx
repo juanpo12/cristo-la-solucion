@@ -88,7 +88,7 @@ export default function ContactoPage() {
 
               {/* Tarjeta de WhatsApp */}
               <Link
-                href="https://wa.link/fpg6lr"
+                href="https://wa.me/message/IAMHFRO2IBX6B1"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block"
