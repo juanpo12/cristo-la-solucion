@@ -53,6 +53,7 @@ export async function createPreference(data: CreatePreferenceData) {
       shipments: {
         mode: "me2", // 🚀 activa Mercado Envíos
         local_pickup: true, // opcional: permitir "retiro en el local"
+        dimensions: "30x30x30,500"
       },
       back_urls: {
         success: `${baseUrl}/tienda/success`,
