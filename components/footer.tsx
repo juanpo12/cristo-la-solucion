@@ -1,5 +1,6 @@
-import { Heart } from "lucide-react"
 import Link from "next/link"
+import Image from "next/image"
+import { Youtube, Instagram, Facebook, MessageCircle } from "lucide-react"
 
 export function Footer() {
   return (
@@ -8,8 +9,14 @@ export function Footer() {
         <div className="grid md:grid-cols-4 gap-12">
           <div>
             <div className="flex items-center space-x-3 mb-6">
-              <div className="w-10 h-10 bg-gradient-to-r from-church-electric-500 to-church-electric-600 rounded-full flex items-center justify-center">
-                <Heart className="w-5 h-5 text-white" />
+              <div className="relative h-10 w-44">
+                <Image
+                  src="/logo-cls.png"
+                  alt="Ministerio Cristo la Solución"
+                  fill
+                  className="object-contain"
+                  priority
+                />
               </div>
               <span className="text-2xl font-bold">CRISTO LA SOLUCIÓN</span>
             </div>
@@ -54,6 +61,49 @@ export function Footer() {
               <p>San Justo</p>
               <p>+54 9 11 2864-8642</p>
               <p>oficinasclsj@gmail.com</p>
+            </div>
+            
+            {/* Redes Sociales */}
+            <div className="mt-8">
+              <h5 className="font-bold mb-4 text-lg">Síguenos</h5>
+              <div className="flex space-x-4">
+                <Link
+                   href="https://www.youtube.com/@AlfredoDimiroLive"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   className="w-10 h-10 bg-gray-700 hover:bg-red-600 rounded-full flex items-center justify-center transition-colors duration-300 group"
+                   aria-label="YouTube"
+                 >
+                   <Youtube className="w-5 h-5 text-white" />
+                 </Link>
+                 <Link
+                   href="https://www.instagram.com/cristolasolucionsj/"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   className="w-10 h-10 bg-gray-700 hover:bg-pink-600 rounded-full flex items-center justify-center transition-colors duration-300 group"
+                   aria-label="Instagram"
+                 >
+                   <Instagram className="w-5 h-5 text-white" />
+                 </Link>
+                <Link
+                    href="https://www.facebook.com/AlfredoDimiro"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-10 h-10 bg-gray-700 hover:bg-blue-600 rounded-full flex items-center justify-center transition-colors duration-300 group"
+                    aria-label="Facebook"
+                  >
+                    <Facebook className="w-5 h-5 text-white" />
+                  </Link>
+                 <Link
+                   href="https://wa.link/fpg6lr"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   className="w-10 h-10 bg-gray-700 hover:bg-green-600 rounded-full flex items-center justify-center transition-colors duration-300 group"
+                   aria-label="WhatsApp"
+                 >
+                   <MessageCircle className="w-5 h-5 text-white" />
+                 </Link>
+              </div>
             </div>
           </div>
         </div>

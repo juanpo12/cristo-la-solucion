@@ -63,16 +63,12 @@ export default function VideosPage() {
     // Ordenar
     filtered.sort((a, b) => {
       switch (sortBy) {
-        case "newest":
+        case "nuevos":
           return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
-        case "oldest":
+        case "antiguos":
           return new Date(a.publishedAt).getTime() - new Date(b.publishedAt).getTime()
-        case "most-viewed":
+        case "Más visto":
           return parseInt(b.viewCount.replace(/,/g, '')) - parseInt(a.viewCount.replace(/,/g, ''))
-        case "duration-long":
-          return parseDuration(b.duration) - parseDuration(a.duration)
-        case "duration-short":
-          return parseDuration(a.duration) - parseDuration(b.duration)
         default:
           return 0
       }
@@ -81,16 +77,7 @@ export default function VideosPage() {
     return filtered
   }, [videos, searchTerm, selectedCategory, sortBy])
 
-  // Función para convertir duración a segundos
-  const parseDuration = (duration: string): number => {
-    const parts = duration.split(':').map(Number)
-    if (parts.length === 2) {
-      return parts[0] * 60 + parts[1]
-    } else if (parts.length === 3) {
-      return parts[0] * 3600 + parts[1] * 60 + parts[2]
-    }
-    return 0
-  }
+
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('es-ES', {
@@ -132,7 +119,7 @@ export default function VideosPage() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 overflow-x-hidden">
       {/* Header */}
       <div className="relative h-[50vh] overflow-hidden -mt-20">
         <Image 
@@ -147,10 +134,7 @@ export default function VideosPage() {
 
         <div className="absolute inset-0 flex items-center justify-center text-white">
           <div className="text-center max-w-4xl px-4">
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 drop-shadow-lg">Transmisiones</h1>
-            <p className="text-xl md:text-2xl opacity-90 drop-shadow-md mb-4">
-              Pastor Alfredo Dimiro
-            </p>
+            <h1 className="text-5xl md:text-6xl font-bold mb-6 drop-shadow-lg">TRANSMISIONES</h1>
             <p className="text-lg opacity-80 drop-shadow-md">
               Biblioteca completa de enseñanzas, conferencias y estudios bíblicos
             </p>
@@ -168,49 +152,51 @@ export default function VideosPage() {
 
       {/* Controles y Filtros */}
       <div className="container mx-auto px-4 py-8">
-        <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
-          <div className="flex flex-col lg:flex-row gap-6">
+        <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 mb-8">
+          <div className="flex flex-col gap-4 sm:gap-6">
             {/* Búsqueda */}
-            <div className="flex-1 relative">
+            <div className="w-full relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
               <Input
                 placeholder="Buscar videos, temas, palabras clave..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 h-12 text-lg border-2 border-gray-200 focus:border-church-electric-400"
+                className="pl-10 h-12 text-base sm:text-lg border-2 border-gray-200 focus:border-church-electric-400 w-full"
               />
             </div>
 
             {/* Filtros */}
-            <div className="flex flex-wrap gap-4">
-              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                <SelectTrigger className="w-48 h-12">
-                  <SelectValue placeholder="Categoría" />
-                </SelectTrigger>
-                <SelectContent>
-                  {categories.map((category) => (
-                    <SelectItem key={category} value={category}>
-                      {category}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+            <div className="flex flex-col sm:flex-row gap-4 w-full">
+              <div className="flex flex-col sm:flex-row gap-4 flex-1">
+                <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                  <SelectTrigger className="w-full sm:w-48 h-12">
+                    <SelectValue placeholder="Categoría" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {categories.map((category) => (
+                      <SelectItem key={category} value={category}>
+                        {category}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
 
-              <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="w-48 h-12">
-                  <SelectValue placeholder="Ordenar por" />
-                </SelectTrigger>
-                <SelectContent>
-                  {sortOptions.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                <Select value={sortBy} onValueChange={setSortBy}>
+                  <SelectTrigger className="w-full sm:w-48 h-12">
+                    <SelectValue placeholder="Ordenar por" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {sortOptions.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
 
               {/* Modo de Vista */}
-              <div className="flex border border-gray-200 rounded-lg">
+              <div className="flex border border-gray-200 rounded-lg w-fit">
                 <Button
                   variant={viewMode === "grid" ? "default" : "ghost"}
                   size="sm"
@@ -266,7 +252,7 @@ export default function VideosPage() {
           </div>
         ) : (
           <div className={viewMode === "grid" 
-            ? "grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" 
+            ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6" 
             : "space-y-4"
           }>
             {filteredAndSortedVideos.map((video) => (
@@ -277,7 +263,7 @@ export default function VideosPage() {
                 }`}
                 onClick={() => setSelectedVideo(video)}
               >
-                <div className={`relative ${viewMode === "list" ? "w-80 flex-shrink-0" : "aspect-video"}`}>
+                <div className={`relative ${viewMode === "list" ? "w-full sm:w-80 flex-shrink-0" : "aspect-video"}`}>
                   <div 
                     className="absolute inset-0 bg-cover bg-center"
                     style={{ backgroundImage: `url('${video.thumbnail}')` }}
@@ -325,7 +311,7 @@ export default function VideosPage() {
         {/* Modal de Video */}
         {selectedVideo && (
           <div 
-            className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-2 sm:p-4"
             onClick={(e) => {
               // Solo cerrar si se hace clic fuera del contenido del modal
               if (e.target === e.currentTarget) {
@@ -334,30 +320,42 @@ export default function VideosPage() {
             }}
           >
             <div 
-              className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+              className="bg-white rounded-lg sm:rounded-2xl w-full max-w-5xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-2xl font-bold church-text">Detalles del Video</h3>
+              <div className="p-3 sm:p-6">
+                <div className="flex items-center justify-between mb-3 sm:mb-4">
+                  <h3 className="text-lg sm:text-2xl font-bold church-text">Detalles del Video</h3>
                   <Button
                     variant="ghost"
                     onClick={() => setSelectedVideo(null)}
-                    className="rounded-full"
+                    className="rounded-full h-8 w-8 sm:h-10 sm:w-10 p-0"
                   >
                     ✕
                   </Button>
                 </div>
                 
-                <div className="aspect-video bg-gray-100 rounded-lg mb-6">
+                <div className="aspect-video bg-gray-100 rounded-lg mb-4 sm:mb-6 relative">
                   {/* Reproductor de YouTube */}
-                  <div key={selectedVideo.id}>
-                    <YouTubePlayer 
-                      videoId={selectedVideo.url || selectedVideo.id} 
-                      className="rounded-lg overflow-hidden"
-                      autoplay={true}
-                    />
-                  </div>
+                  {selectedVideo.url && selectedVideo.url !== '#' ? (
+                    <div key={selectedVideo.id} className="absolute inset-0">
+                      <YouTubePlayer 
+                        videoId={selectedVideo.url || selectedVideo.id} 
+                        className="rounded-lg overflow-hidden w-full h-full"
+                        autoplay={true}
+                      />
+                    </div>
+                  ) : (
+                    <div className="absolute inset-0 flex items-center justify-center bg-gray-200 rounded-lg">
+                      <div className="text-center text-gray-600">
+                        <div className="w-16 h-16 mx-auto mb-4 bg-gray-300 rounded-full flex items-center justify-center">
+                          <Play className="w-8 h-8" />
+                        </div>
+                        <p className="text-lg font-medium mb-2">Video no disponible</p>
+                        <p className="text-sm">Este video aún no está configurado</p>
+                      </div>
+                    </div>
+                  )}
                 </div>
                 <div className="flex justify-end mb-4">
                   <Link 

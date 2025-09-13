@@ -24,7 +24,7 @@ const groups: Group[] = [
     image: "/test.jpg",
     color: "from-blue-600/30 to-cyan-600/30",
     focusPosition: "center center", // Centrado para mostrar al niño
-    ageRange: "3 a 8 años",
+    ageRange: "3 a 9 años",
   },
   {
     id: "invictos-teens",
@@ -34,27 +34,27 @@ const groups: Group[] = [
     image: "/fototeens.jpg",
     color: "from-purple-600/30 to-pink-600/30",
     focusPosition: "center center", // Centrado para mostrar a los jóvenes
-    ageRange: "9 a 17 años",
+    ageRange: "10 a 17 años",
   },
   {
     id: "invictos",
     name: "INVICTOS",
-    shortDesc: "Crecimiento espiritual",
+    shortDesc: "Conocer para dar a conocer",
     schedule: "Sáb 19:30 HS",
     image: "/INVICTOS.jpg",
     color: "from-church-electric-600/30 to-church-navy-600/30",
     focusPosition: "center center", // Centrado para mostrar el grupo
-    ageRange: "18 a 35 años",
+    ageRange: "18 a 34 años",
   },
   {
     id: "gdc",
     name: "GDC",
     shortDesc: "Conexión familiar",
-    schedule: "Mar 19:00 HS",
+    schedule: "Mar 19:30 HS",
     image: "/GDC2.jpg",
     color: "from-orange-600/30 to-red-600/30",
     focusPosition: "center center", // Centrado para mostrar la familia
-    ageRange: "+36 años",
+    ageRange: "+35 años",
   },
 ]
 
@@ -190,73 +190,103 @@ export function Groups() {
         </div>
       </div>
 
-      {/* Tablet: Grid 2x2 */}
-      <div className="hidden md:block lg:hidden">
-        <div className="grid grid-cols-2 gap-4 max-w-4xl mx-auto px-4">
-          {groups.map((group) => (
-            <Link
-              key={group.id}
-              href={`/grupos/${group.id}`}
-              className="relative h-64 overflow-hidden rounded-xl cursor-pointer group"
-            >
-              <div
-                className="absolute inset-0 bg-cover bg-center transition-all duration-300 group-hover:scale-105"
-                style={{
-                  backgroundImage: `url('${group.image}')`,
-                  backgroundPosition: group.focusPosition,
-                }}
-              />
-              <div className={`absolute inset-0 bg-gradient-to-t ${group.color} opacity-40`} />
-              <div className="absolute inset-0 bg-black/20" />
-              <div className="absolute inset-0 flex flex-col justify-center items-center text-white p-6 z-10">
-                <h3 className="text-xl font-bold mb-2 text-center drop-shadow-md">{group.name}</h3>
-                <p className="text-sm mb-3 text-center opacity-90">{group.shortDesc}</p>
-                <div className="flex items-center space-x-2 text-xs opacity-80">
-                  <Calendar className="w-3 h-3" />
-                  <span>{group.schedule}</span>
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </div>
-
-      {/* Mobile: Carousel */}
-      <div className="block md:hidden">
-        <div className="relative">
-          <div className="overflow-hidden">
-            <div className="flex space-x-4 px-4">
-              {groups.map((group) => (
-                <div key={group.id} className="w-80 flex-shrink-0">
-                  <Link
-                    href={`/grupos/${group.id}`}
-                    className="relative h-80 block overflow-hidden rounded-xl cursor-pointer"
-                  >
-                    <div
-                      className="absolute inset-0 bg-cover bg-center"
-                      style={{
-                        backgroundImage: `url('${group.image}')`,
-                        backgroundPosition: group.focusPosition,
-                      }}
-                    />
-                    <div className={`absolute inset-0 bg-gradient-to-t ${group.color} opacity-40`} />
-                    <div className="absolute inset-0 bg-black/20" />
-                    <div className="absolute inset-0 flex flex-col justify-center items-center text-white p-6 z-10">
-                      <h3 className="text-2xl font-bold mb-4 text-center drop-shadow-md">{group.name}</h3>
-                      <p className="text-lg mb-4 text-center opacity-90">{group.shortDesc}</p>
-                      <div className="flex items-center space-x-2 mb-6 opacity-80">
+      {/* Tablet: Grid 2x2 mejorado */}
+      <div className="hidden md:block lg:hidden py-8">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-2 gap-6 max-w-5xl mx-auto">
+            {groups.map((group) => (
+              <Link
+                key={group.id}
+                href={`/grupos/${group.id}`}
+                className="relative h-72 overflow-hidden rounded-2xl cursor-pointer group shadow-lg hover:shadow-2xl transition-all duration-300"
+              >
+                <div
+                  className="absolute inset-0 bg-cover bg-center transition-all duration-500 group-hover:scale-110"
+                  style={{
+                    backgroundImage: `url('${group.image}')`,
+                    backgroundPosition: group.focusPosition,
+                  }}
+                />
+                <div className={`absolute inset-0 bg-gradient-to-t ${group.color} opacity-50 group-hover:opacity-30 transition-opacity duration-300`} />
+                <div className="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-colors duration-300" />
+                <div className="absolute inset-0 flex flex-col justify-end p-6 z-10">
+                  <div className="transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                    <h3 className="text-2xl font-bold mb-2 text-white drop-shadow-lg">{group.name}</h3>
+                    <p className="text-base mb-3 text-white/90 font-medium">{group.shortDesc}</p>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2 text-sm text-white/80">
                         <Calendar className="w-4 h-4" />
                         <span>{group.schedule}</span>
                       </div>
-                      <Button className="bg-white/90 text-gray-800 hover:bg-white">
+                      <div className="bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-xs text-white font-medium">
+                        {group.ageRange}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <Button size="sm" className="bg-white/90 text-gray-800 hover:bg-white hover:text-gray-900 transition-all duration-300">
+                      Conoce más
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </Button>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile: Stack vertical mejorado */}
+      <div className="block md:hidden py-6">
+        <div className="container mx-auto px-4">
+          <div className="space-y-6">
+            {groups.map((group) => (
+              <Link
+                key={group.id}
+                href={`/grupos/${group.id}`}
+                className="relative h-64 block overflow-hidden rounded-2xl cursor-pointer group shadow-lg active:scale-95 transition-all duration-300"
+              >
+                <div
+                  className="absolute inset-0 bg-cover bg-center transition-all duration-300"
+                  style={{
+                    backgroundImage: `url('${group.image}')`,
+                    backgroundPosition: group.focusPosition,
+                  }}
+                />
+                <div className={`absolute inset-0 bg-gradient-to-t ${group.color} opacity-50`} />
+                <div className="absolute inset-0 bg-black/30" />
+                
+                {/* Contenido principal */}
+                <div className="absolute inset-0 flex flex-col justify-between p-6 z-10">
+                  {/* Header con edad */}
+                  <div className="flex justify-end">
+                    <div className="bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-xs text-white font-medium">
+                      {group.ageRange}
+                    </div>
+                  </div>
+                  
+                  {/* Contenido central */}
+                  <div className="text-center">
+                    <h3 className="text-3xl font-bold mb-3 text-white drop-shadow-lg">{group.name}</h3>
+                    <p className="text-lg mb-4 text-white/90 font-medium">{group.shortDesc}</p>
+                  </div>
+                  
+                  {/* Footer con horario y botón */}
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-center space-x-2 text-white/80">
+                      <Calendar className="w-4 h-4" />
+                      <span className="text-base font-medium">{group.schedule}</span>
+                    </div>
+                    <div className="flex justify-center">
+                      <Button className="bg-white/90 text-gray-800 hover:bg-white hover:text-gray-900 transition-all duration-300 shadow-lg">
                         Conoce más
                         <ArrowRight className="w-4 h-4 ml-2" />
                       </Button>
                     </div>
-                  </Link>
+                  </div>
                 </div>
-              ))}
-            </div>
+              </Link>
+            ))}
           </div>
         </div>
       </div>

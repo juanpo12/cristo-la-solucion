@@ -21,7 +21,7 @@ export default function GivingSection() {
 
         <div className="grid md:grid-cols-2 gap-12 mb-16">
           <div>
-            <h3 className="text-3xl font-bold text-gray-800 mb-6">¿Por Qué Dar?</h3>
+            <h3 className="text-3xl font-bold text-gray-800 mb-6">¿Por qué dar?</h3>
             <div className="space-y-6">
               <div className="flex items-start space-x-4">
                 <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
@@ -67,12 +67,12 @@ export default function GivingSection() {
         </div>
 
         <div className="bg-blue-600 rounded-2xl p-12 text-center text-white">
-          <h3 className="text-3xl font-bold mb-4">Cada Aporte Cuenta</h3>
+          <h3 className="text-3xl font-bold mb-4">Cada aporte cuenta</h3>
           <p className="text-blue-100 mb-8 max-w-2xl mx-auto">
             No importa el monto, tu generosidad marca la diferencia en la vida de muchas personas.
           </p>
           <button className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors">
-            Dar Ahora
+            Dar ahora
           </button>
         </div>
       </div>

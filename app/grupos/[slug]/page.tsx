@@ -14,7 +14,7 @@ const groupsData = {
     image: "/test.jpg",
     schedule: "Sábados 19:30 HS",
     location: "Auditorio Principal",
-    ageRange: "3 a 8 años",
+    ageRange: "3 a 9 años",
     color: "from-blue-500 to-cyan-500",
     activities: [
       "Historias bíblicas interactivas",
@@ -32,13 +32,13 @@ const groupsData = {
   },
   "invictos-teens": {
     name: "INVICTOS TEENS",
-    subtitle: "Descubriendo tu identidad en Cristo",
+    subtitle: "Conociendo tu identidad en Cristo",
     description:
       "Estamos llamados a guiar a los adolescentes a que puedan desarrollar una relación personal con Dios, libre de toda tradición y religión. Nos esforzamos en trasmitir los principios de la Palabra utilizando todos los medios disponibles para alcanzar a la mayor cantidad posible.",
-    image: "/TEENS.jpg",
+    image: "/fototeens.jpg",
     schedule: "Sábados 19:30 HS",
     location: "Auditorio Principal",
-    ageRange: "9 a 17 años",
+    ageRange: "10 a 17 años",
     color: "from-purple-500 to-pink-500",
     activities: [
       "Estudios bíblicos relevantes",
@@ -82,9 +82,9 @@ const groupsData = {
     name: "GDC - GRUPOS DE CONEXIÓN",
     subtitle: "Familia, fe y comunión íntima",
     description:
-      "Contamos con grupos de conexión (+36 años) los días martes a las 19:00 hs. La visión de estos grupos es que la gente pueda ser formada en la palabra de Dios; que puedan conectar con otras personas y juntos descubrir la misión que tienen sus vidas, que es vivir por una causa más importante; que esto los lleve a invitar y alcanzar a aquellos que nunca asistieron a la iglesia.",
+      "Contamos con grupos de conexión (+36 años) los días martes a las 19:30 hs. La visión de estos grupos es que la gente pueda ser formada en la palabra de Dios; que puedan conectar con otras personas y juntos descubrir la misión que tienen sus vidas, que es vivir por una causa más importante; que esto los lleve a invitar y alcanzar a aquellos que nunca asistieron a la iglesia.",
     image: "/GDC.jpg",
-    schedule: "Martes 19:00 HS",
+    schedule: "Martes 19:30 HS",
     location: "Auditorio Principal",
     ageRange: "+36 años",
     color: "from-orange-500 to-red-500",

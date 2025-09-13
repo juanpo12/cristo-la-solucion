@@ -4,6 +4,7 @@ import { Inter } from "next/font/google"
 import "./globals.css"
 import { Poppins } from 'next/font/google'
 import { LayoutWrapper } from "@/components/layout-wrapper"
+import { QueryProvider } from "@/components/providers/query-provider"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -26,9 +27,11 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className={`${inter.className} ${poppins.variable}`}>
-        <LayoutWrapper>
-          {children}
-        </LayoutWrapper>
+        <QueryProvider>
+          <LayoutWrapper>
+            {children}
+          </LayoutWrapper>
+        </QueryProvider>
       </body>
     </html>
   )

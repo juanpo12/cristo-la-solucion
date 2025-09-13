@@ -2,6 +2,7 @@ import { MercadoPagoConfig, Preference } from "mercadopago";
 
 // Configuración de Mercado Pago
 const accessToken = process.env.MERCADOPAGO_ACCESS_TOKEN!;
+
 const isSandbox = accessToken.startsWith("TEST-");
 
 const client = new MercadoPagoConfig({
@@ -49,6 +50,11 @@ export async function createPreference(data: CreatePreferenceData) {
         unit_price: item.price,
         currency_id: "ARS",
       })),
+      shipments: {
+        mode: "me2", // 🚀 activa Mercado Envíos
+        local_pickup: true, // opcional: permitir "retiro en el local"
+        dimensions: "30x30x30,500"
+      },
       back_urls: {
         success: `${baseUrl}/tienda/success`,
         failure: `${baseUrl}/tienda/failure`,

@@ -3,14 +3,24 @@ import { Clock } from "lucide-react"
 
 const meetings = [
   {
+    day: "MARTES",
+    time: "19:30 HS",
+    description: "Día apartado para compartir y conectar con otros mediante grupos. Para mayores de 35 años.",
+  },	
+  {
     day: "JUEVES",
     time: "20:30 HS",
-    description: "Reunión en YouTube para líderes y servidores. Impulsamos juntos la visión.",
+    description: "Reunión online a través de YouTube orientada a líderes y servidores... ¡Juntos impulsamos la visión!",
+  },
+    {
+    day: "SÁBADOS",
+    time: "19:30 HS",
+    description: "Actividades en grupos y Palabra para niños, adolescentes y jóvenes de 3 a 34 años.",
   },
   {
-    day: "DOMINGO",
+    day: "DOMINGOS",
     time: "11 Y 18 HS",
-    description: "Día del Señor. Nos congregamos para adorar en uno de los dos horarios disponibles.",
+    description: "Esperamos que puedas asistir a las reuniones y seas parte de lo que Dios está haciendo en nuestra iglesia.",
   }
 ]
 
@@ -20,7 +30,7 @@ export function Meetings() {
       <div className="absolute inset-0 bg-black/20"></div>
       <div className="container mx-auto px-4 relative z-10">
         <h2 className="text-5xl font-bold text-center mb-16">NUESTRAS REUNIONES</h2>
-        <div className="grid md:grid-cols-2 gap-8 max-w-3xl mx-auto">
+        <div className="grid md:grid-cols-4 gap-8  mx-auto">
           {meetings.map((meeting, index) => (
             <Card
               key={index}

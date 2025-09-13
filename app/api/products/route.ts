@@ -14,6 +14,7 @@ export async function GET(request: NextRequest) {
       category: searchParams.get('category') || undefined,
       featured: searchParams.get('featured') === 'true' ? true : undefined,
       active: searchParams.get('active') !== 'false', // Por defecto true
+      inStock: searchParams.get('inStock') !== 'false', // Por defecto true - solo productos con stock
       search: searchParams.get('search') || undefined,
       sortBy: sortBy || 'createdAt',
       sortOrder: (searchParams.get('sortOrder') as 'asc' | 'desc') || 'desc',

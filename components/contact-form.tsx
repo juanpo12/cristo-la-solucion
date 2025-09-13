@@ -95,7 +95,7 @@ export function ContactForm({
             </label>
             <Select 
               value={formData.type} 
-              onValueChange={(value: ContactFormData['type']) => handleInputChange('type', value)}
+              onValueChange={(value) => handleInputChange('type', value as string)}
             >
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Selecciona el tipo de petición" />

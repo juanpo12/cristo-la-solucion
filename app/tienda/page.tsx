@@ -10,6 +10,8 @@ import { Input } from "@/components/ui/input"
 import { useCart } from "@/lib/hooks/use-cart"
 import { useFavorites } from "@/lib/hooks/use-favorites"
 import { useShare } from "@/lib/hooks/use-share"
+import { useProductsInStock } from "@/lib/hooks/use-products"
+import { ProductGridSkeleton } from "@/components/product-skeleton"
 // import { MercadoPagoStatus } from "@/components/mercadopago-status"
 import type { Product } from "@/lib/db/schema"
 import Image from "next/image"
@@ -22,8 +24,6 @@ const categories = [
 ]
 
 export default function TiendaPage() {
-  const [products, setProducts] = useState<Product[]>([])
-  const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("all")
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
@@ -35,28 +35,21 @@ export default function TiendaPage() {
   const { shareProduct } = useShare()
   const searchParams = useSearchParams()
 
-  // Cargar productos desde la API
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        setLoading(true)
-        const response = await fetch('/api/products?active=true')
-        const data = await response.json()
-        
-        if (data.success) {
-          setProducts(data.data)
-        } else {
-          console.error('Error fetching products:', data.error)
-        }
-      } catch (error) {
-        console.error('Error fetching products:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchProducts()
-  }, [])
+  // Usar el hook optimizado para cargar productos
+  const { 
+    data: products = [], 
+    isLoading: loading, 
+    error,
+    refetch 
+  } = useProductsInStock({
+    category: selectedCategory !== 'all' ? selectedCategory : undefined,
+    search: searchTerm.length > 2 ? searchTerm : undefined,
+    sortBy: 'createdAt',
+    sortOrder: 'desc'
+  }, {
+    enabled: true,
+    staleTime: 5 * 60 * 1000, // 5 minutos
+  })
 
   // Detectar producto compartido en URL y abrir modal automáticamente
   useEffect(() => {
@@ -75,19 +68,20 @@ export default function TiendaPage() {
     }
   }, [searchParams, products])
 
-  // Filtrar productos basado en búsqueda y categoría
+  // Los productos ya vienen filtrados del hook, solo necesitamos memoizar para optimización
   const filteredProducts = useMemo(() => {
-    return products.filter((product) => {
-      const matchesSearch =
-        product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.description.toLowerCase().includes(searchTerm.toLowerCase())
-
-      const matchesCategory = selectedCategory === "all" || product.category === selectedCategory
-
-      return matchesSearch && matchesCategory
-    })
-  }, [products, searchTerm, selectedCategory])
+    // Si hay búsqueda local adicional (menos de 3 caracteres)
+    if (searchTerm.length > 0 && searchTerm.length <= 2) {
+      return products.filter((product) => {
+        const matchesSearch =
+          product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          product.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          product.description.toLowerCase().includes(searchTerm.toLowerCase())
+        return matchesSearch
+      })
+    }
+    return products
+  }, [products, searchTerm])
 
   const addToCart = (product: Product) => {
     dispatch({
@@ -143,6 +137,17 @@ export default function TiendaPage() {
     })
   }
 
+  // Función para formatear precios en pesos argentinos
+  const formatPrice = (price: string | number): string => {
+    const numPrice = typeof price === 'string' ? parseFloat(price) : price
+    return numPrice.toLocaleString('es-AR', {
+      style: 'currency',
+      currency: 'ARS',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    })
+  }
+
   const handleShare = async (product: Product) => {
     const result = await shareProduct({
       id: product.id,
@@ -167,14 +172,19 @@ export default function TiendaPage() {
     }
   }
 
-  // Mostrar loading mientras se cargan los productos
-  if (loading) {
+  // Mostrar error si hay problemas cargando productos
+  if (error) {
     return (
       <div className="min-h-screen bg-gray-50 pt-20">
         <div className="container mx-auto px-4 py-12">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-church-electric-600 mx-auto mb-4"></div>
-            <p className="text-church-text-muted">Cargando productos...</p>
+            <div className="text-red-600 mb-4">
+              <h2 className="text-2xl font-bold mb-2">Error al cargar productos</h2>
+              <p className="text-gray-600 mb-4">Hubo un problema cargando los productos. Por favor, intenta nuevamente.</p>
+              <Button onClick={() => refetch()} className="bg-church-electric-600 hover:bg-church-electric-700">
+                Reintentar
+              </Button>
+            </div>
           </div>
         </div>
       </div>
@@ -182,13 +192,13 @@ export default function TiendaPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-20">
+    <div className="min-h-screen bg-gray-50 pt-20 overflow-x-hidden">
       <div className="container mx-auto px-4 py-12">
         {/* Header de la tienda */}
         <div className="text-center mb-12">
           <h1 className="text-6xl font-bold church-text mb-6">TIENDA MINISTERIAL</h1>
           <p className="text-xl church-text-muted max-w-3xl mx-auto leading-relaxed">
-            Descubre libros del Pastor Alfredo Dimiro que fortalecerán tu fe y te ayudarán en tu crecimiento espiritual
+            Descubre libros del pastor Alfredo Dimiro que fortalecerán tu fe y te ayudarán en tu crecimiento espiritual
           </p>
         </div>
 
@@ -196,29 +206,29 @@ export default function TiendaPage() {
         <MercadoPagoStatus /> */}
 
         {/* Barra de búsqueda y filtros */}
-        <div className="flex flex-col lg:flex-row gap-6 mb-12">
-          <div className="flex-1 relative">
+        <div className="flex flex-col gap-4 sm:gap-6 mb-12">
+          <div className="w-full relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
             <Input
               placeholder="Buscar libros..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 h-12 text-lg border-2 border-gray-200 focus:border-church-electric-400"
+              className="pl-10 h-12 text-base sm:text-lg border-2 border-gray-200 focus:border-church-electric-400 w-full"
             />
           </div>
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap gap-2 sm:gap-3 justify-center sm:justify-start">
             {categories.map((category) => (
               <Button
                 key={category.id}
                 variant={selectedCategory === category.id ? "default" : "outline"}
                 onClick={() => setSelectedCategory(category.id)}
-                className={`flex items-center space-x-2 px-6 py-3 h-12 rounded-full border-2 transition-all duration-300 ${
+                className={`flex items-center space-x-2 px-4 sm:px-6 py-2 sm:py-3 h-10 sm:h-12 rounded-full border-2 transition-all duration-300 text-sm sm:text-base ${
                   selectedCategory === category.id
                     ? "bg-church-electric-600 text-white border-church-electric-600"
                     : "border-church-electric-200 hover:bg-church-electric-50 hover:border-church-electric-400 bg-transparent"
                 }`}
               >
-                <category.icon className="w-4 h-4" />
+                <category.icon className="w-3 h-3 sm:w-4 sm:h-4" />
                 <span>{category.name}</span>
               </Button>
             ))}
@@ -232,7 +242,7 @@ export default function TiendaPage() {
               <Star className="w-8 h-8 text-yellow-500 mr-3" />
               Productos Destacados
             </h2>
-            <div className="grid lg:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
               {filteredProducts
                 .filter((product) => product.featured)
                 .map((product) => (
@@ -284,9 +294,9 @@ export default function TiendaPage() {
                           <div className="flex items-center justify-between mb-4">
                             <div className="flex items-center space-x-2">
                               {product.originalPrice && (
-                                <span className="text-base md:text-lg text-gray-400 line-through">${product.originalPrice}</span>
+                                <span className="text-base md:text-lg text-gray-400 line-through">{formatPrice(product.originalPrice)}</span>
                               )}
-                              <span className="text-2xl md:text-3xl font-bold text-church-electric-600">${product.price}</span>
+                              <span className="text-2xl md:text-3xl font-bold text-church-electric-600">{formatPrice(product.price)}</span>
                             </div>
                           </div>
                           <Button
@@ -322,7 +332,9 @@ export default function TiendaPage() {
             </div>
           </div>
 
-          {filteredProducts.length === 0 ? (
+          {loading ? (
+            <ProductGridSkeleton count={8} />
+          ) : filteredProducts.length === 0 ? (
             <div className="text-center py-16">
               <Search className="w-16 h-16 mx-auto text-gray-300 mb-4" />
               <h3 className="text-2xl font-bold church-text mb-2">No se encontraron productos</h3>
@@ -331,7 +343,7 @@ export default function TiendaPage() {
               </p>
             </div>
           ) : (
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
               {filteredProducts.map((product) => (
                 <Card
                   key={product.id}
@@ -385,9 +397,9 @@ export default function TiendaPage() {
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center space-x-2">
                         {product.originalPrice && (
-                          <span className="text-sm text-gray-400 line-through">${product.originalPrice}</span>
+                          <span className="text-sm text-gray-400 line-through">{formatPrice(product.originalPrice)}</span>
                         )}
-                        <span className="text-xl font-bold text-church-electric-600">${product.price}</span>
+                        <span className="text-xl font-bold text-church-electric-600">{formatPrice(product.price)}</span>
                       </div>
                     </div>
                     <Button 
@@ -422,29 +434,29 @@ export default function TiendaPage() {
       {/* Modal del Producto */}
       {isModalOpen && selectedProduct && (
         <div 
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4"
           onClick={closeModal}
         >
           <div 
-            className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl"
+            className="bg-white rounded-lg sm:rounded-2xl max-w-4xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-y-auto shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header del Modal */}
-            <div className="sticky top-0 bg-white border-b border-gray-200 p-4 flex items-center justify-between rounded-t-2xl">
-              <h2 className="text-2xl font-bold church-text">Detalles del Producto</h2>
+            <div className="sticky top-0 bg-white border-b border-gray-200 p-3 sm:p-4 flex items-center justify-between rounded-t-lg sm:rounded-t-2xl">
+              <h2 className="text-lg sm:text-2xl font-bold church-text">Detalles del Producto</h2>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={closeModal}
-                className="rounded-full p-2 hover:bg-gray-100"
+                className="rounded-full p-2 hover:bg-gray-100 h-8 w-8 sm:h-10 sm:w-10"
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4 sm:w-5 sm:h-5" />
               </Button>
             </div>
 
             {/* Contenido del Modal */}
-            <div className="p-6">
-              <div className="grid md:grid-cols-2 gap-8">
+            <div className="p-4 sm:p-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
                 {/* Imagen del Producto */}
                 <div className="space-y-4">
                   <div className="relative aspect-[3/4] rounded-xl overflow-hidden bg-gray-100">
@@ -528,15 +540,15 @@ export default function TiendaPage() {
                     <div className="flex items-center space-x-3">
                       {selectedProduct.originalPrice && (
                         <span className="text-2xl text-gray-400 line-through">
-                          ${selectedProduct.originalPrice}
+                          {formatPrice(selectedProduct.originalPrice)}
                         </span>
                       )}
                       <span className="text-4xl font-bold text-church-electric-600">
-                        ${selectedProduct.price}
+                        {formatPrice(selectedProduct.price)}
                       </span>
                       {selectedProduct.originalPrice && (
                         <Badge className="bg-green-100 text-green-800 text-sm">
-                          Ahorra ${(parseFloat(selectedProduct.originalPrice || '0') - parseFloat(selectedProduct.price)).toFixed(2)}
+                          Ahorra {formatPrice((parseFloat(selectedProduct.originalPrice || '0') - parseFloat(selectedProduct.price)).toString())}
                         </Badge>
                       )}
                     </div>
