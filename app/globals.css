@@ -69,7 +69,6 @@ body {
 /* Prevent layout shifts during scroll */
 main {
   position: relative;
-  z-index: 1;
 }
 
 /* Custom scrollbar styling */
