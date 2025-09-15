@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { ShoppingCart, Star, Book, Music, Shirt, Heart, Filter, Search, X, Plus, Minus, Share2, BookOpen, Calendar, Award } from "lucide-react"
+import { ShoppingCart, Star, Book, Shirt, Heart, Filter, Search, X, Plus, Minus, Share2, BookOpen, Calendar, Award } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { useCart } from "@/lib/hooks/use-cart"
 import { useFavorites } from "@/lib/hooks/use-favorites"
@@ -19,8 +19,7 @@ import Image from "next/image"
 const categories = [
   { id: "all", name: "Todos", icon: Heart },
   { id: "books", name: "Libros", icon: Book },
-  { id: "music", name: "Música", icon: Music },
-  { id: "apparel", name: "Ropa", icon: Shirt },
+  { id: "merch", name: "Merchandising", icon: Shirt },
 ]
 
 export default function TiendaPage() {
