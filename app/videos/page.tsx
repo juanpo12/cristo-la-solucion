@@ -25,20 +25,15 @@ interface PastorVideo {
 // Videos de ejemplo del Pastor Alfredo Dimiro (en producción vendrían de YouTube API)
 
 
-const categories = ["Todos", "Enseñanza", "Conferencia", "Serie", "Estudio Bíblico"]
 const sortOptions = [
-  { value: "newest", label: "Más Recientes" },
-  { value: "oldest", label: "Más Antiguos" },
-  { value: "most-viewed", label: "Más Vistos" },
-  { value: "duration-long", label: "Más Largos" },
-  { value: "duration-short", label: "Más Cortos" }
+  { value: "Más Recientes", label: "Más Recientes" },
+  { value: "Más Antiguos", label: "Más Antiguos" },
 ]
 
 export default function VideosPage() {
   const [videos, setVideos] = useState<PastorVideo[]>([])
   const [searchTerm, setSearchTerm] = useState("")
-  const [selectedCategory, setSelectedCategory] = useState("Todos")
-  const [sortBy, setSortBy] = useState("newest")
+  const [sortBy, setSortBy] = useState("Más Recientes")
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
   const [selectedVideo, setSelectedVideo] = useState<PastorVideo | null>(null)
   const [isLoading, setIsLoading] = useState(false)
@@ -55,27 +50,23 @@ export default function VideosPage() {
         video.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         video.description.toLowerCase().includes(searchTerm.toLowerCase())
 
-      const matchesCategory = selectedCategory === "Todos" || video.category === selectedCategory
-
-      return matchesSearch && matchesCategory
+      return matchesSearch
     })
 
     // Ordenar
     filtered.sort((a, b) => {
       switch (sortBy) {
-        case "nuevos":
+        case "Más Recientes":
           return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
-        case "antiguos":
+        case "Más Antiguos":
           return new Date(a.publishedAt).getTime() - new Date(b.publishedAt).getTime()
-        case "Más visto":
-          return parseInt(b.viewCount.replace(/,/g, '')) - parseInt(a.viewCount.replace(/,/g, ''))
         default:
           return 0
       }
     })
 
     return filtered
-  }, [videos, searchTerm, selectedCategory, sortBy])
+  }, [videos, searchTerm, sortBy])
 
 
 
@@ -168,19 +159,6 @@ export default function VideosPage() {
             {/* Filtros */}
             <div className="flex flex-col sm:flex-row gap-4 w-full">
               <div className="flex flex-col sm:flex-row gap-4 flex-1">
-                <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                  <SelectTrigger className="w-full sm:w-48 h-12">
-                    <SelectValue placeholder="Categoría" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {categories.map((category) => (
-                      <SelectItem key={category} value={category}>
-                        {category}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-
                 <Select value={sortBy} onValueChange={setSortBy}>
                   <SelectTrigger className="w-full sm:w-48 h-12">
                     <SelectValue placeholder="Ordenar por" />
