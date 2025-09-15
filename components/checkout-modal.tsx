@@ -74,11 +74,11 @@ export function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
       onClick={onClose}
     >
       <div 
-        className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl"
+        className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl relative z-10"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex items-center justify-between rounded-t-2xl">
+        <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex items-center justify-between rounded-t-2xl z-20">
           <h2 className="text-2xl font-bold church-text">Finalizar Compra</h2>
           <Button
             variant="ghost"
@@ -104,7 +104,7 @@ export function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
                 <CardContent className="space-y-4">
                   {state.items.map((item) => (
                     <div key={`${item.id}-${Math.random()}`} className="flex items-center space-x-4 p-3 bg-gray-50 rounded-lg">
-                      <div className="relative w-16 h-20 flex-shrink-0">
+                      <div className="relative w-16 h-20 flex-shrink-0 z-0">
                         <Image
                           src={item.image || "/placeholder.svg"}
                           alt={item.name}

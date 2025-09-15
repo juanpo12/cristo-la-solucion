@@ -437,11 +437,11 @@ export default function TiendaPage() {
           onClick={closeModal}
         >
           <div 
-            className="bg-white rounded-lg sm:rounded-2xl max-w-4xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-y-auto shadow-2xl"
+            className="bg-white rounded-lg sm:rounded-2xl max-w-4xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-y-auto shadow-2xl relative z-10"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header del Modal */}
-            <div className="sticky top-0 bg-white border-b border-gray-200 p-3 sm:p-4 flex items-center justify-between rounded-t-lg sm:rounded-t-2xl">
+            <div className="sticky top-0 bg-white border-b border-gray-200 p-3 sm:p-4 flex items-center justify-between rounded-t-lg sm:rounded-t-2xl z-20">
               <h2 className="text-lg sm:text-2xl font-bold church-text">Detalles del Producto</h2>
               <Button
                 variant="ghost"
@@ -458,7 +458,7 @@ export default function TiendaPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
                 {/* Imagen del Producto */}
                 <div className="space-y-4">
-                  <div className="relative aspect-[3/4] rounded-xl overflow-hidden bg-gray-100">
+                  <div className="relative aspect-[3/4] rounded-xl overflow-hidden bg-gray-100 z-0">
                     <Image
                       src={selectedProduct.image || "/placeholder.svg"}
                       alt={selectedProduct.name}
