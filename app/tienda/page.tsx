@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { ShoppingCart, Star, Book, Shirt, Heart, Filter, Search, X, Plus, Minus, Share2, BookOpen, Calendar, Award } from "lucide-react"
+import { ShoppingCart, Book, Shirt, Heart, Filter, Search, X, Plus, Minus, Share2, BookOpen, Calendar } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { useCart } from "@/lib/hooks/use-cart"
 import { useFavorites } from "@/lib/hooks/use-favorites"
@@ -237,8 +237,7 @@ export default function TiendaPage() {
         {/* Productos Destacados */}
         {selectedCategory === "all" && (
           <div className="mb-16">
-            <h2 className="text-4xl font-bold church-text mb-8 flex items-center">
-              <Star className="w-8 h-8 text-yellow-500 mr-3" />
+            <h2 className="text-4xl font-bold church-text mb-8">
               Productos Destacados
             </h2>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
@@ -272,21 +271,7 @@ export default function TiendaPage() {
                         <div>
                           <h3 className="text-xl md:text-2xl font-bold church-text mb-2">{product.name}</h3>
                           <p className="text-church-text-muted mb-3">{product.author}</p>
-                          <div className="flex items-center space-x-2 mb-3">
-                            <div className="flex items-center">
-                              {[...Array(5)].map((_, i) => (
-                                <Star
-                                  key={i}
-                                  className={`w-4 h-4 ${
-                                    i < Math.floor(parseFloat(product.rating || '0')) ? "text-yellow-400 fill-current" : "text-gray-300"
-                                  }`}
-                                />
-                              ))}
-                            </div>
-                            <span className="text-sm church-text-muted">
-                              {product.rating} ({product.reviewCount} reseñas)
-                            </span>
-                          </div>
+
                           <p className="church-text-muted mb-4 leading-relaxed text-sm">{product.description}</p>
                         </div>
                         <div>
@@ -380,19 +365,7 @@ export default function TiendaPage() {
                       <h3 className="font-bold church-text text-lg mb-1 line-clamp-2 leading-tight">{product.name}</h3>
                       <p className="text-sm church-text-muted">{product.author}</p>
                     </div>
-                    <div className="flex items-center space-x-1 mb-3">
-                      <div className="flex items-center">
-                        {[...Array(5)].map((_, i) => (
-                          <Star
-                            key={i}
-                            className={`w-3 h-3 ${
-                              i < Math.floor(parseFloat(product.rating || '0')) ? "text-yellow-400 fill-current" : "text-gray-300"
-                            }`}
-                          />
-                        ))}
-                      </div>
-                      <span className="text-xs church-text-muted">({product.reviewCount})</span>
-                    </div>
+
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center space-x-2">
                         {product.originalPrice && (
@@ -511,28 +484,7 @@ export default function TiendaPage() {
                     </p>
                   </div>
 
-                  {/* Rating y Reseñas */}
-                  <div className="flex items-center space-x-4">
-                    <div className="flex items-center space-x-2">
-                      <div className="flex items-center">
-                        {[...Array(5)].map((_, i) => (
-                          <Star
-                            key={i}
-                            className={`w-5 h-5 ${
-                              i < Math.floor(parseFloat(selectedProduct.rating || '0')) 
-                                ? "text-yellow-400 fill-current" 
-                                : "text-gray-300"
-                            }`}
-                          />
-                        ))}
-                      </div>
-                      <span className="text-lg font-semibold">{selectedProduct.rating}</span>
-                    </div>
-                    <div className="flex items-center text-church-text-muted">
-                      <Award className="w-4 h-4 mr-1" />
-                      <span>({selectedProduct.reviewCount} reseñas)</span>
-                    </div>
-                  </div>
+
 
                   {/* Precio */}
                   <div className="bg-gray-50 rounded-xl p-4">
