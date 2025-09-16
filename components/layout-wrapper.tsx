@@ -16,7 +16,7 @@ export function LayoutWrapper({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Header />
-      <main className="pt-20 relative z-1">
+      <main className="pt-20 relative">
         {children}
       </main>
       <Footer />
