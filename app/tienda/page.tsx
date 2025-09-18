@@ -235,7 +235,7 @@ export default function TiendaPage() {
         </div>
 
         {/* Productos Destacados */}
-        {selectedCategory === "all" && (
+        {selectedCategory === "all" && filteredProducts.filter((product) => product.featured).length > 0 && (
           <div className="mb-16">
             <h2 className="text-4xl font-bold church-text mb-8">
               Productos Destacados
