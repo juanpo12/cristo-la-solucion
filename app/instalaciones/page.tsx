@@ -10,24 +10,24 @@ export default function InstalacionesPage() {
       title: "LIBRERÍA",
       description: "En librería se pueden adquirir los libros de nuestro pastor y también artículos para regalar.",
       icon: BookOpen,
-      image: "/store.jpg",
-      color: "from-blue-500 to-blue-600"
+      image: "/libreria1.jpg",
+      // color: "from-blue-500 to-blue-600"
     },
     {
       id: "cafeteria",
       title: "CAFETERÍA",
       description: "Espacio abierto al público para que las personas puedan compartir, antes o después, de nuestras reuniones.",
       icon: Coffee,
-      image: "/frente.jpg",
-      color: "from-amber-500 to-orange-600"
+      image: "/cafeteria1.jpg",
+      // color: "from-amber-500/40 to-orange-600/40"
     },
     {
       id: "auditorio",
       title: "AUDITORIO",
       description: "Estamos ubicados en Juan Manuel de Rosas 4357, San Justo, Buenos Aires.",
       icon: Building,
-      image: "/DSC02510.jpg",
-      color: "from-purple-500 to-purple-600"
+      image: "/Banner transimision-instalaciones.jpg",
+      // color: "from-purple-500 to-purple-600"
     }
   ]
 
@@ -36,13 +36,13 @@ export default function InstalacionesPage() {
       {/* Header */}
       <div className="relative h-[50vh] overflow-hidden -mt-20">
         <Image 
-          src="/SEDES.jpg" 
+          src="/Banner transimision-instalaciones.jpg" 
           alt="Instalaciones Cristo La Solución" 
           fill 
           className="object-cover" 
           priority 
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-church-electric-600/80 to-church-navy-600/80" />
+        <div className="absolute inset-0 bg-gradient-to-r from-church-electric-600/0 to-church-navy-600/80" />
         <div className="absolute inset-0 bg-black/30" />
 
         <div className="absolute inset-0 flex items-center justify-center text-white">
@@ -78,7 +78,7 @@ export default function InstalacionesPage() {
                   fill
                   className="object-cover"
                 />
-                <div className={`absolute inset-0 bg-gradient-to-t ${instalacion.color} opacity-60`} />
+                <div className={`absolute inset-0 bg-gradient-to-t opacity-60`} />
                 <div className="absolute inset-0 bg-black/20" />
                 <div className="absolute top-4 left-4">
                   <div className="bg-white/20 backdrop-blur-sm p-3 rounded-full">

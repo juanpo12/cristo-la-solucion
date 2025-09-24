@@ -82,12 +82,14 @@ export default function PastoresPage() {
                 Te invitamos a ser parte de nuestra comunidad
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button
-                  size="lg"
-                  className="bg-white text-church-electric-600 hover:bg-gray-100 px-8 py-4 text-lg"
-                >
-                  Visítanos
-                </Button>
+                <Link href="/contacto">
+                  <Button
+                    size="lg"
+                    className="bg-white text-church-electric-600 hover:bg-gray-100 px-8 py-4 text-lg"
+                  >
+                    Visítanos
+                  </Button>
+                </Link>
                 <Link href="/tienda">
                   <Button
                     size="lg"

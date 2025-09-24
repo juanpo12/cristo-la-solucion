@@ -19,7 +19,7 @@ const storeSections: StoreSection[] = [
     id: "tienda",
     name: "TIENDA",
     shortDesc: "Recursos espirituales",
-    image: "/store.jpg",
+    image: "/libreria1.jpg",
     color: "from-green-600/30 to-emerald-600/30",
     focusPosition: "center center",
   },
