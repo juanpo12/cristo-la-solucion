@@ -1,7 +1,6 @@
 import { db } from '@/lib/db'
 import { products, type NewProduct } from '@/lib/db/schema'
 import { eq, desc, asc, and, or, like, sql } from 'drizzle-orm'
-import { fallbackProducts } from '@/lib/data/products-fallback'
 
 export class ProductService {
   // Obtener todos los productos
@@ -92,77 +91,9 @@ export class ProductService {
 
       return await finalQuery
     } catch (error) {
-      console.error('Error in ProductService.getAll, using fallback data:', error)
-      
-      // Usar datos de fallback cuando la base de datos no esté disponible
-      let filteredProducts = [...fallbackProducts]
-      
-      // Aplicar filtros a los datos de fallback
-      if (filters?.category && filters.category !== 'all') {
-        filteredProducts = filteredProducts.filter(p => p.category === filters.category)
-      }
-      
-      if (filters?.featured !== undefined) {
-        filteredProducts = filteredProducts.filter(p => p.featured === filters.featured)
-      }
-      
-      if (filters?.active !== undefined) {
-        filteredProducts = filteredProducts.filter(p => p.active === filters.active)
-      }
-      
-      if (filters?.search) {
-        const searchLower = filters.search.toLowerCase()
-        filteredProducts = filteredProducts.filter(p => 
-          p.name.toLowerCase().includes(searchLower) ||
-          p.author.toLowerCase().includes(searchLower) ||
-          p.description.toLowerCase().includes(searchLower)
-        )
-      }
-      
-      // Aplicar ordenamiento
-      if (filters?.sortBy) {
-        filteredProducts.sort((a, b) => {
-          let aVal, bVal
-          switch (filters.sortBy) {
-            case 'name':
-              aVal = a.name
-              bVal = b.name
-              break
-            case 'price':
-              aVal = parseFloat(a.price)
-              bVal = parseFloat(b.price)
-              break
-            case 'rating':
-              aVal = parseFloat(a.rating)
-              bVal = parseFloat(b.rating)
-              break
-            case 'createdAt':
-              aVal = a.createdAt
-              bVal = b.createdAt
-              break
-            default:
-              aVal = a.createdAt
-              bVal = b.createdAt
-          }
-          
-          if (filters.sortOrder === 'desc') {
-            return aVal > bVal ? -1 : aVal < bVal ? 1 : 0
-          } else {
-            return aVal < bVal ? -1 : aVal > bVal ? 1 : 0
-          }
-        })
-      }
-      
-      // Aplicar paginación
-      if (filters?.offset) {
-        filteredProducts = filteredProducts.slice(filters.offset)
-      }
-      
-      if (filters?.limit) {
-        filteredProducts = filteredProducts.slice(0, filters.limit)
-      }
-      
-      return filteredProducts
+      console.error('Error in ProductService.getAll:', error)
+      // Retornar array vacío cuando la base de datos no esté disponible
+      return []
     }
   }
 
@@ -172,8 +103,8 @@ export class ProductService {
       const result = await db.select().from(products).where(eq(products.id, id)).limit(1)
       return result[0] || null
     } catch (error) {
-      console.error('Error in ProductService.getById, using fallback data:', error)
-      return fallbackProducts.find(p => p.id === id) || null
+      console.error('Error in ProductService.getById:', error)
+      return null
     }
   }
 
@@ -187,11 +118,8 @@ export class ProductService {
         .orderBy(desc(products.rating))
         .limit(limit)
     } catch (error) {
-      console.error('Error in ProductService.getFeatured, using fallback data:', error)
-      return fallbackProducts
-        .filter(p => p.featured && p.active)
-        .sort((a, b) => parseFloat(b.rating) - parseFloat(a.rating))
-        .slice(0, limit)
+      console.error('Error in ProductService.getFeatured:', error)
+      return []
     }
   }
 
