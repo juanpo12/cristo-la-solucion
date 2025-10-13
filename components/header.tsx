@@ -194,7 +194,7 @@ export function Header() {
             href="/"
             className="hidden lg:flex items-center transition-opacity duration-200 hover:opacity-80"
           >
-            <div className="relative h-10 w-44">
+            <div className="relative h-[60px] w-[150px]">
               <Image
                 src="/logo-cls.png"
                 alt="Ministerio Cristo la Solución"

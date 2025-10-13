@@ -114,13 +114,13 @@ export default function VideosPage() {
       {/* Header */}
       <div className="relative h-[50vh] overflow-hidden -mt-20">
         <Image 
-          src="/youtube.png" 
+          src="/Banner transimision-transmision.jpg" 
           alt="Pastor Alfredo Dimiro" 
           fill 
           className="object-cover" 
           priority 
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-church-electric-600/80 to-church-navy-600/80" />
+        <div className="absolute inset-0 bg-gradient-to-r  to-church-navy-600/80" />
         <div className="absolute inset-0 bg-black/30" />
 
         <div className="absolute inset-0 flex items-center justify-center text-white">

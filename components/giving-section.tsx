@@ -1,6 +1,11 @@
+"use client"
+
+import { useState } from "react"
 import { CreditCard, Smartphone, Building, Heart } from "lucide-react"
+import { DonationModal } from "./donation-modal"
 
 export default function GivingSection() {
+  const [isDonationModalOpen, setIsDonationModalOpen] = useState(false)
   const givingMethods = [
     { icon: CreditCard, title: "Transferencia Bancaria", description: "CBU: 1234567890123456789012" },
     { icon: Smartphone, title: "Mercado Pago", description: "Alias: iglesia.cristo.solucion" },
@@ -53,14 +58,14 @@ export default function GivingSection() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {givingMethods.map((method, index) => (
-              <div key={index} className="bg-white rounded-xl p-6 shadow-lg text-center">
+              <div key={index} className="bg-white rounded-xl p-4 sm:p-6 shadow-lg text-center">
                 <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <method.icon className="text-blue-600" size={20} />
                 </div>
-                <h4 className="font-semibold text-gray-800 mb-2">{method.title}</h4>
-                <p className="text-sm text-gray-600">{method.description}</p>
+                <h4 className="font-semibold text-gray-800 mb-2 text-sm sm:text-base">{method.title}</h4>
+                <p className="text-xs sm:text-sm text-gray-600 break-words break-all">{method.description}</p>
               </div>
             ))}
           </div>
@@ -71,10 +76,20 @@ export default function GivingSection() {
           <p className="text-blue-100 mb-8 max-w-2xl mx-auto">
             No importa el monto, tu generosidad marca la diferencia en la vida de muchas personas.
           </p>
-          <button className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors">
+          <button 
+            onClick={() => setIsDonationModalOpen(true)}
+            className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors flex items-center gap-2 mx-auto"
+          >
+            <Heart className="w-5 h-5" />
             Dar ahora
           </button>
         </div>
+
+        {/* Modal de donación */}
+        <DonationModal 
+          isOpen={isDonationModalOpen} 
+          onClose={() => setIsDonationModalOpen(false)} 
+        />
       </div>
     </section>
   )
