@@ -216,8 +216,8 @@ export function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
                       <div>
                         <h4 className="font-semibold text-blue-800">Información de Entrega</h4>
                         <p className="text-sm text-blue-700 mt-1">
-                          Los libros se entregan en la iglesia los domingos después del servicio. 
-                          Te contactaremos para coordinar la entrega.
+                          Puede seleccionar la dirección de entrega en la seccion de mercado pago. En caso de que quiera retirarlo en la iglesia, 
+                          no es necesario proporcionar una dirección.
                         </p>
                       </div>
                     </div>
