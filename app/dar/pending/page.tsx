@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -13,19 +13,19 @@ interface PaymentData {
   externalReference: string | null
 }
 
-export default function DonationPendingPage() {
+function DonationPendingContent() {
   const searchParams = useSearchParams()
   const [paymentData, setPaymentData] = useState<PaymentData | null>(null)
 
   useEffect(() => {
-    const paymentId = searchParams.get('payment_id')
-    const status = searchParams.get('status')
-    const externalReference = searchParams.get('external_reference')
+    const paymentId = searchParams.get("payment_id")
+    const status = searchParams.get("status")
+    const externalReference = searchParams.get("external_reference")
 
     setPaymentData({
       paymentId,
       status,
-      externalReference
+      externalReference,
     })
   }, [searchParams])
 
@@ -115,5 +115,18 @@ export default function DonationPendingPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function DonationPendingPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-gray-50 pt-20 flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+        <p className="text-gray-600">Cargando...</p>
+      </div>
+    </div>}>
+      <DonationPendingContent />
+    </Suspense>
   )
 }
