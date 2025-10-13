@@ -5,10 +5,9 @@ import { useSearchParams } from "next/navigation"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { ShoppingCart, Book, Shirt, Heart, Filter, Search, X, Plus, Minus, Share2, BookOpen, Calendar } from "lucide-react"
+import { ShoppingCart, Book, Shirt, Filter, Search, X, Plus, Minus, Share2, BookOpen, Calendar, Package } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { useCart } from "@/lib/hooks/use-cart"
-import { useFavorites } from "@/lib/hooks/use-favorites"
 import { useShare } from "@/lib/hooks/use-share"
 import { useProductsInStock } from "@/lib/hooks/use-products"
 import { ProductGridSkeleton } from "@/components/product-skeleton"
@@ -17,7 +16,7 @@ import type { Product } from "@/lib/db/schema"
 import Image from "next/image"
 
 const categories = [
-  { id: "all", name: "Todos", icon: Heart },
+  { id: "all", name: "Todos", icon: Package },
   { id: "books", name: "Libros", icon: Book },
   { id: "merch", name: "Merchandising", icon: Shirt },
 ]
@@ -30,7 +29,6 @@ export default function TiendaPage() {
   const [quantity, setQuantity] = useState(1)
   const [shareMessage, setShareMessage] = useState("")
   const { dispatch } = useCart()
-  const { toggleFavorite, isFavorite } = useFavorites()
   const { shareProduct } = useShare()
   const searchParams = useSearchParams()
 
@@ -125,16 +123,7 @@ export default function TiendaPage() {
     closeModal()
   }
 
-  const handleToggleFavorite = (e: React.MouseEvent, product: Product) => {
-    e.stopPropagation() // Evitar que se abra el modal
-    toggleFavorite({
-      id: product.id,
-      name: product.name,
-      author: product.author,
-      price: parseFloat(product.price),
-      image: product.image || '',
-    })
-  }
+
 
   // Función para formatear precios en pesos argentinos
   const formatPrice = (price: string | number): string => {
@@ -344,20 +333,6 @@ export default function TiendaPage() {
                     {product.originalPrice && (
                       <Badge className="absolute top-3 left-3 bg-red-500 text-white">¡Oferta!</Badge>
                     )}
-                    <div className="absolute top-3 right-3">
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        className={`rounded-full p-2 w-8 h-8 ${
-                          isFavorite(product.id) 
-                            ? 'bg-red-100 hover:bg-red-200 text-red-600' 
-                            : 'bg-white/80 hover:bg-white text-gray-700'
-                        }`}
-                        onClick={(e) => handleToggleFavorite(e, product)}
-                      >
-                        <Heart className={`w-4 h-4 ${isFavorite(product.id) ? 'fill-current' : ''}`} />
-                      </Button>
-                    </div>
                   </div>
 
                   <CardContent className="p-4">
@@ -447,14 +422,6 @@ export default function TiendaPage() {
                   
                   {/* Botones de Acción Secundarios */}
                   <div className="flex gap-3">
-                    <Button 
-                      variant="outline" 
-                      className={`flex-1 ${isFavorite(selectedProduct.id) ? 'bg-red-50 border-red-200 text-red-600' : ''}`}
-                      onClick={(e) => handleToggleFavorite(e, selectedProduct)}
-                    >
-                      <Heart className={`w-4 h-4 mr-2 ${isFavorite(selectedProduct.id) ? 'fill-current' : ''}`} />
-                      {isFavorite(selectedProduct.id) ? 'En Favoritos' : 'Favoritos'}
-                    </Button>
                     <Button 
                       variant="outline" 
                       className="flex-1"
