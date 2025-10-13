@@ -53,14 +53,14 @@ export default function GivingSection() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {givingMethods.map((method, index) => (
-              <div key={index} className="bg-white rounded-xl p-6 shadow-lg text-center">
+              <div key={index} className="bg-white rounded-xl p-4 sm:p-6 shadow-lg text-center">
                 <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <method.icon className="text-blue-600" size={20} />
                 </div>
-                <h4 className="font-semibold text-gray-800 mb-2">{method.title}</h4>
-                <p className="text-sm text-gray-600">{method.description}</p>
+                <h4 className="font-semibold text-gray-800 mb-2 text-sm sm:text-base">{method.title}</h4>
+                <p className="text-xs sm:text-sm text-gray-600 break-words break-all">{method.description}</p>
               </div>
             ))}
           </div>
