@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -13,7 +13,7 @@ interface PaymentData {
   externalReference: string | null
 }
 
-export default function DonationFailurePage() {
+function DonationFailureContent() {
   const searchParams = useSearchParams()
   const [paymentData, setPaymentData] = useState<PaymentData | null>(null)
 
@@ -112,5 +112,18 @@ export default function DonationFailurePage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function DonationFailurePage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-gray-50 pt-20 flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+        <p className="text-gray-600">Cargando...</p>
+      </div>
+    </div>}>
+      <DonationFailureContent />
+    </Suspense>
   )
 }
