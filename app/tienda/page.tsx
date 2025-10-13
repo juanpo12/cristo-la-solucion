@@ -366,16 +366,7 @@ export default function TiendaPage() {
           )}
         </div>
 
-        {/* Call to Action */}
-        <div className="mt-20 text-center bg-gradient-to-r from-church-electric-500 to-church-navy-600 rounded-2xl p-12 text-white">
-          <h3 className="text-4xl font-bold mb-4">¿No encuentras lo que buscas?</h3>
-          <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
-            Contáctanos y te ayudaremos a encontrar el recurso perfecto para tu crecimiento espiritual
-          </p>
-          <Button size="lg" className="bg-white text-church-electric-600 hover:bg-gray-100 px-8 py-4 text-lg">
-            Contactar Tienda
-          </Button>
-        </div>
+        
       </div>
 
       {/* Modal del Producto */}
