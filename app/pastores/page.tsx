@@ -1,71 +1,81 @@
 import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
 export default function PastoresPage() {
   return (
     <div className="min-h-screen bg-white">
-      {/* Header con imagen de fondo */}
-      <div className="relative h-[60vh] overflow-hidden -mt-20">
-        <Image
-          src="/pastores.jpg"
-          alt="Pastores Alfredo y Celina"
-          fill
-          priority
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-church-electric-600/80 to-church-navy-600/80" />
-        <div className="absolute inset-0 bg-black/30" />
+      {/* Header mejorado con imagen que no se estira */}
+      <div className="relative bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 -mt-20">
+        <div className="container mx-auto px-4">
+          <div className="grid md:grid-cols-2 gap-12 items-center py-24 md:py-32">
+            {/* Texto del header */}
+            <div className="text-white z-10 order-2 md:order-1">
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
+                NUESTROS PASTORES
+              </h1>
+              <p className="text-2xl md:text-3xl font-light mb-4 text-blue-200">
+                Alfredo y Celina Dimiro
+              </p>
+              <div className="h-1 w-24 bg-blue-400 mb-6"></div>
+            </div>
 
-        <div className="absolute inset-0 flex items-center justify-center text-white">
-          <div className="text-center max-w-4xl px-4">
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 drop-shadow-lg">
-              NUESTROS PASTORES
-            </h1>
-            <p className="text-xl md:text-2xl opacity-90 drop-shadow-md">
-              ALFREDO Y CELINA DIMIRO
-            </p>
+            {/* Imagen con mejor manejo */}
+            <div className="order-1 md:order-2 flex justify-center md:justify-end">
+              <div className="relative w-full max-w-md">
+                <div className="aspect-[3/4] relative rounded-2xl overflow-hidden shadow-2xl ring-4 ring-white/10">
+                  <Image
+                    src="/pastor1.jpg"
+                    alt="Pastores Alfredo y Celina"
+                    fill
+                    className="object-cover object-[80%_center]"
+                    priority
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                  />
+                </div>
+                {/* Decoración */}
+                <div className="absolute -bottom-6 -right-6 w-full h-full bg-blue-500/20 rounded-2xl -z-10"></div>
+              </div>
+            </div>
           </div>
         </div>
 
-        <Link
-          href="/"
-          className="absolute top-8 left-8 bg-white/20 backdrop-blur-sm text-white px-6 py-3 rounded-full hover:bg-white hover:text-gray-900 transition-all duration-300 flex items-center space-x-2"
-        >
-          <ArrowLeft className="w-5 h-5" />
-          <span>Volver al Inicio</span>
-        </Link>
+        {/* Onda decorativa */}
+        <div className="absolute bottom-0 left-0 right-0">
+          <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto">
+            <path d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="white"/>
+          </svg>
+        </div>
       </div>
 
       {/* Contenido principal */}
       <div className="container mx-auto px-4 py-16">
         <div className="max-w-4xl mx-auto">
-          {/* Información de los Pastores */}
-
           {/* Historia y Ministerio */}
-          <div className="mt-16 space-y-12">
+          <div className="space-y-12">
             <div className="text-center">
-              <h2 className="text-4xl font-bold church-text mb-8">
+              <h2 className="text-4xl md:text-5xl font-bold text-slate-800 mb-4">
                 Su historia y ministerio
               </h2>
+              <div className="h-1 w-24 bg-blue-600 mx-auto"></div>
             </div>
 
-            <div className="prose prose-lg max-w-none">
-              <p className="text-xl church-text-muted leading-relaxed text-justify">
+            <div className="space-y-6">
+              <p className="text-xl text-slate-700 leading-relaxed text-justify">
                 Pastorean la iglesia{" "}
-                <strong className="church-text">
-                  Cristo La Solución, San Justo,  <em></em> 
-                </strong>
-                  hace más de treinta años. Alfredo es un maestro de las
+                <strong className="text-slate-900">
+                  Cristo La Solución, San Justo,
+                </strong>{" "}
+                hace más de treinta años. Alfredo es un maestro de las
                 Escrituras, le apasiona desmenuzar los versos bíblicos y
                 estudiarlos detalladamente para enseñárselo a las personas.
                 Algunos de sus estudios pueden encontrarse en los libros que
                 escribió: <em>&quot;El poder de la pasión&quot;</em>;{" "}
-                <em>&quot;Desechando maldiciones&quot;</em>;
+                <em>&quot;Desechando maldiciones&quot;</em>;{" "}
                 <em>&quot;Administración financiera&quot;</em>; entre otros.
               </p>
 
-              <p className="text-xl church-text-muted leading-relaxed text-justify mt-6">
+              <p className="text-xl text-slate-700 leading-relaxed text-justify">
                 Por otro lado, Celina lo acompaña siendo usada por Dios en
                 oración y consejería. Ambos, dedican sus vidas al ministerio y a
                 la iglesia local, ya que el deseo de sus corazones es vivir por
@@ -75,17 +85,21 @@ export default function PastoresPage() {
               </p>
             </div>
 
+           
+
             {/* Call to Action */}
-            <div className="text-center bg-gradient-to-r from-church-electric-500 to-church-navy-600 rounded-2xl p-12 text-white mt-16">
-              <h3 className="text-4xl font-bold mb-4">¿Quieres conocer más?</h3>
-              <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
+            <div className="bg-gradient-to-r from-blue-600 to-slate-700 rounded-2xl p-12 text-white mt-16 shadow-xl">
+              <h3 className="text-3xl md:text-4xl font-bold mb-4 text-center">
+                ¿Quieres conocer más?
+              </h3>
+              <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto text-center">
                 Te invitamos a ser parte de nuestra comunidad
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link href="/contacto">
                   <Button
                     size="lg"
-                    className="bg-white text-church-electric-600 hover:bg-gray-100 px-8 py-4 text-lg"
+                    className="bg-white text-blue-600 hover:bg-blue-50 px-8 py-6 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
                   >
                     Visítanos
                   </Button>
@@ -93,7 +107,7 @@ export default function PastoresPage() {
                 <Link href="/tienda">
                   <Button
                     size="lg"
-                    className="bg-white/20 backdrop-blur-sm border-2 border-white text-white hover:bg-white hover:text-church-electric-600 px-8 py-4 text-lg font-semibold transition-all duration-300"
+                    className="bg-white/10 backdrop-blur-sm border-2 border-white text-white hover:bg-white hover:text-blue-600 px-8 py-6 text-lg font-semibold transition-all duration-300"
                   >
                     Ver libros del pastor
                   </Button>
