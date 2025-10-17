@@ -43,7 +43,7 @@ export function Contact() {
                 <div>
                   <h4 className="font-bold church-text text-xl mb-2">Horarios de Oficina</h4>
                   <p className="church-text-muted text-lg">
-                    Lunes a Viernes: 9:00 - 17:00
+                    Martes a Viernes: 9:00 - 17:00
                     <br />
                     Sábados: 9:00 - 13:00
                   </p>

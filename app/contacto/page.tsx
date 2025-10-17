@@ -79,7 +79,7 @@ export default function ContactoPage() {
                     <div>
                       <h3 className="text-xl font-bold church-text mb-2">Horarios de atención</h3>
                       <p className="church-text-muted">
-                        Lunes a Viernes: 13:00 - 19:00 HS
+                        Martes a Viernes: 13:00 - 19:00 HS
                       </p>
                     </div>
                   </div>
