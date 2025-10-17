@@ -9,7 +9,7 @@ export function Hero() {
   const [currentSlide, setCurrentSlide] = useState(0)
   
   const images = [
-    { src: "/hero.jpg", alt: "Hero principal" },
+    { src: "/DSC086721.jpg", alt: "Hero principal" },
     { src: "/Libro-prdsadomo.jpg", alt: "Libro Prdsadomo" },
     { src: "/corazonacorazon.jpg", alt: "Corazón a Corazón" }
   ]
