@@ -1,10 +1,19 @@
 'use client'
 import { Button } from "@/components/ui/button"
-import { ArrowRight } from "lucide-react"
+import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
+import { useState, useEffect } from "react"
 
 export function Hero() {
+  const [currentSlide, setCurrentSlide] = useState(0)
+  
+  const images = [
+    { src: "/hero.jpg", alt: "Hero principal" },
+    { src: "/Libro-prdsadomo.jpg", alt: "Libro Prdsadomo" },
+    { src: "/corazonacorazon.jpg", alt: "Corazón a Corazón" }
+  ]
+
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId)
     if (element) {
@@ -18,17 +27,58 @@ export function Hero() {
     }
   }
 
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % images.length)
+  }
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + images.length) % images.length)
+  }
+
+  // Auto-play del carrusel
+  useEffect(() => {
+    const interval = setInterval(nextSlide, 5000) // Cambia cada 5 segundos
+    return () => clearInterval(interval)
+  }, [])
+
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden">
-      {/* Imagen de fondo */}
-      <Image
-        width={1920}
-        height={1080}
-        src="/DSC086721.jpg"
-        alt="Fondo"
-        className="absolute inset-0 w-full h-full object-cover"
-        style={{ zIndex: -1 }}
-      />
+      {/* Carrusel de imágenes de fondo */}
+      <div className="absolute inset-0 w-full h-full">
+        {images.map((image, index) => (
+          <Image
+            key={index}
+            width={1920}
+            height={1080}
+            src={image.src}
+            alt={image.alt}
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+              index === currentSlide ? 'opacity-100' : 'opacity-0'
+            }`}
+            style={{ zIndex: -1 }}
+            priority={index === 0}
+          />
+        ))}
+      </div>
+
+      {/* Controles del carrusel */}
+      <button
+        onClick={prevSlide}
+        className="absolute left-4 top-1/2 transform -translate-y-1/2 z-20 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full p-2 transition-all duration-300"
+        aria-label="Imagen anterior"
+      >
+        <ChevronLeft className="w-6 h-6 text-white" />
+      </button>
+      
+      <button
+        onClick={nextSlide}
+        className="absolute right-4 top-1/2 transform -translate-y-1/2 z-20 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full p-2 transition-all duration-300"
+        aria-label="Siguiente imagen"
+      >
+        <ChevronRight className="w-6 h-6 text-white" />
+      </button>
+
+
 
       {/* Overlay con gradiente moderno */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60" />
@@ -85,9 +135,6 @@ export function Hero() {
           </div>
         </div>
       </div>
-
-      {/* Información de horarios mejorada - Ajustada para móvil */}
-     
 
       {/* Indicador de scroll - Oculto en móvil para evitar superposición */}
       <div className="hidden md:block absolute bottom-10 left-1/2 transform -translate-x-1/2 z-10 animate-bounce">
