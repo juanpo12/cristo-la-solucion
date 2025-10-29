@@ -41,6 +41,9 @@ export function Hero() {
     return () => clearInterval(interval)
   }, [])
 
+  // Determinar si el slide actual debe ocultar el contenido
+  const shouldHideContent = currentSlide === 1 || currentSlide === 2
+
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden">
       {/* Carrusel de imágenes de fondo */}
@@ -78,13 +81,15 @@ export function Hero() {
         <ChevronRight className="w-6 h-6 text-white" />
       </button>
 
-
-
-      {/* Overlay con gradiente moderno */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60" />
+      {/* Overlay con gradiente moderno - Solo visible en el primer slide */}
+      <div className={`absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60 transition-opacity duration-1000 ${
+        shouldHideContent ? 'opacity-0' : 'opacity-100'
+      }`} />
 
       {/* Contenido principal - Posicionado centro-derecha */}
-      <div className="relative z-10 w-full max-w-screen mx-auto px-4 sm:px-6 lg:px-12">
+      <div className={`relative z-10 w-full max-w-screen mx-auto px-4 sm:px-6 lg:px-12 transition-opacity duration-1000 ${
+        shouldHideContent ? 'opacity-0 pointer-events-none' : 'opacity-100'
+      }`}>
         <div className="grid grid-cols-12 gap-4 items-center min-h-screen">
           {/* Espacio vacío a la izquierda */}
           <div className="hidden md:block md:col-span-1 lg:col-span-1"></div>
@@ -137,7 +142,9 @@ export function Hero() {
       </div>
 
       {/* Indicador de scroll - Oculto en móvil para evitar superposición */}
-      <div className="hidden md:block absolute bottom-10 left-1/2 transform -translate-x-1/2 z-10 animate-bounce">
+      <div className={`hidden md:block absolute bottom-10 left-1/2 transform -translate-x-1/2 z-10 animate-bounce transition-opacity duration-1000 ${
+        shouldHideContent ? 'opacity-0' : 'opacity-100'
+      }`}>
         <div className="w-6 h-10 border-2 border-white/40 rounded-full flex justify-center">
           <div className="w-1 h-3 bg-white/60 rounded-full mt-2 animate-pulse" />
         </div>
