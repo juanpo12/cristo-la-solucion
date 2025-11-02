@@ -10,8 +10,8 @@ export function Hero() {
   
   const images = [
     { src: "/DSC086721.jpg", alt: "Hero principal" },
-    { src: "/Libro-prdsadomo.jpg", alt: "Libro Prdsadomo" },
-    { src: "/corazonacorazon.jpg", alt: "Corazón a Corazón" }
+    { src: "/libros pastor portada.jpg", alt: "Libro Prdsadomo" },
+    { src: "/de corazon a corazon 2026 web.jpg", alt: "Corazón a Corazón" }
   ]
 
   const scrollToSection = (sectionId: string) => {
@@ -60,6 +60,8 @@ export function Hero() {
             }`}
             style={{ zIndex: -1 }}
             priority={index === 0}
+            quality={100}
+            unoptimized={false}
           />
         ))}
       </div>
@@ -82,7 +84,7 @@ export function Hero() {
       </button>
 
       {/* Overlay con gradiente moderno - Solo visible en el primer slide */}
-      <div className={`absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60 transition-opacity duration-1000 ${
+      <div className={`absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/50 transition-opacity duration-1000 ${
         shouldHideContent ? 'opacity-0' : 'opacity-100'
       }`} />
 
