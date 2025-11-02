@@ -22,15 +22,6 @@ export async function POST(request: NextRequest) {
       
       // Obtener información del pago
       const paymentInfo = await payment.get({ id: paymentId })
-      
-      console.log('Payment notification received:', {
-        id: paymentInfo.id,
-        status: paymentInfo.status,
-        external_reference: paymentInfo.external_reference,
-        transaction_amount: paymentInfo.transaction_amount,
-        payer: paymentInfo.payer
-      })
-      
       // Buscar si ya existe una orden con esta referencia externa
       if (paymentInfo.external_reference) {
         try {

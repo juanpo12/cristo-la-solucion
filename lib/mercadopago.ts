@@ -1,4 +1,5 @@
 import { MercadoPagoConfig, Preference } from "mercadopago";
+import { randomUUID } from "crypto";
 
 // Configuración de Mercado Pago
 const accessToken = process.env.MERCADOPAGO_ACCESS_TOKEN!;
@@ -9,7 +10,6 @@ const client = new MercadoPagoConfig({
   accessToken,
   options: {
     timeout: 5000,
-    idempotencyKey: "abc",
   },
 });
 
@@ -40,6 +40,7 @@ export interface CreatePreferenceData {
 export async function createPreference(data: CreatePreferenceData) {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+    const idempotencyKey = randomUUID();
 
     const preferenceData: unknown = {
       items: data.items.map((item) => ({
@@ -53,7 +54,7 @@ export async function createPreference(data: CreatePreferenceData) {
       shipments: {
         mode: "me2", // 🚀 activa Mercado Envíos
         local_pickup: true, // opcional: permitir "retiro en el local"
-        dimensions: "30x30x30,500"
+        dimensions: "30x30x30,500",
       },
       back_urls: {
         success: `${baseUrl}/tienda/success`,
@@ -70,7 +71,8 @@ export async function createPreference(data: CreatePreferenceData) {
 
     // Solo agregar payer si se proporciona
     if (data.payer && (data.payer.email || data.payer.name)) {
-      preferenceData.payer = data.payer;
+      (preferenceData as { payer?: CreatePreferenceData["payer"] }).payer =
+        data.payer;
     }
 
     console.log(
@@ -80,7 +82,10 @@ export async function createPreference(data: CreatePreferenceData) {
     console.log("Is sandbox:", isSandbox);
     console.log("Base URL:", baseUrl);
 
-    const response = await preference.create({ body: preferenceData });
+    const response = await preference.create({
+      body: preferenceData,
+      requestOptions: { idempotencyKey },
+    });
     return response;
   } catch (error) {
     console.error("Error creating preference:", error);

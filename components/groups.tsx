@@ -51,7 +51,7 @@ const groups: Group[] = [
     name: "GDC",
     shortDesc: "Conexión familiar",
     schedule: "Mar 19:30 HS",
-    image: "/GDC2.jpg",
+    image: "/gdcnueva.jpg",
     color: "from-orange-600/30 to-red-600/30",
     focusPosition: "center center", // Centrado para mostrar la familia
     ageRange: "+35 años",
