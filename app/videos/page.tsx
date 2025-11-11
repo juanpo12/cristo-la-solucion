@@ -380,7 +380,7 @@ export default function VideosPage() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <Button size="lg" className="bg-red-600 hover:bg-red-700 text-white px-8 py-4 text-lg">
+            <Button size="lg" className="bg-red-600 hover:bg-red-700 text-white px-8 py-4 md:text-lg">
               <Play className="w-6 h-6 mr-3" />
               Suscribirse a @AlfredoDimiroLive
             </Button>
