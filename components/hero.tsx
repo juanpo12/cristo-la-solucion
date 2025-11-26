@@ -9,8 +9,8 @@ export function Hero() {
   const [currentSlide, setCurrentSlide] = useState(0)
   
   const images = [
-    { src: "/DSC086721.jpg", alt: "Hero principal" },
-    { src: "/libros pastor portada.jpg", alt: "Libro Prdsadomo" },
+    { src: "/pastorportadav.jpg", alt: "Hero principal" },
+    { src: "/libros pastor portada OK.jpg", alt: "Libro Prdsadomo" },
     { src: "/de corazon a corazon 2026 web.jpg", alt: "Corazón a Corazón" }
   ]
 
