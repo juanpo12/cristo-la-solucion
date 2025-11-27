@@ -36,7 +36,7 @@ const storeSections: StoreSection[] = [
     name: " EVENTOS ",
     shortDesc:
       "¡No te pierdas las últimas actualizaciones y eventos especiales!",
-    image: "/CONFE.jpg",
+    image: "/testeventos.jpg",
     color: "from-orange-500/40 to-red-600/40",
     focusPosition: "center center",
   },
