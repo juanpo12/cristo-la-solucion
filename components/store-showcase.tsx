@@ -151,6 +151,11 @@ export function StoreShowcase() {
                     : "opacity-0 transform translate-y-4"
                     }`}
                 >
+                  <img
+                    src={section.emoji}
+                    alt={section.name}
+                    className="w-64 h-64 mx-auto mb-4 drop-shadow-lg object-contain"
+                  />
                   <h3 className="text-2xl md:text-3xl font-bold mb-3 drop-shadow-md">
                     {section.name}
                   </h3>
@@ -214,6 +219,11 @@ export function StoreShowcase() {
                 <div className="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-colors duration-300" />
                 <div className="absolute inset-0 flex flex-col justify-end p-6 z-10">
                   <div className="transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                    <img
+                      src={section.emoji}
+                      alt={section.name}
+                      className="w-20 h-20 mb-3 drop-shadow-lg object-contain"
+                    />
                     <h3 className="text-2xl font-bold mb-2 text-white drop-shadow-lg">
                       {section.name}
                     </h3>
@@ -250,6 +260,11 @@ export function StoreShowcase() {
               <div className="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-colors duration-300" />
               <div className="absolute inset-0 flex flex-col justify-center items-center text-white p-6 z-10">
                 <div className="text-center transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                  <img
+                    src={storeSections[2].emoji}
+                    alt={storeSections[2].name}
+                    className="w-24 h-24 mx-auto mb-4 drop-shadow-lg object-contain"
+                  />
                   <h3 className="text-3xl font-bold mb-3 text-white drop-shadow-lg">
                     {storeSections[2].name}
                   </h3>
@@ -295,6 +310,11 @@ export function StoreShowcase() {
                 <div className="absolute inset-0 flex flex-col justify-between p-6 z-10">
                   {/* Contenido central */}
                   <div className="flex-1 flex flex-col justify-center text-center">
+                    <img
+                      src={section.emoji}
+                      alt={section.name}
+                      className="w-24 h-24 mx-auto mb-4 drop-shadow-lg object-contain"
+                    />
                     <h3 className="text-3xl font-bold mb-4 text-white drop-shadow-lg">
                       {section.name}
                     </h3>
