@@ -7,7 +7,7 @@ import { Footer } from "@/components/footer"
 export function LayoutWrapper({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const isAdminRoute = pathname.startsWith('/admin')
-  
+
   if (isAdminRoute) {
     return <>{children}</>
   }
@@ -16,7 +16,7 @@ export function LayoutWrapper({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Header />
-      <main className="pt-20 relative">
+      <main className="relative">
         {children}
       </main>
       <Footer />
