@@ -21,7 +21,7 @@ const groups: Group[] = [
     name: "INVICTOS KIDS",
     shortDesc: "Diversión y aprendizaje",
     schedule: "Sáb 19:30 HS",
-    image: "/test.jpg",
+    image: "/DSC09953 copia.jpg",
     color: "from-blue-600/30 to-cyan-600/30",
     focusPosition: "center center", // Centrado para mostrar al niño
     ageRange: "3 a 9 años",
@@ -31,7 +31,7 @@ const groups: Group[] = [
     name: "INVICTOS TEENS",
     shortDesc: "Descubriendo propósito",
     schedule: "Sáb 19:30 HS",
-    image: "/fototeens.jpg",
+    image: "/DSC00695 (1).jpg",
     color: "from-purple-600/30 to-pink-600/30",
     focusPosition: "center center", // Centrado para mostrar a los jóvenes
     ageRange: "10 a 17 años",
@@ -41,7 +41,7 @@ const groups: Group[] = [
     name: "INVICTOS",
     shortDesc: "Conocer para dar a conocer",
     schedule: "Sáb 19:30 HS",
-    image: "/INVICTOS.jpg",
+    image: "/fototeens.jpg",
     color: "from-church-electric-600/30 to-church-navy-600/30",
     focusPosition: "center center", // Centrado para mostrar el grupo
     ageRange: "18 a 34 años",
