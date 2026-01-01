@@ -7,10 +7,10 @@ import { useState, useEffect } from "react"
 
 export function Hero() {
   const [currentSlide, setCurrentSlide] = useState(0)
-  
+
   const images = [
-    { src: "/pastorportadav.jpg", alt: "Hero principal" },
-    { src: "/taller.jpg", alt: "Taller" }
+    { src: "/pastorportadav.jpg", alt: "Hero principal", objectPosition: "center 40%" },
+    { src: "/taller.jpg", alt: "Taller", objectPosition: "center 150%" }
   ]
 
   const scrollToSection = (sectionId: string) => {
@@ -54,10 +54,9 @@ export function Hero() {
             height={1080}
             src={image.src}
             alt={image.alt}
-            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
-              index === currentSlide ? 'opacity-100' : 'opacity-0'
-            }`}
-            style={{ zIndex: -1 }}
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${index === currentSlide ? 'opacity-100' : 'opacity-0'
+              }`}
+            style={{ zIndex: -1, objectPosition: image.objectPosition }}
             priority={index === 0}
             quality={100}
             unoptimized={false}
@@ -73,7 +72,7 @@ export function Hero() {
       >
         <ChevronLeft className="w-6 h-6 text-white" />
       </button>
-      
+
       <button
         onClick={nextSlide}
         className="hidden md:block absolute right-4 top-1/2 transform -translate-y-1/2 z-20 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full p-2 transition-all duration-300"
@@ -83,24 +82,22 @@ export function Hero() {
       </button>
 
       {/* Overlay con gradiente moderno - Solo visible en el primer slide */}
-      <div className={`absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/50 transition-opacity duration-1000 ${
-        shouldHideContent ? 'opacity-0' : 'opacity-100'
-      }`} />
+      <div className={`absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/50 transition-opacity duration-1000 ${shouldHideContent ? 'opacity-0' : 'opacity-100'
+        }`} />
 
       {/* Contenido principal - Posicionado centro-derecha */}
-      <div className={`relative z-10 w-full max-w-screen mx-auto px-4 sm:px-6 lg:px-12 transition-opacity duration-1000 ${
-        shouldHideContent ? 'opacity-0 pointer-events-none' : 'opacity-100'
-      }`}>
+      <div className={`relative z-10 w-full max-w-screen mx-auto px-4 sm:px-6 lg:px-12 transition-opacity duration-1000 ${shouldHideContent ? 'opacity-0 pointer-events-none' : 'opacity-100'
+        }`}>
         <div className="grid grid-cols-12 gap-4 items-center min-h-screen">
           {/* Espacio vacío a la izquierda */}
           <div className="hidden md:block md:col-span-1 lg:col-span-1"></div>
-          
+
           {/* Contenido del texto */}
           <div className="col-span-12 md:col-span-8 lg:col-span-7">
             <div className="text-center md:text-left text-white space-y-6 md:space-y-8 max-w-2xl pt-16 md:pt-0 pb-32 md:pb-0">
               {/* Título principal con Poppins */}
               <div className="space-y-3 md:space-y-4">
-                <h1 
+                <h1
                   className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-poppins font-light tracking-tight leading-tight"
                   style={{ fontFamily: "'Poppins', sans-serif" }}
                 >
@@ -111,7 +108,7 @@ export function Hero() {
                 </div>
 
                 <p className="text-base sm:text-lg md:text-xl lg:text-2xl font-light text-white/90 leading-relaxed px-4 md:px-0">
-                  Una comunidad donde cada persona encuentra su propósito y 
+                  Una comunidad donde cada persona encuentra su propósito y
                   <span className="font-medium text-white"> crece espiritualmente</span>
                 </p>
               </div>
@@ -143,9 +140,8 @@ export function Hero() {
       </div>
 
       {/* Indicador de scroll - Oculto en móvil para evitar superposición */}
-      <div className={`hidden md:block absolute bottom-10 left-1/2 transform -translate-x-1/2 z-10 animate-bounce transition-opacity duration-1000 ${
-        shouldHideContent ? 'opacity-0' : 'opacity-100'
-      }`}>
+      <div className={`hidden md:block absolute bottom-10 left-1/2 transform -translate-x-1/2 z-10 animate-bounce transition-opacity duration-1000 ${shouldHideContent ? 'opacity-0' : 'opacity-100'
+        }`}>
         <div className="w-6 h-10 border-2 border-white/40 rounded-full flex justify-center">
           <div className="w-1 h-3 bg-white/60 rounded-full mt-2 animate-pulse" />
         </div>
