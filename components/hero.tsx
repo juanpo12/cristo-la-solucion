@@ -9,8 +9,8 @@ export function Hero() {
   const [currentSlide, setCurrentSlide] = useState(0)
 
   const images = [
-    { src: "/pastorportadav.jpg", alt: "Hero principal", objectPosition: "center 100%" },
-    { src: "/taller.jpg", alt: "Taller", objectPosition: "center 150%" }
+    { src: "/pastorportadav.jpg", alt: "Hero principal" },
+    { src: "/taller.jpg", alt: "Taller" }
   ]
 
   const scrollToSection = (sectionId: string) => {
@@ -56,7 +56,7 @@ export function Hero() {
             alt={image.alt}
             className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${index === currentSlide ? 'opacity-100' : 'opacity-0'
               }`}
-            style={{ zIndex: -1, objectPosition: image.objectPosition }}
+            style={{ zIndex: -1 }}
             priority={index === 0}
             quality={100}
             unoptimized={false}
