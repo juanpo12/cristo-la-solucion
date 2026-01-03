@@ -65,18 +65,16 @@ export default function EventosPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 pt-20">
       {/* Header */}
       <div className="relative h-[50vh] overflow-hidden -mt-20">
-        <Image 
-          src="/CONFE.jpg" 
-          alt="Eventos Cristo La Solución" 
-          fill 
-          className="object-cover" 
-          priority 
+        <Image
+          src="/color2.jpg"
+          alt="Eventos Cristo La Solución"
+          fill
+          className="object-cover"
+          priority
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-church-electric-600/80 to-church-navy-600/80" />
-        <div className="absolute inset-0 bg-black/30" />
 
         <div className="absolute inset-0 flex items-center justify-center text-white">
           <div className="text-center max-w-4xl px-4">
@@ -87,14 +85,6 @@ export default function EventosPage() {
             </p>
           </div>
         </div>
-
-        <Link
-          href="/"
-          className="absolute top-8 left-8 bg-white/20 backdrop-blur-sm text-white px-6 py-3 rounded-full hover:bg-white hover:text-gray-900 transition-all duration-300 flex items-center space-x-2"
-        >
-          <ArrowLeft className="w-5 h-5" />
-          <span>Volver al inicio</span>
-        </Link>
       </div>
 
       {/* Contenido principal */}
@@ -115,7 +105,7 @@ export default function EventosPage() {
                   </CardTitle>
                 </div>
               </CardHeader>
-              
+
               <CardContent className="pt-0">
                 <p className="church-text-muted leading-relaxed text-base whitespace-pre-line">
                   {evento.description}

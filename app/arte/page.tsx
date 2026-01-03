@@ -1,13 +1,19 @@
 import { ArrowLeft, Palette, Music, Theater, Zap } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 export default function ArtePage() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white pt-20">
       {/* Header con imagen de fondo */}
       <div className="relative h-[60vh] overflow-hidden -mt-20">
-        <div className="absolute inset-0 bg-gradient-to-r from-church-electric-500 to-church-navy-600" />
-        <div className="absolute inset-0 bg-black/20" />
+          <Image
+            src="/color2.jpg"
+            alt="Laboratorio de Arte Cristo La Solución"
+            fill
+            className="absolute inset-0 w-full h-full object-cover brightness-50"
+            priority
+          />
 
         <div className="absolute inset-0 flex items-center justify-center text-white">
           <div className="text-center max-w-4xl px-4">
@@ -22,14 +28,6 @@ export default function ArtePage() {
             </p>
           </div>
         </div>
-
-        <Link
-          href="/"
-          className="absolute top-8 left-8 bg-white/20 backdrop-blur-sm text-white px-6 py-3 rounded-full hover:bg-white hover:text-gray-900 transition-all duration-300 flex items-center space-x-2"
-        >
-          <ArrowLeft className="w-5 h-5" />
-          <span>Volver al Inicio</span>
-        </Link>
       </div>
 
       {/* Contenido principal */}

@@ -4,7 +4,7 @@ import Image from "next/image";
 
 export default function PastoresPage() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white pt-20">
       {/* Header mejorado con imagen que no se estira */}
       <div className="relative bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 -mt-20">
         <div className="container mx-auto px-4">
