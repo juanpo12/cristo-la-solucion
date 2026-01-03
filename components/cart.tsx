@@ -11,7 +11,8 @@ import Image from "next/image"
 export function Cart() {
   const [isOpen, setIsOpen] = useState(false)
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false)
-  const { state, dispatch } = useCart()
+  const { items, total, dispatch } = useCart()
+  const state = { items, total, itemCount: items.length }
 
   const updateQuantity = (id: number, quantity: number) => {
     dispatch({ type: "UPDATE_QUANTITY", payload: { id, quantity } })
@@ -52,9 +53,8 @@ export function Cart() {
 
       {/* Sidebar del carrito */}
       <div
-        className={`fixed top-0 right-0 h-full w-96 bg-white shadow-2xl z-50 transform transition-transform duration-300 ${
-          isOpen ? "translate-x-0" : "translate-x-full"
-        }`}
+        className={`fixed top-0 right-0 h-full w-96 bg-white shadow-2xl z-50 transform transition-transform duration-300 ${isOpen ? "translate-x-0" : "translate-x-full"
+          }`}
       >
         <div className="flex flex-col h-full">
           {/* Header */}
@@ -137,7 +137,7 @@ export function Cart() {
               </div>
 
               <div className="space-y-3">
-                <Button 
+                <Button
                   onClick={() => setIsCheckoutOpen(true)}
                   className="w-full church-button-primary h-12 text-lg"
                 >
@@ -157,9 +157,9 @@ export function Cart() {
       </div>
 
       {/* Modal de Checkout */}
-      <CheckoutModal 
-        isOpen={isCheckoutOpen} 
-        onClose={() => setIsCheckoutOpen(false)} 
+      <CheckoutModal
+        isOpen={isCheckoutOpen}
+        onClose={() => setIsCheckoutOpen(false)}
       />
     </>
   )

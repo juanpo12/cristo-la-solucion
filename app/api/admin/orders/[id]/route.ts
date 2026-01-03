@@ -23,12 +23,13 @@ const updateOrderSchema = z.object({
 // GET - Obtener orden por ID
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await requireAuth()
 
-    const id = parseInt(params.id)
+    const { id: idStr } = await params
+    const id = parseInt(idStr)
     if (isNaN(id)) {
       return NextResponse.json(
         { error: 'ID inválido' },
@@ -37,7 +38,7 @@ export async function GET(
     }
 
     const order = await OrderService.getById(id)
-    
+
     if (!order) {
       return NextResponse.json(
         { error: 'Orden no encontrada' },
@@ -49,7 +50,7 @@ export async function GET(
 
   } catch (error) {
     console.error('Error obteniendo orden:', error)
-    
+
     if (error instanceof Error && error.message === 'No autenticado') {
       return NextResponse.json(
         { error: 'No autenticado' },
@@ -67,12 +68,13 @@ export async function GET(
 // PUT - Actualizar orden
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await requireAuth()
 
-    const id = parseInt(params.id)
+    const { id: idStr } = await params
+    const id = parseInt(idStr)
     if (isNaN(id)) {
       return NextResponse.json(
         { error: 'ID inválido' },
@@ -84,7 +86,7 @@ export async function PUT(
     const updateData = updateOrderSchema.parse(body)
 
     const order = await OrderService.updateStatus(id, updateData.status || 'pending', updateData)
-    
+
     if (!order) {
       return NextResponse.json(
         { error: 'Orden no encontrada' },
@@ -99,7 +101,7 @@ export async function PUT(
 
   } catch (error) {
     console.error('Error actualizando orden:', error)
-    
+
     if (error instanceof Error && error.message === 'No autenticado') {
       return NextResponse.json(
         { error: 'No autenticado' },
@@ -109,7 +111,7 @@ export async function PUT(
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: 'Datos inválidos', details: error.errors },
+        { error: 'Datos inválidos', details: (error as any).errors },
         { status: 400 }
       )
     }

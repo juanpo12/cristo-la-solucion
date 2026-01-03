@@ -36,12 +36,12 @@ export default function SedesPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 pt-20 via-white to-gray-100">
       {/* Hero Header */}
       <div className="relative h-[60vh] overflow-hidden -mt-20">
 
         <Image
-          src="/sedesv2.jpg"
+          src="/color2.jpg"
           alt="Sedes Cristo La Solución"
           fill
           className="absolute inset-0 w-full h-full object-cover brightness-50"

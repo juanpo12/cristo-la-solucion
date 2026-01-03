@@ -1,6 +1,7 @@
 import { db } from '@/lib/db'
+import { escapeLike } from '@/lib/utils'
 import { orders, orderItems, type NewOrder, type NewOrderItem } from '@/lib/db/schema'
-import { eq, desc, asc, and, or, like, sql, gte, lte } from 'drizzle-orm'
+import { eq, desc, asc, and, or, like, sql, gte, lte, type SQL } from 'drizzle-orm'
 
 export class OrderService {
   // Obtener todas las órdenes con filtros
@@ -14,23 +15,24 @@ export class OrderService {
     limit?: number
     offset?: number
   }) {
-    let query = db.select().from(orders)
+    const baseQuery = db.select().from(orders)
 
     // Aplicar filtros
-    const conditions = []
-    
+    const conditions: SQL[] = []
+
     if (filters?.status && filters.status !== 'all') {
       conditions.push(eq(orders.status, filters.status))
     }
-    
+
     if (filters?.search) {
-      conditions.push(
-        or(
-          like(orders.externalReference, `%${filters.search}%`),
-          like(orders.payerEmail, `%${filters.search}%`),
-          like(orders.payerName, `%${filters.search}%`)
-        )
+      const searchCondition = or(
+        like(orders.externalReference, `%${escapeLike(filters.search)}%`),
+        like(orders.payerEmail, `%${escapeLike(filters.search)}%`),
+        like(orders.payerName, `%${escapeLike(filters.search)}%`)
       )
+      if (searchCondition) {
+        conditions.push(searchCondition)
+      }
     }
 
     if (filters?.dateFrom) {
@@ -41,11 +43,12 @@ export class OrderService {
       conditions.push(lte(orders.createdAt, filters.dateTo))
     }
 
-    if (conditions.length > 0) {
-      query = query.where(and(...conditions))
-    }
+    const queryWithFilters = conditions.length > 0
+      ? baseQuery.where(and(...conditions))
+      : baseQuery
 
     // Aplicar ordenamiento
+    let queryWithOrder
     if (filters?.sortBy) {
       let column
       switch (filters.sortBy) {
@@ -60,21 +63,22 @@ export class OrderService {
           column = orders.createdAt
       }
       const order = filters.sortOrder === 'asc' ? asc(column) : desc(column)
-      query = query.orderBy(order)
+      queryWithOrder = queryWithFilters.orderBy(order)
     } else {
-      query = query.orderBy(desc(orders.createdAt))
+      queryWithOrder = queryWithFilters.orderBy(desc(orders.createdAt))
     }
 
     // Aplicar paginación
+    let finalQuery = queryWithOrder
     if (filters?.limit) {
-      query = query.limit(filters.limit)
-    }
-    
-    if (filters?.offset) {
-      query = query.offset(filters.offset)
+      finalQuery = (finalQuery as any).limit(filters.limit)
     }
 
-    return await query
+    if (filters?.offset) {
+      finalQuery = (finalQuery as any).offset(filters.offset)
+    }
+
+    return await finalQuery
   }
 
   // Obtener orden por ID con items
@@ -119,15 +123,15 @@ export class OrderService {
     const result = await db.transaction(async (tx) => {
       // Crear la orden
       const [order] = await tx.insert(orders).values(orderData).returning()
-      
+
       // Crear los items de la orden
       const orderItemsData = items.map(item => ({
         ...item,
         orderId: order.id
       }))
-      
+
       await tx.insert(orderItems).values(orderItemsData)
-      
+
       return order
     })
 
@@ -161,11 +165,11 @@ export class OrderService {
   // Obtener estadísticas de órdenes
   static async getStats(dateFrom?: Date, dateTo?: Date) {
     const conditions = []
-    
+
     if (dateFrom) {
       conditions.push(gte(orders.createdAt, dateFrom))
     }
-    
+
     if (dateTo) {
       conditions.push(lte(orders.createdAt, dateTo))
     }
@@ -193,15 +197,15 @@ export class OrderService {
       .where(and(eq(orders.status, 'delivered'), ...(conditions || [])))
 
     const totalRevenue = await db
-      .select({ 
-        total: sql<number>`sum(${orders.total}::numeric)` 
+      .select({
+        total: sql<number>`sum(${orders.total}::numeric)`
       })
       .from(orders)
       .where(and(eq(orders.status, 'approved'), ...(conditions || [])))
 
     const averageOrderValue = await db
-      .select({ 
-        avg: sql<number>`avg(${orders.total}::numeric)` 
+      .select({
+        avg: sql<number>`avg(${orders.total}::numeric)`
       })
       .from(orders)
       .where(and(eq(orders.status, 'approved'), ...(conditions || [])))
@@ -227,7 +231,7 @@ export class OrderService {
 
   // Obtener productos más vendidos
   static async getTopSellingProducts(limit = 10, dateFrom?: Date, dateTo?: Date) {
-    let query = db
+    const baseQuery = db
       .select({
         productId: orderItems.productId,
         productName: orderItems.productName,
@@ -243,20 +247,22 @@ export class OrderService {
       .orderBy(desc(sql`sum(${orderItems.quantity})`))
       .limit(limit)
 
+    let finalQuery = baseQuery
+
     if (dateFrom || dateTo) {
-      const conditions = [eq(orders.status, 'approved')]
-      
+      const conditions: SQL[] = [eq(orders.status, 'approved')]
+
       if (dateFrom) {
         conditions.push(gte(orders.createdAt, dateFrom))
       }
-      
+
       if (dateTo) {
         conditions.push(lte(orders.createdAt, dateTo))
       }
 
-      query = query.where(and(...conditions))
+      finalQuery = (baseQuery as any).where(and(...conditions))
     }
 
-    return await query
+    return await finalQuery
   }
 }

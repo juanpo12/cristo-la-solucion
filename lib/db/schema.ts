@@ -100,6 +100,13 @@ export const storeConfig = pgTable('store_config', {
   updatedAt: timestamp('updated_at').defaultNow(),
 })
 
+// Tabla de rate limits
+export const rateLimits = pgTable('rate_limits', {
+  key: varchar('key', { length: 255 }).primaryKey(),
+  count: integer('count').notNull().default(0),
+  expiresAt: timestamp('expires_at').notNull(),
+})
+
 // Schemas de validación con Zod
 export const insertProductSchema = createInsertSchema(products, {
   price: z.string().regex(/^\d+(\.\d{1,2})?$/, "Price must be a valid decimal with up to 2 decimal places"),

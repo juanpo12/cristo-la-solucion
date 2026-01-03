@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { env } from '@/lib/env'
 
 // Configuración específica para el canal del Pastor Alfredo Dimiro
-const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY
-const PASTOR_CHANNEL_ID = process.env.PASTOR_CHANNEL_ID || 'UC_ALFREDO_DIMIRO_CHANNEL_ID' // Reemplazar con el ID real
+const YOUTUBE_API_KEY = env.YOUTUBE_API_KEY
+const PASTOR_CHANNEL_ID = env.PASTOR_CHANNEL_ID || 'UC_ALFREDO_DIMIRO_CHANNEL_ID' // Reemplazar con el ID real
 const PASTOR_CHANNEL_HANDLE = '@AlfredoDimiroLive'
 
 // Función para obtener todos los videos del Pastor
@@ -135,13 +136,13 @@ async function getPastorVideos(maxResults: number = 50) {
   try {
     // Primero, obtener información del canal usando el handle
     let channelId = PASTOR_CHANNEL_ID
-    
+
     if (!channelId || channelId.includes('ALFREDO_DIMIRO')) {
       // Buscar el canal por handle si no tenemos el ID
       const channelSearchResponse = await fetch(
         `https://www.googleapis.com/youtube/v3/search?key=${YOUTUBE_API_KEY}&q=${PASTOR_CHANNEL_HANDLE}&type=channel&part=snippet&maxResults=1`
       )
-      
+
       if (channelSearchResponse.ok) {
         const channelSearchData = await channelSearchResponse.json()
         if (channelSearchData.items && channelSearchData.items.length > 0) {
@@ -154,7 +155,7 @@ async function getPastorVideos(maxResults: number = 50) {
     const channelResponse = await fetch(
       `https://www.googleapis.com/youtube/v3/channels?key=${YOUTUBE_API_KEY}&id=${channelId}&part=snippet,statistics`
     )
-    
+
     let channelInfo = {
       title: "Pastor Alfredo Dimiro",
       handle: "@AlfredoDimiroLive",
@@ -179,26 +180,26 @@ async function getPastorVideos(maxResults: number = 50) {
     const videosResponse = await fetch(
       `https://www.googleapis.com/youtube/v3/search?key=${YOUTUBE_API_KEY}&channelId=${channelId}&part=snippet&order=date&maxResults=${maxResults}&type=video`
     )
-    
+
     if (!videosResponse.ok) {
       throw new Error('Error fetching videos from YouTube API')
     }
-    
+
     const videosData = await videosResponse.json()
-    
+
     // Obtener detalles adicionales de los videos
-    const videoIds = videosData.items.map((item: Record<string, unknown>) => (item.id as Record<string, string>).videoId).join(',')
+    const videoIds = videosData.items.map((item: any) => (item.id as any).videoId).join(',')
     const detailsResponse = await fetch(
       `https://www.googleapis.com/youtube/v3/videos?key=${YOUTUBE_API_KEY}&id=${videoIds}&part=contentDetails,statistics,snippet`
     )
-    
+
     const detailsData = await detailsResponse.json()
-    
+
     // Combinar datos y categorizar videos
-    const videos = videosData.items.map((item: Record<string, unknown>, index: number) => {
+    const videos = videosData.items.map((item: any, index: number) => {
       const details = detailsData.items[index]
       const title = item.snippet.title.toLowerCase()
-      
+
       // Categorizar automáticamente basado en el título
       let category = "Enseñanza"
       if (title.includes("conferencia") || title.includes("evento")) {
@@ -250,11 +251,11 @@ function formatCount(count: string): string {
 function formatDuration(duration: string): string {
   const match = duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/)
   if (!match) return '0:00'
-  
+
   const hours = parseInt(match[1] || '0')
   const minutes = parseInt(match[2] || '0')
   const seconds = parseInt(match[3] || '0')
-  
+
   if (hours > 0) {
     return `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
   } else {
@@ -271,9 +272,9 @@ export async function GET(request: NextRequest) {
 
     // Obtener videos del pastor
     const data = await getPastorVideos(maxResults)
-    
+
     // Formatear duración y conteo de vistas
-    let formattedVideos = data.videos.map(video => ({
+    let formattedVideos = data.videos.map((video: any) => ({
       ...video,
       duration: formatDuration(video.duration),
       viewCount: parseInt(video.viewCount).toLocaleString()
@@ -281,13 +282,13 @@ export async function GET(request: NextRequest) {
 
     // Filtrar por categoría si se especifica
     if (category && category !== 'Todos') {
-      formattedVideos = formattedVideos.filter(video => video.category === category)
+      formattedVideos = formattedVideos.filter((video: any) => video.category === category)
     }
 
     // Filtrar por búsqueda si se especifica
     if (search) {
       const searchLower = search.toLowerCase()
-      formattedVideos = formattedVideos.filter(video =>
+      formattedVideos = formattedVideos.filter((video: any) =>
         video.title.toLowerCase().includes(searchLower) ||
         video.description.toLowerCase().includes(searchLower)
       )
@@ -302,7 +303,7 @@ export async function GET(request: NextRequest) {
 
   } catch {
     return NextResponse.json(
-      { 
+      {
         error: 'Error fetching Pastor videos',
         videos: [],
         totalResults: 0,

@@ -1,8 +1,9 @@
 import { MercadoPagoConfig, Preference } from "mercadopago";
 import { randomUUID } from "crypto";
+import { env } from "@/lib/env";
 
 // Configuración de Mercado Pago
-const accessToken = process.env.MERCADOPAGO_ACCESS_TOKEN!;
+const accessToken = env.MERCADOPAGO_ACCESS_TOKEN;
 
 const isSandbox = accessToken.startsWith("TEST-");
 
@@ -16,10 +17,12 @@ const client = new MercadoPagoConfig({
 export const preference = new Preference(client);
 
 export interface CartItem {
-  id: number;
+  id: number | string; // Allow string for compatibility
   name: string;
+  title?: string; // Optional for compatibility
   author: string;
   price: number;
+  unit_price?: number; // Optional for compatibility
   image: string;
   quantity: number;
 }
@@ -39,7 +42,7 @@ export interface CreatePreferenceData {
 
 export async function createPreference(data: CreatePreferenceData) {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+    const baseUrl = env.NEXT_PUBLIC_BASE_URL;
     const idempotencyKey = randomUUID();
 
     const preferenceData: unknown = {
@@ -83,7 +86,7 @@ export async function createPreference(data: CreatePreferenceData) {
     console.log("Base URL:", baseUrl);
 
     const response = await preference.create({
-      body: preferenceData,
+      body: preferenceData as any,
       requestOptions: { idempotencyKey },
     });
     return response;

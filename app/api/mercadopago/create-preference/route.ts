@@ -1,29 +1,66 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createPreference, type CreatePreferenceData } from '@/lib/mercadopago'
+import { env } from '@/lib/env'
 import { db } from '@/lib/db'
 import { orders } from '@/lib/db/schema'
+import { z } from 'zod'
+
+const preferenceSchema = z.object({
+  items: z.array(z.object({
+    id: z.union([z.number(), z.string()]),
+    name: z.string(),
+    title: z.string().optional(),
+    author: z.string(),
+    price: z.number().positive(),
+    unit_price: z.number().positive().optional(),
+    image: z.string(),
+    quantity: z.number().int().positive(),
+  })).min(1, "No items provided"),
+  payer: z.object({
+    name: z.string().optional(),
+    surname: z.string().optional(),
+    email: z.string().email().optional(),
+    phone: z.object({
+      area_code: z.string().optional(),
+      number: z.string().optional(),
+    }).optional(),
+    address: z.object({
+      zip_code: z.string().optional(),
+      street_name: z.string().optional(),
+      street_number: z.number().optional(),
+    }).optional(),
+  }).optional(),
+  customerInfo: z.object({
+    name: z.string(),
+    email: z.string().email(),
+    phone: z.string().optional(),
+  }).optional(),
+})
+
+import { rateLimit } from '@/lib/ratelimit'
 
 export async function POST(request: NextRequest) {
   try {
-    const body: CreatePreferenceData & {
-      customerInfo?: {
-        name: string
-        email: string
-        phone?: string
-      }
-    } = await request.json()
+    // Rate Limiting
+    const ip = request.headers.get('x-forwarded-for') || 'unknown'
+    const limitResult = await rateLimit(`mp_pref:${ip}`, 10, 3600) // 10 requests per hour
 
-    console.log('Received request body:', JSON.stringify(body, null, 2))
-
-    if (!body.items || body.items.length === 0) {
+    if (!limitResult.success) {
       return NextResponse.json(
-        { error: 'No items provided' },
-        { status: 400 }
+        { error: 'Too many requests' },
+        { status: 429 }
       )
     }
 
+    const json = await request.json()
+    const body = preferenceSchema.parse(json)
+
+    if (env.NODE_ENV === 'development') {
+      console.log('Received request body:', JSON.stringify(body, null, 2))
+    }
+
     // Verificar que las variables de entorno estén configuradas
-    if (!process.env.MERCADOPAGO_ACCESS_TOKEN) {
+    if (!env.MERCADOPAGO_ACCESS_TOKEN) {
       console.error('MERCADOPAGO_ACCESS_TOKEN not configured')
       return NextResponse.json(
         { error: 'Mercado Pago not configured' },
@@ -35,6 +72,7 @@ export async function POST(request: NextRequest) {
     const totalAmount = body.items.reduce((sum, item) => sum + (item.price * item.quantity), 0)
 
     // Crear la preferencia de Mercado Pago
+    // @ts-ignore - body matches structure but Zod types might be slightly different from SDK types
     const preference = await createPreference(body)
 
     // Crear la orden en la base de datos
@@ -71,13 +109,13 @@ export async function POST(request: NextRequest) {
     })
   } catch (error: unknown) {
     console.error('Error creating preference:', error)
-    
+
     // Proporcionar más detalles del error
     const errorMessage = error instanceof Error ? error.message : 'Failed to create preference'
     const errorDetails = error instanceof Error ? error.cause : error
-    
+
     return NextResponse.json(
-      { 
+      {
         error: errorMessage,
         details: errorDetails
       },

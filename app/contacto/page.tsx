@@ -4,7 +4,7 @@ import Link from "next/link"
 
 export default function ContactoPage() {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 pt-20">
       {/* Contenido principal */}
       <div className="mx-auto px-4 py-16">
         <div className="max-w-6xl mx-auto">

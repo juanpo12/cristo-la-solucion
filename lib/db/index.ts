@@ -1,12 +1,13 @@
 import { drizzle } from 'drizzle-orm/postgres-js'
 import postgres from 'postgres'
 import * as schema from './schema'
+import { env } from '@/lib/env'
 
 // Configuración de la conexión
-const connectionString = process.env.DATABASE_URL!
+const connectionString = env.DATABASE_URL
 
 // Configuración específica para Supabase
-const client = postgres(connectionString, { 
+const client = postgres(connectionString, {
   prepare: false,
   ssl: 'require',
   connection: {

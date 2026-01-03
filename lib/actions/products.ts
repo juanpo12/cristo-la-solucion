@@ -34,7 +34,7 @@ export async function getProducts(filters: ProductFilters = {}): Promise<Product
     }
 
     const products = await ProductService.getAll(defaultFilters)
-    
+
     return {
       success: true,
       data: products,
@@ -53,7 +53,7 @@ export async function getProducts(filters: ProductFilters = {}): Promise<Product
 export async function getFeaturedProducts(limit = 6): Promise<ProductsResult> {
   try {
     const products = await ProductService.getFeatured(limit)
-    
+
     return {
       success: true,
       data: products,
@@ -80,7 +80,7 @@ export async function searchProducts(query: string, limit = 10): Promise<Product
     }
 
     const products = await ProductService.search(query.trim(), limit)
-    
+
     return {
       success: true,
       data: products,
@@ -99,14 +99,14 @@ export async function searchProducts(query: string, limit = 10): Promise<Product
 export async function getProductById(id: number): Promise<{ success: boolean; data?: Product; error?: string }> {
   try {
     const product = await ProductService.getById(id)
-    
+
     if (!product) {
       return {
         success: false,
         error: 'Producto no encontrado'
       }
     }
-    
+
     return {
       success: true,
       data: product
@@ -118,9 +118,4 @@ export async function getProductById(id: number): Promise<{ success: boolean; da
       error: error instanceof Error ? error.message : 'Error desconocido al obtener el producto'
     }
   }
-}
-
-// Server action para invalidar caché de productos
-export async function revalidateProducts() {
-  revalidateTag('products')
 }
