@@ -16,9 +16,10 @@ interface CheckoutModalProps {
 }
 
 export function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
-  const { state } = useCart()
+  const { items, total } = useCart()
+  const state = { items, total }
   const { createPayment, isLoading, error } = useMercadoPago()
-  
+
   const [payerInfo, setPayerInfo] = useState({
     name: '',
     surname: '',
@@ -29,7 +30,7 @@ export function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
     }
   })
 
-  const total = state.items.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+  // const total = state.items.reduce((sum, item) => sum + (item.price * item.quantity), 0)
 
   const handleInputChange = (field: string, value: string) => {
     if (field === 'phone') {
@@ -49,17 +50,20 @@ export function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
     }
 
     // Convertir items del carrito al formato de Mercado Pago
+    // Convertir items del carrito al formato de Mercado Pago
     const items = state.items.map(item => ({
-      id: item.id,
+      id: item.id.toString(), // Send as string to satisfy potential old schema
+      title: item.name,       // Send as title to satisfy potential old schema
       name: item.name,
       author: item.author,
       price: item.price,
+      unit_price: item.price,
       image: item.image,
       quantity: item.quantity
     }))
 
     const paymentUrl = await createPayment(items, payerInfo)
-    
+
     if (paymentUrl) {
       // Redirigir a Mercado Pago
       window.location.href = paymentUrl
@@ -69,11 +73,11 @@ export function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
   if (!isOpen) return null
 
   return (
-    <div 
+    <div
       className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
       onClick={onClose}
     >
-      <div 
+      <div
         className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl relative z-10"
         onClick={(e) => e.stopPropagation()}
       >
@@ -122,7 +126,7 @@ export function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
                       </div>
                     </div>
                   ))}
-                  
+
                   <div className="border-t pt-4">
                     <div className="flex justify-between items-center text-xl font-bold">
                       <span>Total:</span>
@@ -216,7 +220,7 @@ export function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
                       <div>
                         <h4 className="font-semibold text-blue-800">Información de Entrega</h4>
                         <p className="text-sm text-blue-700 mt-1">
-                          Puede seleccionar la dirección de entrega en la seccion de mercado pago. En caso de que quiera retirarlo en la iglesia, 
+                          Puede seleccionar la dirección de entrega en la seccion de mercado pago. En caso de que quiera retirarlo en la iglesia,
                           no es necesario proporcionar una dirección.
                         </p>
                       </div>

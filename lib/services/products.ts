@@ -1,6 +1,7 @@
 import { db } from '@/lib/db'
+import { escapeLike } from '@/lib/utils'
 import { products, type NewProduct } from '@/lib/db/schema'
-import { eq, desc, asc, and, or, like, sql } from 'drizzle-orm'
+import { eq, desc, asc, and, or, like, sql, type SQL } from 'drizzle-orm'
 
 export class ProductService {
   // Obtener todos los productos
@@ -17,39 +18,40 @@ export class ProductService {
   }) {
     try {
       // Construir condiciones de filtro
-      const conditions = []
-      
+      const conditions: SQL[] = []
+
       if (filters?.category && filters.category !== 'all') {
         conditions.push(eq(products.category, filters.category))
       }
-      
+
       if (filters?.featured !== undefined) {
         conditions.push(eq(products.featured, filters.featured))
       }
-      
+
       if (filters?.active !== undefined) {
         conditions.push(eq(products.active, filters.active))
       }
-      
+
       if (filters?.inStock !== undefined && filters.inStock) {
         conditions.push(sql`${products.stock} > 0`)
       }
-      
+
       if (filters?.search) {
-        conditions.push(
-          or(
-            like(products.name, `%${filters.search}%`),
-            like(products.author, `%${filters.search}%`),
-            like(products.description, `%${filters.search}%`)
-          )
+        const searchCondition = or(
+          like(products.name, `%${escapeLike(filters.search)}%`),
+          like(products.author, `%${escapeLike(filters.search)}%`),
+          like(products.description, `%${escapeLike(filters.search)}%`)
         )
+        if (searchCondition) {
+          conditions.push(searchCondition)
+        }
       }
 
       // Construir query de manera más compatible
       const baseQuery = db.select().from(products)
-      
+
       // Aplicar filtros
-      const queryWithFilters = conditions.length > 0 
+      const queryWithFilters = conditions.length > 0
         ? baseQuery.where(and(...conditions))
         : baseQuery
 
@@ -82,11 +84,11 @@ export class ProductService {
       // Aplicar paginación
       let finalQuery = queryWithOrder
       if (filters?.limit) {
-        finalQuery = finalQuery.limit(filters.limit)
+        finalQuery = (finalQuery as any).limit(filters.limit)
       }
-      
+
       if (filters?.offset) {
-        finalQuery = finalQuery.offset(filters.offset)
+        finalQuery = (finalQuery as any).offset(filters.offset)
       }
 
       return await finalQuery
@@ -159,7 +161,7 @@ export class ProductService {
   static async updateStock(id: number, quantity: number) {
     const result = await db
       .update(products)
-      .set({ 
+      .set({
         stock: sql`${products.stock} + ${quantity}`,
         updatedAt: new Date()
       })
@@ -172,7 +174,7 @@ export class ProductService {
   static async reduceStock(id: number, quantity: number) {
     const result = await db
       .update(products)
-      .set({ 
+      .set({
         stock: sql`GREATEST(0, ${products.stock} - ${quantity})`,
         updatedAt: new Date()
       })
@@ -199,8 +201,8 @@ export class ProductService {
       .where(and(eq(products.active, true), sql`${products.stock} <= 5`))
 
     const totalValue = await db
-      .select({ 
-        total: sql<number>`sum(${products.price}::numeric * ${products.stock})` 
+      .select({
+        total: sql<number>`sum(${products.price}::numeric * ${products.stock})`
       })
       .from(products)
       .where(eq(products.active, true))
@@ -222,9 +224,9 @@ export class ProductService {
         and(
           eq(products.active, true),
           or(
-            like(products.name, `%${query}%`),
-            like(products.author, `%${query}%`),
-            like(products.description, `%${query}%`)
+            like(products.name, `%${escapeLike(query)}%`),
+            like(products.author, `%${escapeLike(query)}%`),
+            like(products.description, `%${escapeLike(query)}%`)
           )
         )
       )
