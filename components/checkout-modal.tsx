@@ -9,16 +9,31 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { useMercadoPago } from "@/lib/hooks/use-mercadopago"
 import { useCart } from "@/lib/hooks/use-cart"
 import Image from "next/image"
+import { z } from "zod"
 
 interface CheckoutModalProps {
   isOpen: boolean
   onClose: () => void
 }
 
+const checkoutSchema = z.object({
+  name: z.string().min(2, "El nombre debe tener al menos 2 caracteres"),
+  surname: z.string().min(2, "El apellido debe tener al menos 2 caracteres"),
+  email: z.string().email("Por favor ingresa un email válido"),
+  phone: z.object({
+    area_code: z.string().optional(),
+    number: z.string().optional()
+  }).optional()
+})
+
+type ValidationErrors = {
+  [key: string]: string | undefined
+}
+
 export function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
   const { items, total } = useCart()
   const state = { items, total }
-  const { createPayment, isLoading, error } = useMercadoPago()
+  const { createPayment, isLoading, error: mpError } = useMercadoPago()
 
   const [payerInfo, setPayerInfo] = useState({
     name: '',
@@ -30,9 +45,16 @@ export function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
     }
   })
 
+  const [errors, setErrors] = useState<ValidationErrors>({})
+
   // const total = state.items.reduce((sum, item) => sum + (item.price * item.quantity), 0)
 
   const handleInputChange = (field: string, value: string) => {
+    // Clear error for the field being edited
+    if (errors[field]) {
+      setErrors(prev => ({ ...prev, [field]: undefined }))
+    }
+
     if (field === 'phone') {
       setPayerInfo(prev => ({
         ...prev,
@@ -44,12 +66,20 @@ export function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
   }
 
   const handleCheckout = async () => {
-    if (!payerInfo.email || !payerInfo.name) {
-      alert('Por favor completa los campos obligatorios')
+    // Validate form
+    const result = checkoutSchema.safeParse(payerInfo)
+
+    if (!result.success) {
+      const newErrors: ValidationErrors = {}
+      result.error.issues.forEach(issue => {
+        // Handle nested paths like phone.number if needed, but for now top level is main concern
+        const path = issue.path[0].toString()
+        newErrors[path] = issue.message
+      })
+      setErrors(newErrors)
       return
     }
 
-    // Convertir items del carrito al formato de Mercado Pago
     // Convertir items del carrito al formato de Mercado Pago
     const items = state.items.map(item => ({
       id: item.id.toString(), // Send as string to satisfy potential old schema
@@ -158,8 +188,10 @@ export function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
                         value={payerInfo.name}
                         onChange={(e) => handleInputChange('name', e.target.value)}
                         placeholder="Tu nombre"
+                        className={errors.name ? "border-red-500" : ""}
                         required
                       />
+                      {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
                     </div>
                     <div>
                       <Label htmlFor="surname">Apellido *</Label>
@@ -168,8 +200,10 @@ export function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
                         value={payerInfo.surname}
                         onChange={(e) => handleInputChange('surname', e.target.value)}
                         placeholder="Tu apellido"
+                        className={errors.surname ? "border-red-500" : ""}
                         required
                       />
+                      {errors.surname && <p className="text-red-500 text-xs mt-1">{errors.surname}</p>}
                     </div>
                   </div>
 
@@ -184,8 +218,10 @@ export function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
                       value={payerInfo.email}
                       onChange={(e) => handleInputChange('email', e.target.value)}
                       placeholder="tu@email.com"
+                      className={errors.email ? "border-red-500" : ""}
                       required
                     />
+                    {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
                   </div>
 
                   <div>
@@ -227,15 +263,15 @@ export function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
                     </div>
                   </div>
 
-                  {error && (
+                  {mpError && (
                     <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
-                      {error}
+                      {mpError}
                     </div>
                   )}
 
                   <Button
                     onClick={handleCheckout}
-                    disabled={isLoading || !payerInfo.email || !payerInfo.name}
+                    disabled={isLoading}
                     className="w-full church-button-primary h-12 text-lg"
                   >
                     {isLoading ? (
