@@ -62,38 +62,42 @@ export default function GivingSection() {
             {givingMethods.map((method, index) => (
               <div
                 key={index}
-                className={`bg-white rounded-xl p-4 sm:p-6 shadow-lg ${index === givingMethods.length - 1 && givingMethods.length % 2 !== 0
-                  ? 'md:col-span-2'
-                  : ''
-                  } ${method.image ? 'text-left' : 'text-center'}`}
+                className={`relative bg-white rounded-xl p-4 sm:p-6 shadow-lg ${index === givingMethods.length - 1 && givingMethods.length % 2 !== 0
+                    ? 'md:col-span-2'
+                    : ''
+                  } ${method.image ? 'text-center' : 'text-center'}`}
               >
                 {method.image ? (
-                  <div className="flex flex-col sm:flex-row items-center gap-6 sm:gap-8">
-                    {/* QR */}
-                    <div className="flex-shrink-0 bg-gray-50 p-4 rounded-xl shadow-sm">
-                      <Image
-                        src={method.image}
-                        alt={method.title}
-                        width={120}
-                        height={120}
-                        className="rounded-lg"
-                      />
+                  <>
+                    {/* Icono arriba a la derecha */}
+                    <div className="absolute top-4 right-4 w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center shadow-md">
+                      <method.icon className="text-blue-600" size={20} />
                     </div>
 
-                    {/* Contenido */}
-                    <div className="flex-1 text-center sm:text-left">
-                      <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mb-4 mx-auto sm:mx-0">
-                        <method.icon className="text-blue-600" size={20} />
+                    {/* Contenido centrado */}
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-8 pt-4">
+                      {/* QR */}
+                      <div className="flex-shrink-0 bg-gray-50 p-4 rounded-xl shadow-sm">
+                        <Image
+                          src={method.image}
+                          alt={method.title}
+                          width={120}
+                          height={120}
+                          className="rounded-lg"
+                        />
                       </div>
 
-                      <h4 className="font-semibold text-gray-800 mb-2 text-base sm:text-lg">
-                        {method.title}
-                      </h4>
-                      <p className="text-sm sm:text-base text-gray-600">
-                        {method.description}
-                      </p>
+                      {/* Texto centrado */}
+                      <div className="flex-1 text-center sm:text-left max-w-md">
+                        <h4 className="font-semibold text-gray-800 mb-2 text-base sm:text-lg">
+                          {method.title}
+                        </h4>
+                        <p className="text-sm sm:text-base text-gray-600">
+                          {method.description}
+                        </p>
+                      </div>
                     </div>
-                  </div>
+                  </>
                 ) : (
 
                   // Layout vertical centrado para tarjetas sin QR
