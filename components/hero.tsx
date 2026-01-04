@@ -81,26 +81,6 @@ export function Hero() {
         <ChevronRight className="w-6 h-6 text-white" />
       </button>
 
-      {/* Botón para "De Corazón a Corazón" visible solo en el slide correspondiente */}
-      {currentSlide === 2 && (
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20">
-          <Button
-            size="lg"
-            asChild
-            className="bg-white text-gray-900 hover:bg-gray-100 px-6 md:px-8 py-3 md:py-4 text-base md:text-lg font-medium shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
-          >
-            <a
-              href="https://www.conferenciadecorazonacorazon.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Conseguí tus entradas
-              <ArrowRight className="w-4 md:w-5 h-4 md:h-5 ml-2" />
-            </a>
-          </Button>
-        </div>
-      )}
-
       {/* Overlay con gradiente moderno - Solo visible en el primer slide */}
       <div className={`absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/50 transition-opacity duration-1000 ${shouldHideContent ? 'opacity-0' : 'opacity-100'
         }`} />
