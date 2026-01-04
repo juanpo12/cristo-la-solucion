@@ -3,13 +3,14 @@
 import { useState } from "react"
 import { CreditCard, Smartphone, Building, Heart } from "lucide-react"
 import { DonationModal } from "./donation-modal"
+import Image from "next/image"
 
 export default function GivingSection() {
   const [isDonationModalOpen, setIsDonationModalOpen] = useState(false)
   const givingMethods = [
     { icon: CreditCard, title: "Transferencia Bancaria", description: "CBU: 1234567890123456789012" },
     { icon: Building, title: "En Persona", description: "Durante los servicios" },
-    { icon: Smartphone, title: "Mercado Pago", description: "Alias: iglesia.cristo.solucion" },
+    { icon: Smartphone, title: "Mercado Pago", description: "Alias: iglesia.cristo.solucion", image: "/qr-mp-02.jpg" },
   ]
 
   return (
@@ -61,16 +62,49 @@ export default function GivingSection() {
             {givingMethods.map((method, index) => (
               <div
                 key={index}
-                className={`bg-white rounded-xl p-4 sm:p-6 shadow-lg text-center ${index === givingMethods.length - 1 && givingMethods.length % 2 !== 0
-                    ? 'md:col-span-2'
-                    : ''
-                  }`}
+                className={`bg-white rounded-xl p-4 sm:p-6 shadow-lg ${index === givingMethods.length - 1 && givingMethods.length % 2 !== 0
+                  ? 'md:col-span-2'
+                  : ''
+                  } ${method.image ? 'text-left' : 'text-center'}`}
               >
-                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <method.icon className="text-blue-600" size={20} />
-                </div>
-                <h4 className="font-semibold text-gray-800 mb-2 text-sm sm:text-base">{method.title}</h4>
-                <p className="text-xs sm:text-sm text-gray-600 break-words break-all">{method.description}</p>
+                {method.image ? (
+                  <div className="flex flex-col sm:flex-row items-center gap-6 sm:gap-8">
+                    {/* QR */}
+                    <div className="flex-shrink-0 bg-gray-50 p-4 rounded-xl shadow-sm">
+                      <Image
+                        src={method.image}
+                        alt={method.title}
+                        width={120}
+                        height={120}
+                        className="rounded-lg"
+                      />
+                    </div>
+
+                    {/* Contenido */}
+                    <div className="flex-1 text-center sm:text-left">
+                      <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mb-4 mx-auto sm:mx-0">
+                        <method.icon className="text-blue-600" size={20} />
+                      </div>
+
+                      <h4 className="font-semibold text-gray-800 mb-2 text-base sm:text-lg">
+                        {method.title}
+                      </h4>
+                      <p className="text-sm sm:text-base text-gray-600">
+                        {method.description}
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+
+                  // Layout vertical centrado para tarjetas sin QR
+                  <>
+                    <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <method.icon className="text-blue-600" size={20} />
+                    </div>
+                    <h4 className="font-semibold text-gray-800 mb-2 text-sm sm:text-base">{method.title}</h4>
+                    <p className="text-xs sm:text-sm text-gray-600 break-words break-all">{method.description}</p>
+                  </>
+                )}
               </div>
             ))}
           </div>
