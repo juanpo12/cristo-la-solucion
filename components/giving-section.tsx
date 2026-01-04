@@ -98,15 +98,16 @@ export default function GivingSection() {
                   </div>
 
                   {/* Columna derecha: Información */}
-                  <div className="flex flex-col items-start">
+                  <div className="flex flex-col items-start w-full">
                     {/* Logo de Mercado Pago */}
-                    <div className="mb-4 ml-0">
+                    <div className="mb-4 -ml-4">
                       <Image
                         src="/MP_RGB_HANDSHAKE_color_horizontal.png"
                         alt="Mercado Pago"
                         width={180}
                         height={60}
-                        className="object-contain ml-0"
+                        className="object-contain object-left"
+                        style={{ marginLeft: 0, paddingLeft: 0 }}
                       />
                     </div>
                     <p className="text-lg text-gray-700 font-semibold mb-2 text-center">{givingMethods[2].description}</p>
