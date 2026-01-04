@@ -8,8 +8,8 @@ export default function GivingSection() {
   const [isDonationModalOpen, setIsDonationModalOpen] = useState(false)
   const givingMethods = [
     { icon: CreditCard, title: "Transferencia Bancaria", description: "CBU: 1234567890123456789012" },
+    { icon: Building, title: "En Persona", description: "Durante los servicios" },
     { icon: Smartphone, title: "Mercado Pago", description: "Alias: iglesia.cristo.solucion" },
-    { icon: Building, title: "En Persona", description: "Durante los servicios" }
   ]
 
   return (
