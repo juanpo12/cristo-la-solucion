@@ -103,7 +103,14 @@ export default async function GroupPage({ params }: { params: { slug: string } }
     <div className="min-h-screen bg-white">
       {/* Header con imagen de fondo */}
       <div className="relative h-[60vh] overflow-hidden">
-        <Image src={group.image || "/placeholder.svg"} alt={group.name} fill className="object-cover" priority />
+        <Image
+          src={group.image || "/placeholder.svg"}
+          alt={group.name}
+          fill
+          className="object-cover"
+          style={{ objectPosition: group.image === '/DSC09796.png' ? 'center 25%' : 'center' }}
+          priority
+        />
         <div className={`absolute inset-0 bg-gradient-to-r ${group.color} opacity-30`} />
         <div className="absolute inset-0 bg-black/30" />
 
