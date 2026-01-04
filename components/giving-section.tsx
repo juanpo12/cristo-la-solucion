@@ -82,7 +82,7 @@ export default function GivingSection() {
 
             {/* Tarjeta especial de Mercado Pago con QR */}
             {givingMethods[2] && (
-              <div className="bg-gradient-to-br  rounded-2xl p-8 shadow-xl">
+              <div className="bg-gradient-to-br flex justify-center  rounded-2xl p-8 shadow-xl">
                 <div className="flex flex-col lg:flex-row items-center gap-8">
                   {/* Columna izquierda: QR */}
                   <div className="flex-shrink-0">
@@ -98,18 +98,18 @@ export default function GivingSection() {
                   </div>
 
                   {/* Columna derecha: Información */}
-                  <div className="flex-1 text-center lg:text-left">
+                  <div className="flex flex-col items-start">
                     {/* Logo de Mercado Pago */}
-                    <div className="inline-flex items-center justify-center mb-2 ">
+                    <div className="mb-4 ml-0">
                       <Image
                         src="/MP_RGB_HANDSHAKE_color_horizontal.png"
                         alt="Mercado Pago"
                         width={180}
                         height={60}
-                        className="object-contain"
+                        className="object-contain ml-0"
                       />
                     </div>
-                    <p className="text-lg text-gray-700 font-semibold mb-4">{givingMethods[2].description}</p>
+                    <p className="text-lg text-gray-700 font-semibold mb-2 text-center">{givingMethods[2].description}</p>
                     <div className="inline-flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-md">
                       <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                       <span className="text-sm font-medium text-gray-700">Escanea el código QR</span>
