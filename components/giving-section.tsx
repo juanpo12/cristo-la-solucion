@@ -9,8 +9,7 @@ export default function GivingSection() {
   const givingMethods = [
     { icon: CreditCard, title: "Transferencia Bancaria", description: "CBU: 1234567890123456789012" },
     { icon: Smartphone, title: "Mercado Pago", description: "Alias: iglesia.cristo.solucion" },
-    { icon: Building, title: "En Persona", description: "Durante los servicios" },
-    { icon: Heart, title: "Donación Mensual", description: "Compromiso de apoyo continuo" },
+    { icon: Building, title: "En Persona", description: "Durante los servicios" }
   ]
 
   return (
@@ -58,9 +57,15 @@ export default function GivingSection() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {givingMethods.map((method, index) => (
-              <div key={index} className="bg-white rounded-xl p-4 sm:p-6 shadow-lg text-center">
+              <div
+                key={index}
+                className={`bg-white rounded-xl p-4 sm:p-6 shadow-lg text-center ${index === givingMethods.length - 1 && givingMethods.length % 2 !== 0
+                    ? 'md:col-span-2'
+                    : ''
+                  }`}
+              >
                 <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <method.icon className="text-blue-600" size={20} />
                 </div>
@@ -76,7 +81,7 @@ export default function GivingSection() {
           <p className="text-blue-100 mb-8 max-w-2xl mx-auto">
             No importa el monto, tu generosidad marca la diferencia en la vida de muchas personas.
           </p>
-          <button 
+          <button
             onClick={() => setIsDonationModalOpen(true)}
             className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors flex items-center gap-2 mx-auto"
           >
@@ -86,9 +91,9 @@ export default function GivingSection() {
         </div>
 
         {/* Modal de donación */}
-        <DonationModal 
-          isOpen={isDonationModalOpen} 
-          onClose={() => setIsDonationModalOpen(false)} 
+        <DonationModal
+          isOpen={isDonationModalOpen}
+          onClose={() => setIsDonationModalOpen(false)}
         />
       </div>
     </section>
