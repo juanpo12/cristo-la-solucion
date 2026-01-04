@@ -5,11 +5,11 @@ import Image from "next/image";
 
 export default function NovedadesPage() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white pt-20">
       {/* Header con imagen de fondo */}
       <div className="relative h-[60vh] overflow-hidden -mt-20">
         <Image
-          src="/CONFE.jpg"
+          src="/color1.jpg"
           alt="Novedades Cristo La Solución"
           fill
           className="object-cover object-center"
@@ -45,7 +45,7 @@ export default function NovedadesPage() {
       <div className="container mx-auto px-4 py-16">
         <div className="max-w-6xl mx-auto">
           {/* Novedades destacadas */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+          <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8 mb-16">
             {/* Novedad 1 */}
             <div className="bg-gradient-to-br from-orange-50 to-red-50 rounded-2xl p-6 border border-orange-200 hover:shadow-lg transition-all duration-300">
               <div className="flex items-center mb-4">
@@ -99,7 +99,7 @@ export default function NovedadesPage() {
             </div>
 
             {/* Novedad 3 */}
-            <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-6 border border-green-200 hover:shadow-lg transition-all duration-300">
+            {/* <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-6 border border-green-200 hover:shadow-lg transition-all duration-300">
               <div className="flex items-center mb-4">
                 <Star className="w-6 h-6 text-green-600 mr-2" />
                 <span className="text-sm font-semibold text-green-600 uppercase tracking-wide">
@@ -122,7 +122,7 @@ export default function NovedadesPage() {
                   Más información
                 </Button>
               </Link>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

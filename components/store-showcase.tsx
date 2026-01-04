@@ -12,6 +12,7 @@ type StoreSection = {
   image: string;
   color: string;
   focusPosition: string;
+  emoji: string;
 };
 
 const storeSections: StoreSection[] = [
@@ -19,34 +20,38 @@ const storeSections: StoreSection[] = [
     id: "tienda",
     name: "TIENDA",
     shortDesc: "Recursos espirituales",
-    image: "/DSC09995.jpg",
-    color: "from-green-600/30 to-emerald-600/30",
+    image: "/color1.jpg",
+    color: "",
     focusPosition: "center center",
+    emoji: "/7.png",
   },
   {
     id: "arte",
     name: "ARTE CLS",
     shortDesc: "Canto, dibujo, teatro y danza ¡para toda la familia!",
-    image: "/DSC02510.jpg",
-    color: "from-pink-600/30 to-rose-600/30",
+    image: "/color2.jpg",
+    color: "",
     focusPosition: "center center",
+    emoji: "/8.png",
   },
   {
     id: "eventos",
     name: " EVENTOS ",
     shortDesc:
       "¡No te pierdas las últimas actualizaciones y eventos especiales!",
-    image: "/testeventos.jpg",
-    color: "from-orange-500/40 to-red-600/40",
+    image: "/color1.jpg",
+    color: "",
     focusPosition: "center center",
+    emoji: "/5.png",
   },
   {
     id: "sedes",
     name: "SEDES",
     shortDesc: "Tenemos dos lugares más",
-    image: "/sedesv2.jpg",
-    color: "from-blue-600/30 to-sky-600/30",
+    image: "/color2.jpg",
+    color: "",
     focusPosition: "center center",
+    emoji: "/6.png",
   }
 ];
 
@@ -135,28 +140,30 @@ export function StoreShowcase() {
               <div
                 className={`absolute inset-0 bg-gradient-to-t transition-all duration-700 ${getOverlayColor(
                   section
-                )} ${
-                  hoveredSection === section.id ? "opacity-20" : "opacity-40"
-                }`}
+                )} ${hoveredSection === section.id ? "opacity-20" : "opacity-40"
+                  }`}
               />
               <div className="absolute inset-0 bg-black/20" />
               <div className="absolute inset-0 flex flex-col justify-center items-center text-white p-6 z-10">
                 <div
-                  className={`text-center transition-all duration-700 ease-out ${
-                    shouldShowContent(section)
-                      ? "opacity-100 transform translate-y-0"
-                      : "opacity-0 transform translate-y-4"
-                  }`}
+                  className={`text-center transition-all duration-700 ease-out ${shouldShowContent(section)
+                    ? "opacity-100 transform translate-y-0"
+                    : "opacity-0 transform translate-y-4"
+                    }`}
                 >
+                  <img
+                    src={section.emoji}
+                    alt={section.name}
+                    className="w-64 h-64 mx-auto mb-4 drop-shadow-lg object-contain"
+                  />
                   <h3 className="text-2xl md:text-3xl font-bold mb-3 drop-shadow-md">
                     {section.name}
                   </h3>
                   <div
-                    className={`transition-all duration-700 ease-out ${
-                      hoveredSection === section.id
-                        ? "opacity-100 translate-y-0 max-h-96"
-                        : "opacity-0 translate-y-6 max-h-0 overflow-hidden"
-                    }`}
+                    className={`transition-all duration-700 ease-out ${hoveredSection === section.id
+                      ? "opacity-100 translate-y-0 max-h-96"
+                      : "opacity-0 translate-y-6 max-h-0 overflow-hidden"
+                      }`}
                   >
                     <p className="text-lg mb-6 drop-shadow-sm font-medium">
                       {section.shortDesc}
@@ -170,11 +177,10 @@ export function StoreShowcase() {
                     </Button>
                   </div>
                   <div
-                    className={`transition-all duration-500 ${
-                      hoveredSection === null
-                        ? "opacity-90"
-                        : "opacity-0 absolute"
-                    }`}
+                    className={`transition-all duration-500 ${hoveredSection === null
+                      ? "opacity-90"
+                      : "opacity-0 absolute"
+                      }`}
                   >
                     <p className="text-sm md:text-base font-medium">
                       {section.shortDesc}
@@ -213,6 +219,11 @@ export function StoreShowcase() {
                 <div className="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-colors duration-300" />
                 <div className="absolute inset-0 flex flex-col justify-end p-6 z-10">
                   <div className="transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                    <img
+                      src={section.emoji}
+                      alt={section.name}
+                      className="w-20 h-20 mb-3 drop-shadow-lg object-contain"
+                    />
                     <h3 className="text-2xl font-bold mb-2 text-white drop-shadow-lg">
                       {section.name}
                     </h3>
@@ -249,6 +260,11 @@ export function StoreShowcase() {
               <div className="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-colors duration-300" />
               <div className="absolute inset-0 flex flex-col justify-center items-center text-white p-6 z-10">
                 <div className="text-center transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                  <img
+                    src={storeSections[2].emoji}
+                    alt={storeSections[2].name}
+                    className="w-24 h-24 mx-auto mb-4 drop-shadow-lg object-contain"
+                  />
                   <h3 className="text-3xl font-bold mb-3 text-white drop-shadow-lg">
                     {storeSections[2].name}
                   </h3>
@@ -289,11 +305,16 @@ export function StoreShowcase() {
                   className={`absolute inset-0 bg-gradient-to-t ${section.color} opacity-50`}
                 />
                 <div className="absolute inset-0 bg-black/30" />
-                
+
                 {/* Contenido principal */}
                 <div className="absolute inset-0 flex flex-col justify-between p-6 z-10">
                   {/* Contenido central */}
                   <div className="flex-1 flex flex-col justify-center text-center">
+                    <img
+                      src={section.emoji}
+                      alt={section.name}
+                      className="w-24 h-24 mx-auto mb-4 drop-shadow-lg object-contain"
+                    />
                     <h3 className="text-3xl font-bold mb-4 text-white drop-shadow-lg">
                       {section.name}
                     </h3>
@@ -301,7 +322,7 @@ export function StoreShowcase() {
                       {section.shortDesc}
                     </p>
                   </div>
-                  
+
                   {/* Footer con botón */}
                   <div className="flex justify-center">
                     <Button className="bg-white/90 text-gray-800 hover:bg-white hover:text-gray-900 transition-all duration-300 shadow-lg">

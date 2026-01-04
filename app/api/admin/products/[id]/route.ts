@@ -30,7 +30,7 @@ export async function GET(
     }
 
     const product = await ProductService.getById(id)
-    
+
     if (!product) {
       return NextResponse.json(
         { error: 'Producto no encontrado' },
@@ -42,7 +42,7 @@ export async function GET(
 
   } catch (error) {
     console.error('Error obteniendo producto:', error)
-    
+
     if (error instanceof Error && error.message === 'No autenticado') {
       return NextResponse.json(
         { error: 'No autenticado' },
@@ -75,7 +75,7 @@ export async function PUT(
     }
 
     const body = await request.json()
-    
+
     // Schema específico para actualizaciones
     const updateSchema = z.object({
       name: z.string().optional(),
@@ -92,16 +92,16 @@ export async function PUT(
       active: z.boolean().optional(),
       stock: z.number().optional(),
     })
-    
+
     const rawData = updateSchema.parse(body)
-    
+
     // Filtrar valores undefined para evitar sobrescribir con undefined
     const updateData = Object.fromEntries(
       Object.entries(rawData).filter(([, value]) => value !== undefined)
     )
 
     const product = await ProductService.update(id, updateData)
-    
+
     if (!product) {
       return NextResponse.json(
         { error: 'Producto no encontrado' },
@@ -116,7 +116,7 @@ export async function PUT(
 
   } catch (error) {
     console.error('Error actualizando producto:', error)
-    
+
     if (error instanceof Error && error.message === 'No autenticado') {
       return NextResponse.json(
         { error: 'No autenticado' },
@@ -126,7 +126,7 @@ export async function PUT(
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: 'Datos inválidos', details: error.errors },
+        { error: 'Datos inválidos', details: (error as any).errors },
         { status: 400 }
       )
     }
@@ -156,7 +156,7 @@ export async function DELETE(
     }
 
     const product = await ProductService.delete(id)
-    
+
     if (!product) {
       return NextResponse.json(
         { error: 'Producto no encontrado' },
@@ -171,7 +171,7 @@ export async function DELETE(
 
   } catch (error) {
     console.error('Error eliminando producto:', error)
-    
+
     if (error instanceof Error && error.message === 'No autenticado') {
       return NextResponse.json(
         { error: 'No autenticado' },

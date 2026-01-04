@@ -19,13 +19,13 @@ export async function GET(request: NextRequest) {
     await requireAuth()
 
     const { searchParams } = new URL(request.url)
-    
+
     const filters = {
       category: searchParams.get('category') || undefined,
-      featured: searchParams.get('featured') === 'true' ? true : 
-                searchParams.get('featured') === 'false' ? false : undefined,
-      active: searchParams.get('active') === 'true' ? true : 
-              searchParams.get('active') === 'false' ? false : undefined,
+      featured: searchParams.get('featured') === 'true' ? true :
+        searchParams.get('featured') === 'false' ? false : undefined,
+      active: searchParams.get('active') === 'true' ? true :
+        searchParams.get('active') === 'false' ? false : undefined,
       search: searchParams.get('search') || undefined,
       sortBy: (searchParams.get('sortBy') as 'name' | 'price' | 'rating' | 'createdAt') || 'createdAt',
       sortOrder: (searchParams.get('sortOrder') as 'asc' | 'desc') || 'desc',
@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
 
   } catch (error) {
     console.error('Error obteniendo productos:', error)
-    
+
     if (error instanceof Error && error.message === 'No autenticado') {
       return NextResponse.json(
         { error: 'No autenticado' },
@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
     await requireAuth()
 
     const body = await request.json()
-    
+
     // Schema específico para creación
     const createSchema = z.object({
       name: z.string().min(1, "El nombre es requerido"),
@@ -78,7 +78,7 @@ export async function POST(request: NextRequest) {
       active: z.boolean().default(true),
       stock: z.number().default(0),
     })
-    
+
     const productData = createSchema.parse(body)
 
     const product = await ProductService.create(productData)
@@ -90,7 +90,7 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('Error creando producto:', error)
-    
+
     if (error instanceof Error && error.message === 'No autenticado') {
       return NextResponse.json(
         { error: 'No autenticado' },
@@ -100,7 +100,7 @@ export async function POST(request: NextRequest) {
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: 'Datos inválidos', details: error.errors },
+        { error: 'Datos inválidos', details: (error as any).errors },
         { status: 400 }
       )
     }

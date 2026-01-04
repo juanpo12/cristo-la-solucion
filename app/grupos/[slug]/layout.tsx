@@ -6,7 +6,7 @@ export default function GroupLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen pt-20">
       {children}
     </div>
   )

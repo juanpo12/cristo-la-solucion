@@ -110,11 +110,11 @@ export default function VideosPage() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-gray-50 overflow-x-hidden">
+    <div className="min-h-screen bg-gray-50 pt-20 overflow-x-hidden">
       {/* Header */}
       <div className="relative h-[50vh] overflow-hidden -mt-20">
         <Image 
-          src="/Banner transimision-transmision.jpg" 
+          src="/color2.jpg" 
           alt="Pastor Alfredo Dimiro" 
           fill 
           className="object-cover" 
@@ -131,14 +131,6 @@ export default function VideosPage() {
             </p>
           </div>
         </div>
-
-        <Link
-          href="/"
-          className="absolute top-8 left-8 bg-white/20 backdrop-blur-sm text-white px-6 py-3 rounded-full hover:bg-white hover:text-gray-900 transition-all duration-300 flex items-center space-x-2"
-        >
-          <ArrowLeft className="w-5 h-5" />
-          <span>Volver al Inicio</span>
-        </Link>
       </div>
 
       {/* Controles y Filtros */}

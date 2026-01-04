@@ -19,7 +19,7 @@ const meetings = [
   },
   {
     day: "DOMINGOS",
-    time: "11 Y 18 HS",
+    time: "11 Y 19 HS",
     description: "Esperamos que puedas asistir a las reuniones y seas parte de lo que Dios está haciendo en nuestra iglesia.",
   }
 ]
