@@ -9,8 +9,7 @@ export function Hero() {
   const [currentSlide, setCurrentSlide] = useState(0)
 
   const images = [
-    { src: "/pastorportadav.jpg", alt: "Hero principal" },
-    { src: "/taller.jpg", alt: "Taller" }
+    { src: "/pastorportadav.jpg", alt: "Hero principal" }
   ]
 
   const scrollToSection = (sectionId: string) => {
@@ -65,21 +64,25 @@ export function Hero() {
       </div>
 
       {/* Controles del carrusel */}
-      <button
-        onClick={prevSlide}
-        className="hidden md:block absolute left-4 top-1/2 transform -translate-y-1/2 z-20 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full p-2 transition-all duration-300"
-        aria-label="Imagen anterior"
-      >
-        <ChevronLeft className="w-6 h-6 text-white" />
-      </button>
+      {images.length > 1 && (
+        <button
+          onClick={prevSlide}
+          className="hidden md:block absolute left-4 top-1/2 transform -translate-y-1/2 z-20 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full p-2 transition-all duration-300"
+          aria-label="Imagen anterior"
+        >
+          <ChevronLeft className="w-6 h-6 text-white" />
+        </button>
+      )}
 
-      <button
-        onClick={nextSlide}
-        className="hidden md:block absolute right-4 top-1/2 transform -translate-y-1/2 z-20 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full p-2 transition-all duration-300"
-        aria-label="Siguiente imagen"
-      >
-        <ChevronRight className="w-6 h-6 text-white" />
-      </button>
+      {images.length > 1 && (
+        <button
+          onClick={nextSlide}
+          className="hidden md:block absolute right-4 top-1/2 transform -translate-y-1/2 z-20 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full p-2 transition-all duration-300"
+          aria-label="Siguiente imagen"
+        >
+          <ChevronRight className="w-6 h-6 text-white" />
+        </button>
+      )}
 
       {/* Overlay con gradiente moderno - Solo visible en el primer slide */}
       <div className={`absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/50 transition-opacity duration-1000 ${shouldHideContent ? 'opacity-0' : 'opacity-100'
