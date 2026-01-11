@@ -53,7 +53,7 @@ export function Hero() {
             height={1080}
             src={image.src}
             alt={image.alt}
-            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${index === currentSlide ? 'opacity-100' : 'opacity-0'
+            className={`absolute inset-0 w-full h-full object-cover object-[75%_center] md:object-center transition-opacity duration-1000 ${index === currentSlide ? 'opacity-100' : 'opacity-0'
               }`}
             style={{ zIndex: -1 }}
             priority={index === 0}
