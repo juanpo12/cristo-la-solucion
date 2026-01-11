@@ -11,7 +11,7 @@ const groupsData = {
     subtitle: "Donde los pequeños grandes sueños cobran vida",
     description:
       "Es un espacio exclusivo para los niños de nuestra congregación. Contamos con un equipo de maestros encargados de sembrar la palabra de Dios, en la vida de cada uno de los niños, por medio de enseñanzas dinámicas, que capturen la atención de ellos e impacten sus vidas.",
-    image: "/test.jpg",
+    image: "/DSC09953 copia.jpg",
     schedule: "Sábados 19:30 HS",
     location: "Auditorio Principal",
     ageRange: "3 a 9 años",
@@ -35,7 +35,7 @@ const groupsData = {
     subtitle: "Conociendo tu identidad en Cristo",
     description:
       "Estamos llamados a guiar a los adolescentes a que puedan desarrollar una relación personal con Dios, libre de toda tradición y religión. Nos esforzamos en trasmitir los principios de la Palabra utilizando todos los medios disponibles para alcanzar a la mayor cantidad posible.",
-    image: "/fototeens.jpg",
+    image: "/DSC09796.png",
     schedule: "Sábados 19:30 HS",
     location: "Auditorio Principal",
     ageRange: "10 a 17 años",
@@ -59,7 +59,7 @@ const groupsData = {
     subtitle: "Crecimiento espiritual sin límites",
     description:
       "Invictos es un grupo de jóvenes, que creen en que Jesús es la respuesta a todas las preguntas y que solo en Él hay esperanza. Mediante grupos de amistad y reuniones, los días sábados a las 19:30 hs, buscamos que Dios siga transformando la vida de los jóvenes y que los lleve a compartirlo con otros.",
-    image: "/INVICTOS.jpg",
+    image: "/fototeens.jpg",
     schedule: "Sábados 19:30 HS",
     location: "Auditorio Principal",
     ageRange: "18 a 35 años",
@@ -83,7 +83,7 @@ const groupsData = {
     subtitle: "Familia, fe y comunión íntima",
     description:
       "Contamos con grupos de conexión (+36 años) los días martes a las 19:30 hs. La visión de estos grupos es que la gente pueda ser formada en la palabra de Dios; que puedan conectar con otras personas y juntos descubrir la misión que tienen sus vidas, que es vivir por una causa más importante; que esto los lleve a invitar y alcanzar a aquellos que nunca asistieron a la iglesia.",
-    image: "/GDC.jpg",
+    image: "/gdcnueva.jpg",
     schedule: "Martes 19:30 HS",
     location: "Auditorio Principal",
     ageRange: "+36 años",
@@ -103,7 +103,14 @@ export default async function GroupPage({ params }: { params: { slug: string } }
     <div className="min-h-screen bg-white">
       {/* Header con imagen de fondo */}
       <div className="relative h-[60vh] overflow-hidden">
-        <Image src={group.image || "/placeholder.svg"} alt={group.name} fill className="object-cover" priority />
+        <Image
+          src={group.image || "/placeholder.svg"}
+          alt={group.name}
+          fill
+          className="object-cover"
+          style={{ objectPosition: group.image === '/DSC09796.png' ? 'center 25%' : 'center' }}
+          priority
+        />
         <div className={`absolute inset-0 bg-gradient-to-r ${group.color} opacity-30`} />
         <div className="absolute inset-0 bg-black/30" />
 

@@ -76,6 +76,14 @@ export function Groups() {
       return groups[sectionIndex].focusPosition
     } else {
       // Estado hover: mostrar la imagen completa dividida
+      const hoveredIndex = groups.findIndex((g) => g.id === hoveredGroup)
+      const currentImage = groups[hoveredIndex].image
+
+      // Si es la imagen DSC09796.png, ajustar la posición vertical para mostrar más arriba
+      if (currentImage === '/DSC09796.png') {
+        return `${sectionIndex * 33.33}% 25%`
+      }
+
       return `${sectionIndex * 33.33}% center`
     }
   }
@@ -138,26 +146,23 @@ export function Groups() {
                 }}
               />
               <div
-                className={`absolute inset-0 bg-gradient-to-t transition-all duration-700 ${getOverlayColor(group)} ${
-                  hoveredGroup === group.id ? "opacity-20" : "opacity-40"
-                }`}
+                className={`absolute inset-0 bg-gradient-to-t transition-all duration-700 ${getOverlayColor(group)} ${hoveredGroup === group.id ? "opacity-20" : "opacity-40"
+                  }`}
               />
               <div className="absolute inset-0 bg-black/20" />
               <div className="absolute inset-0 flex flex-col justify-center items-center text-white p-6 z-10">
                 <div
-                  className={`text-center transition-all duration-700 ease-out ${
-                    shouldShowContent(group)
-                      ? "opacity-100 transform translate-y-0"
-                      : "opacity-0 transform translate-y-4"
-                  }`}
+                  className={`text-center transition-all duration-700 ease-out ${shouldShowContent(group)
+                    ? "opacity-100 transform translate-y-0"
+                    : "opacity-0 transform translate-y-4"
+                    }`}
                 >
                   <h3 className="text-2xl md:text-3xl font-bold mb-3 drop-shadow-md">{group.name}</h3>
                   <div
-                    className={`transition-all duration-700 ease-out ${
-                      hoveredGroup === group.id
-                        ? "opacity-100 translate-y-0 max-h-96"
-                        : "opacity-0 translate-y-6 max-h-0 overflow-hidden"
-                    }`}
+                    className={`transition-all duration-700 ease-out ${hoveredGroup === group.id
+                      ? "opacity-100 translate-y-0 max-h-96"
+                      : "opacity-0 translate-y-6 max-h-0 overflow-hidden"
+                      }`}
                   >
                     <p className="text-lg mb-4 drop-shadow-sm font-medium">{group.shortDesc}</p>
                     <div className="flex items-center justify-center space-x-2 mb-3 opacity-90">
@@ -176,9 +181,8 @@ export function Groups() {
                     </Button>
                   </div>
                   <div
-                    className={`transition-all duration-500 ${
-                      hoveredGroup === null ? "opacity-90" : "opacity-0 absolute"
-                    }`}
+                    className={`transition-all duration-500 ${hoveredGroup === null ? "opacity-90" : "opacity-0 absolute"
+                      }`}
                   >
                     <p className="text-sm md:text-base font-medium">{group.shortDesc}</p>
                   </div>
@@ -255,7 +259,7 @@ export function Groups() {
                 />
                 <div className={`absolute inset-0 bg-gradient-to-t ${group.color} opacity-50`} />
                 <div className="absolute inset-0 bg-black/30" />
-                
+
                 {/* Contenido principal */}
                 <div className="absolute inset-0 flex flex-col justify-between p-6 z-10">
                   {/* Header con edad */}
@@ -264,13 +268,13 @@ export function Groups() {
                       {group.ageRange}
                     </div>
                   </div>
-                  
+
                   {/* Contenido central */}
                   <div className="text-center">
                     <h3 className="text-3xl font-bold mb-3 text-white drop-shadow-lg">{group.name}</h3>
                     <p className="text-lg mb-4 text-white/90 font-medium">{group.shortDesc}</p>
                   </div>
-                  
+
                   {/* Footer con horario y botón */}
                   <div className="space-y-4">
                     <div className="flex items-center justify-center space-x-2 text-white/80">
