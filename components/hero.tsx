@@ -57,7 +57,6 @@ export function Hero() {
               }`}
             style={{ zIndex: -1 }}
             priority={index === 0}
-            quality={100}
             unoptimized={false}
           />
         ))}
