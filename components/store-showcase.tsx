@@ -292,7 +292,7 @@ export function StoreShowcase() {
               <Link
                 key={section.id}
                 href={`/${section.id}`}
-                className="relative h-64 block overflow-hidden rounded-2xl cursor-pointer group shadow-lg active:scale-95 transition-all duration-300"
+                className="relative block overflow-hidden rounded-2xl cursor-pointer group shadow-lg active:scale-95 transition-all duration-300"
               >
                 <div
                   className="absolute inset-0 bg-cover bg-center transition-all duration-300"
@@ -307,25 +307,25 @@ export function StoreShowcase() {
                 <div className="absolute inset-0 bg-black/30" />
 
                 {/* Contenido principal */}
-                <div className="absolute inset-0 flex flex-col justify-between p-6 z-10">
+                <div className="relative z-10 flex flex-col justify-between p-8 min-h-[420px]">
                   {/* Contenido central */}
                   <div className="flex-1 flex flex-col justify-center text-center">
                     <img
                       src={section.emoji}
                       alt={section.name}
-                      className="w-24 h-24 mx-auto mb-4 drop-shadow-lg object-contain"
+                      className="w-48 h-48 md:w-24 md:h-24 mx-auto mb-6 drop-shadow-lg object-contain"
                     />
                     <h3 className="text-3xl font-bold mb-4 text-white drop-shadow-lg">
                       {section.name}
                     </h3>
-                    <p className="text-lg mb-6 text-white/90 font-medium px-2">
+                    <p className="text-lg mb-8 text-white/90 font-medium px-2 leading-relaxed">
                       {section.shortDesc}
                     </p>
                   </div>
 
                   {/* Footer con botón */}
-                  <div className="flex justify-center">
-                    <Button className="bg-white/90 text-gray-800 hover:bg-white hover:text-gray-900 transition-all duration-300 shadow-lg">
+                  <div className="flex justify-center mt-auto">
+                    <Button className="bg-white/90 text-gray-800 hover:bg-white hover:text-gray-900 transition-all duration-300 shadow-lg w-full sm:w-auto">
                       Explorar
                       <ArrowRight className="w-4 h-4 ml-2" />
                     </Button>

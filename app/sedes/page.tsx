@@ -47,7 +47,7 @@ export default function SedesPage() {
           className="absolute inset-0 w-full h-full object-cover brightness-50"
           priority
         />
-        
+
         {/* Overlay con gradiente animado */}
         <div className="absolute inset-0 bg-gradient-to-br from-purple-900/40 via-blue-900/40 to-cyan-900/40" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(17,24,39,0.2),rgba(0,0,0,0.8))]" />
@@ -82,7 +82,7 @@ export default function SedesPage() {
               <div className="relative h-56 overflow-hidden">
                 <div className={`absolute inset-0 bg-gradient-to-br ${sede.color} transition-transform duration-500 group-hover:scale-110`} />
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(255,255,255,0.1),transparent)]" />
-                
+
                 {/* Icono flotante */}
                 <div className="absolute top-6 left-6 p-4 bg-white/20 backdrop-blur-md rounded-2xl border border-white/30 shadow-lg group-hover:scale-110 transition-transform duration-300">
                   <MapPin className="w-8 h-8 text-white" strokeWidth={2} />
@@ -95,7 +95,7 @@ export default function SedesPage() {
                   </h2>
                 </div>
               </div>
-              
+
               {/* Contenido de la card */}
               <CardContent className="p-8 space-y-6">
                 {/* Dirección */}
@@ -113,11 +113,11 @@ export default function SedesPage() {
                     <Clock className="w-5 h-5 text-gray-700" />
                     <h3 className="font-bold text-gray-900 text-lg">Horarios de Reunión</h3>
                   </div>
-                  
+
                   <div className="space-y-3">
                     {sede.horarios.map((horario, idx) => (
-                      <div 
-                        key={idx} 
+                      <div
+                        key={idx}
                         className="flex items-center justify-between p-3 bg-gradient-to-r from-gray-50 to-white rounded-lg border border-gray-100 hover:border-gray-200 transition-colors group/item"
                       >
                         <div className="flex items-center space-x-3">
@@ -154,7 +154,7 @@ export default function SedesPage() {
             <div className="inline-block p-5 bg-white/20 backdrop-blur-md rounded-2xl border border-white/30">
               <MapPin className="w-14 h-14" strokeWidth={1.5} />
             </div>
-            
+
             <div className="space-y-4">
               <h3 className="text-4xl md:text-5xl font-black">¡Te Esperamos!</h3>
               <p className="text-xl md:text-2xl opacity-95 max-w-2xl mx-auto font-light leading-relaxed">
