@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 type StoreSection = {
   id: string;
@@ -125,18 +126,22 @@ export function StoreShowcase() {
               onMouseEnter={() => setHoveredSection(section.id)}
               onMouseLeave={() => setHoveredSection(null)}
             >
-              <div
-                className="absolute inset-0 bg-cover bg-center transition-all duration-700 ease-out"
-                style={{
-                  backgroundImage: `url('${getBackgroundImage(index)}')`,
-                  backgroundPosition: getBackgroundPosition(index),
-                  backgroundSize: getBackgroundSize(),
-                  filter:
-                    hoveredSection && hoveredSection !== section.id
-                      ? "brightness(0.6) contrast(0.8)"
-                      : "brightness(0.9)",
-                }}
-              />
+              <div className="absolute inset-0 transition-all duration-700 ease-out">
+                <Image
+                  src={getBackgroundImage(index)}
+                  alt={section.name}
+                  fill
+                  className="object-cover"
+                  style={{
+                    objectPosition: getBackgroundPosition(index),
+                    filter:
+                      hoveredSection && hoveredSection !== section.id
+                        ? "brightness(0.6) contrast(0.8)"
+                        : "brightness(0.9)",
+                  }}
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                />
+              </div>
               <div
                 className={`absolute inset-0 bg-gradient-to-t transition-all duration-700 ${getOverlayColor(
                   section

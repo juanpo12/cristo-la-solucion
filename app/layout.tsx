@@ -16,7 +16,28 @@ const poppins = Poppins({
 
 export const metadata: Metadata = {
   title: "Cristo la solución",
-  description: "Cristo la solución",
+  description: "Una familia para vos. Iglesia Cristo la Solución.",
+  icons: {
+    icon: "/logo-cls.png",
+    shortcut: "/logo-cls.png",
+    apple: "/logo-cls.png",
+  },
+  openGraph: {
+    title: "Cristo la solución",
+    description: "Una familia para vos. Iglesia Cristo la Solución.",
+    url: "https://www.cristolasolucionsj.com",
+    siteName: "Cristo la Solución",
+    images: [
+      {
+        url: "/logo-cls.png",
+        width: 800,
+        height: 600,
+        alt: "Logo Cristo la Solución",
+      },
+    ],
+    locale: "es_AR",
+    type: "website",
+  },
 }
 
 export default function RootLayout({
