@@ -201,14 +201,14 @@ export class OrderService {
         total: sql<number>`sum(${orders.total}::numeric)`
       })
       .from(orders)
-      .where(and(eq(orders.status, 'approved'), ...(conditions || [])))
+      .where(and(or(eq(orders.status, 'approved'), eq(orders.status, 'delivered')), ...(conditions || [])))
 
     const averageOrderValue = await db
       .select({
         avg: sql<number>`avg(${orders.total}::numeric)`
       })
       .from(orders)
-      .where(and(eq(orders.status, 'approved'), ...(conditions || [])))
+      .where(and(or(eq(orders.status, 'approved'), eq(orders.status, 'delivered')), ...(conditions || [])))
 
     return {
       totalOrders: totalOrders[0]?.count || 0,

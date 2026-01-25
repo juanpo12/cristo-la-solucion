@@ -9,7 +9,9 @@ import {
   DollarSign,
   AlertTriangle,
   Clock,
-  ChevronRight
+  ChevronRight,
+  MessageSquare,
+  Users
 } from 'lucide-react'
 
 interface AdminUser {
@@ -33,6 +35,10 @@ interface DashboardStats {
     deliveredOrders: number
     totalRevenue: number
     averageOrderValue: number
+  }
+  contacts: {
+    total: number
+    pending: number
   }
 }
 
@@ -131,9 +137,25 @@ export default function AdminDashboard() {
         console.error('Error obteniendo estadísticas de órdenes:', error)
       }
 
+      // Obtener estadísticas de contactos
+      let contactsStats = { total: 0, pending: 0 }
+      try {
+        const contactsResponse = await fetch('/api/admin/contacts/stats')
+        if (contactsResponse.ok) {
+          const contactsData = await contactsResponse.json()
+          contactsStats = {
+            total: contactsData.total || 0,
+            pending: contactsData.byStatus?.pending || 0
+          }
+        }
+      } catch (error) {
+        console.error('Error obteniendo estadísticas de contactos:', error)
+      }
+
       setStats({
         products: productsStats,
-        orders: ordersStats
+        orders: ordersStats,
+        contacts: contactsStats
       })
 
       setRecentOrders(ordersArray)
@@ -264,25 +286,26 @@ export default function AdminDashboard() {
 
           {/* Stats Cards con diseño premium */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-6 mb-6 md:mb-8">
-            {/* Card 1: Total Productos */}
-            <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 p-6 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 transition-all duration-300 hover:-translate-y-1">
+            {/* Card 1: Ingresos Totales (Reemplaza Productos) */}
+            <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-green-500 to-emerald-600 p-6 shadow-lg shadow-green-500/30 hover:shadow-xl hover:shadow-green-500/40 transition-all duration-300 hover:-translate-y-1">
               <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16"></div>
               <div className="relative">
                 <div className="flex items-center justify-between mb-4">
                   <div className="p-3 bg-white/20 backdrop-blur-sm rounded-xl">
-                    <Package className="h-6 w-6 md:h-7 md:w-7 text-white" />
+                    <DollarSign className="h-6 w-6 md:h-7 md:w-7 text-white" />
                   </div>
                   <div className="text-white/80 text-xs font-medium px-2 py-1 bg-white/10 rounded-lg">
-                    Catálogo
+                    Ingresos
                   </div>
                 </div>
-                <h3 className="text-sm font-medium text-white/90 mb-1">Total Productos</h3>
+                <h3 className="text-sm font-medium text-white/90 mb-1">Ingresos Totales</h3>
                 <div className="flex items-baseline gap-2">
-                  <p className="text-3xl md:text-4xl font-bold text-white">{stats?.products?.totalProducts || 0}</p>
-                  <span className="text-sm text-white/70">unidades</span>
+                  <p className="text-2xl md:text-3xl font-bold text-white truncate">
+                    {formatCurrency(stats?.orders?.totalRevenue || 0)}
+                  </p>
                 </div>
-                <p className="text-xs text-white/80 mt-2">
-                  <span className="font-semibold">{stats?.products?.featuredProducts || 0}</span> destacados
+                <p className="text-xs text-white/80 mt-2 truncate">
+                  Ticket Promedio: <span className="font-semibold">{formatCurrency(stats?.orders?.averageOrderValue || 0)}</span>
                 </p>
               </div>
             </div>
@@ -310,49 +333,48 @@ export default function AdminDashboard() {
               </div>
             </div>
 
-            {/* Card 3: Ingresos Totales */}
-            <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-green-500 to-emerald-600 p-6 shadow-lg shadow-green-500/30 hover:shadow-xl hover:shadow-green-500/40 transition-all duration-300 hover:-translate-y-1">
+            {/* Card 3: Mensajes Nuevos (Reemplaza Ingresos/Posición 3) */}
+            <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 p-6 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 transition-all duration-300 hover:-translate-y-1">
               <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16"></div>
               <div className="relative">
                 <div className="flex items-center justify-between mb-4">
                   <div className="p-3 bg-white/20 backdrop-blur-sm rounded-xl">
-                    <DollarSign className="h-6 w-6 md:h-7 md:w-7 text-white" />
+                    <MessageSquare className="h-6 w-6 md:h-7 md:w-7 text-white" />
                   </div>
                   <div className="text-white/80 text-xs font-medium px-2 py-1 bg-white/10 rounded-lg">
-                    Ingresos
+                    Mensajes
                   </div>
                 </div>
-                <h3 className="text-sm font-medium text-white/90 mb-1">Ingresos Totales</h3>
+                <h3 className="text-sm font-medium text-white/90 mb-1">Mensajes Nuevos</h3>
                 <div className="flex items-baseline gap-2">
-                  <p className="text-2xl md:text-3xl font-bold text-white truncate">
-                    {formatCurrency(stats?.orders?.totalRevenue || 0)}
-                  </p>
+                  <p className="text-3xl md:text-4xl font-bold text-white">{stats?.contacts?.pending || 0}</p>
+                  <span className="text-sm text-white/70">sin leer</span>
                 </div>
-                <p className="text-xs text-white/80 mt-2 truncate">
-                  Promedio: <span className="font-semibold">{formatCurrency(stats?.orders?.averageOrderValue || 0)}</span>
+                <p className="text-xs text-white/80 mt-2">
+                  <span className="font-semibold">{stats?.contacts?.total || 0}</span> total histórico
                 </p>
               </div>
             </div>
 
-            {/* Card 4: Stock Bajo */}
-            <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-red-500 to-pink-600 p-6 shadow-lg shadow-red-500/30 hover:shadow-xl hover:shadow-red-500/40 transition-all duration-300 hover:-translate-y-1">
+            {/* Card 4: Total Productos (Reemplaza Stock Bajo) */}
+            <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-purple-500 to-purple-600 p-6 shadow-lg shadow-purple-500/30 hover:shadow-xl hover:shadow-purple-500/40 transition-all duration-300 hover:-translate-y-1">
               <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16"></div>
               <div className="relative">
                 <div className="flex items-center justify-between mb-4">
                   <div className="p-3 bg-white/20 backdrop-blur-sm rounded-xl">
-                    <AlertTriangle className="h-6 w-6 md:h-7 md:w-7 text-white" />
+                    <Package className="h-6 w-6 md:h-7 md:w-7 text-white" />
                   </div>
                   <div className="text-white/80 text-xs font-medium px-2 py-1 bg-white/10 rounded-lg">
-                    Alerta
+                    Catálogo
                   </div>
                 </div>
-                <h3 className="text-sm font-medium text-white/90 mb-1">Stock Bajo</h3>
+                <h3 className="text-sm font-medium text-white/90 mb-1">Total Productos</h3>
                 <div className="flex items-baseline gap-2">
-                  <p className="text-3xl md:text-4xl font-bold text-white">{stats?.products?.lowStockProducts || 0}</p>
-                  <span className="text-sm text-white/70">productos</span>
+                  <p className="text-3xl md:text-4xl font-bold text-white">{stats?.products?.totalProducts || 0}</p>
+                  <span className="text-sm text-white/70">items</span>
                 </div>
                 <p className="text-xs text-white/80 mt-2">
-                  Stock ≤ 5 unidades
+                  <span className="font-semibold">{stats?.products?.lowStockProducts || 0}</span> con stock bajo
                 </p>
               </div>
             </div>
