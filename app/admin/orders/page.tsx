@@ -16,6 +16,13 @@ import {
   XCircle,
   Truck,
 } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface AdminUser {
   id: string;
@@ -174,6 +181,24 @@ export default function AdminOrdersPage() {
     }
   };
 
+  const updateOrderStatus = async (orderId: number, status: string) => {
+    try {
+      const response = await fetch(`/api/admin/orders/${orderId}/status`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status }),
+      });
+
+      if (response.ok) {
+        await loadOrders();
+      }
+    } catch (error) {
+      console.error("Error actualizando estado:", error);
+    }
+  };
+
   if (loading || !user) {
     return <OrdersSkeleton />;
   }
@@ -296,25 +321,30 @@ export default function AdminOrdersPage() {
                         <div className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-900">
                           {formatCurrency(order.total)}
                         </div>
-                        <div className="flex flex-wrap gap-2">
+                        <div className="flex flex-col sm:flex-row items-end sm:items-center gap-2">
+                          <Select
+                            value={order.status}
+                            onValueChange={(value) => updateOrderStatus(order.id, value)}
+                          >
+                            <SelectTrigger className="w-[140px] h-8 text-xs">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="pending">Pendiente</SelectItem>
+                              <SelectItem value="approved">Aprobado</SelectItem>
+                              <SelectItem value="delivered">Entregado</SelectItem>
+                              <SelectItem value="rejected">Rechazado</SelectItem>
+                            </SelectContent>
+                          </Select>
+
                           <Button
                             variant="outline"
                             size="sm"
-                            className="text-xs hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700"
+                            className="text-xs hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 h-8"
                           >
                             <Eye className="h-3 w-3 md:h-4 md:w-4 mr-1" />
                             Ver detalles
                           </Button>
-                          {order.status === "approved" && (
-                            <Button
-                              size="sm"
-                              onClick={() => markAsDelivered(order.id)}
-                              className="text-xs bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-md hover:shadow-lg transition-all"
-                            >
-                              <Truck className="h-3 w-3 md:h-4 md:w-4 mr-1" />
-                              Marcar entregado
-                            </Button>
-                          )}
                         </div>
                       </div>
                     </div>
