@@ -126,6 +126,7 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
                   key={item.name}
                   href={item.href}
                   onClick={() => setSidebarOpen(false)}
+                  prefetch={true}
                   className={cn(
                     "group flex items-center justify-between px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200 relative overflow-hidden",
                     isActive

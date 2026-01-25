@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState, useCallback } from 'react'
+import { ProductsSkeleton } from '@/components/admin/products-skeleton'
 import { AdminSidebar } from '@/components/admin/admin-sidebar'
 import { ProductEditModal } from '@/components/admin/product-edit-modal'
 import { ProductViewModal } from '@/components/admin/product-view-modal'
@@ -222,17 +223,7 @@ export default function AdminProductsPage() {
   }
 
   if (loading || !user) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 via-gray-50 to-gray-100">
-        <div className="text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 rounded-full bg-white shadow-lg mb-6">
-            <Loader2 className="h-10 w-10 md:h-12 md:w-12 animate-spin text-church-electric-600" />
-          </div>
-          <p className="text-base md:text-lg font-medium text-gray-700">Cargando productos...</p>
-          <p className="text-sm text-gray-500 mt-2">Obteniendo catálogo</p>
-        </div>
-      </div>
-    )
+    return <ProductsSkeleton />
   }
 
   return (

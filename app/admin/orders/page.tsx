@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import { OrdersSkeleton } from "@/components/admin/orders-skeleton";
 import { AdminSidebar } from "@/components/admin/admin-sidebar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -174,17 +175,7 @@ export default function AdminOrdersPage() {
   };
 
   if (loading || !user) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 via-gray-50 to-gray-100">
-        <div className="text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 rounded-full bg-white shadow-lg mb-6">
-            <div className="animate-spin rounded-full h-10 w-10 md:h-12 md:w-12 border-4 border-gray-200 border-t-church-electric-600"></div>
-          </div>
-          <p className="text-base md:text-lg font-medium text-gray-700">Cargando órdenes...</p>
-          <p className="text-sm text-gray-500 mt-2">Obteniendo pedidos</p>
-        </div>
-      </div>
-    );
+    return <OrdersSkeleton />;
   }
 
   return (
