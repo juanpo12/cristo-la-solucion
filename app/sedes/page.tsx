@@ -3,6 +3,13 @@ import { Card, CardContent } from "@/components/ui/card"
 import { MapPin, Clock, Navigation, Phone } from "lucide-react"
 import Image from "next/image"
 
+import { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Nuestras Sedes | Cristo la Solución",
+  description: "Encuentra la sede más cercana a tu hogar. Estamos expandiendo el Reino.",
+}
+
 export default function SedesPage() {
   const sedes = [
     {
