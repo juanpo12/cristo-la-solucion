@@ -4,6 +4,13 @@ import { ArrowLeft, Calendar, Users, Heart, Cross, Home, UserCheck, Droplets, Bu
 import Link from "next/link"
 import Image from "next/image"
 
+import { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Eventos | Cristo la Solución",
+  description: "No te pierdas nuestros próximos eventos, conferencias y reuniones especiales.",
+}
+
 export default function EventosPage() {
   const eventos = [
     {

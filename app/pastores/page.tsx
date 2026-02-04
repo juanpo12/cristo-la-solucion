@@ -2,6 +2,13 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
 
+import { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Nuestros Pastores | Cristo la Solución",
+  description: "Conoce a nuestros pastores y líderes que guían nuestra comunidad con amor y visión.",
+}
+
 export default function PastoresPage() {
   return (
     <div className="min-h-screen bg-white pt-20">
@@ -43,7 +50,7 @@ export default function PastoresPage() {
         {/* Onda decorativa */}
         <div className="absolute bottom-0 left-0 right-0">
           <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto">
-            <path d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="white"/>
+            <path d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="white" />
           </svg>
         </div>
       </div>
@@ -85,7 +92,7 @@ export default function PastoresPage() {
               </p>
             </div>
 
-           
+
 
             {/* Call to Action */}
             <div className="bg-gradient-to-r from-blue-600 to-slate-700 rounded-2xl p-12 text-white mt-16 shadow-xl">

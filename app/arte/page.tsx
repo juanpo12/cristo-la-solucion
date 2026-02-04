@@ -2,18 +2,25 @@ import { ArrowLeft, Palette, Music, Theater, Zap } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
+import { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Arte CLS | Cristo la Solución",
+  description: "Expresa tu adoración a través del arte. Música, danza, teatro y más en Cristo la Solución.",
+}
+
 export default function ArtePage() {
   return (
     <div className="min-h-screen bg-white pt-20">
       {/* Header con imagen de fondo */}
       <div className="relative h-[60vh] overflow-hidden -mt-20">
-          <Image
-            src="/color2.jpg"
-            alt="Laboratorio de Arte Cristo La Solución"
-            fill
-            className="absolute inset-0 w-full h-full object-cover brightness-50"
-            priority
-          />
+        <Image
+          src="/color2.jpg"
+          alt="Laboratorio de Arte Cristo La Solución"
+          fill
+          className="absolute inset-0 w-full h-full object-cover brightness-50"
+          priority
+        />
 
         <div className="absolute inset-0 flex items-center justify-center text-white">
           <div className="text-center max-w-4xl px-4">
@@ -80,7 +87,7 @@ export default function ArtePage() {
             </div>
 
           </div>
-      </div>
+        </div>
       </div>
     </div>
   );

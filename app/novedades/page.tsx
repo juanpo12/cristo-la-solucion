@@ -3,6 +3,13 @@ import { ArrowLeft, Calendar, Star, Zap } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
+import { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Novedades | Cristo la Solución",
+  description: "Mantente al día con las últimas noticias y anuncios de nuestra iglesia.",
+}
+
 export default function NovedadesPage() {
   return (
     <div className="min-h-screen bg-white pt-20">
@@ -58,7 +65,7 @@ export default function NovedadesPage() {
                 Laboratorio de Arte Inaugurado
               </h3>
               <p className="church-text-muted mb-4">
-                ¡Ya está abierto nuestro nuevo espacio para canto, dibujo, teatro y danza! 
+                ¡Ya está abierto nuestro nuevo espacio para canto, dibujo, teatro y danza!
                 Actividades para toda la familia.
               </p>
               <div className="flex items-center text-sm church-text-muted mb-4">
@@ -84,7 +91,7 @@ export default function NovedadesPage() {
                 Nueva Tienda Online
               </h3>
               <p className="church-text-muted mb-4">
-                Renovamos completamente nuestra tienda online con nuevos libros 
+                Renovamos completamente nuestra tienda online con nuevos libros
                 y recursos espirituales del Pastor Alfredo.
               </p>
               <div className="flex items-center text-sm church-text-muted mb-4">

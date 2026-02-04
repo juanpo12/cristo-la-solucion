@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation"
+import { Metadata, ResolvingMetadata } from "next"
 import { Card, CardContent } from "@/components/ui/card"
 // import { Badge } from "@/components/ui/badge"
 import { ArrowLeft, Calendar, MapPin, Users, Heart, Star, Target } from "lucide-react"
@@ -91,7 +92,33 @@ const groupsData = {
   },
 }
 
-export default async function GroupPage({ params }: { params: { slug: string } }) {
+
+
+export async function generateMetadata(
+  { params }: { params: Promise<{ slug: string }> },
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const { slug } = await params
+  const group = groupsData[slug as keyof typeof groupsData]
+
+  if (!group) {
+    return {
+      title: "Grupo no encontrado | Cristo la Solución",
+    }
+  }
+
+  return {
+    title: `${group.name} | Cristo la Solución`,
+    description: group.subtitle || group.description.slice(0, 150),
+    openGraph: {
+      title: `${group.name} | Cristo la Solución`,
+      description: group.subtitle || group.description.slice(0, 150),
+      images: [group.image || '/logo-cls.png'],
+    },
+  }
+}
+
+export default async function GroupPage({ params }: { params: Promise<{ slug: string }> }) {
   const awaitParams = await params
   const group = groupsData[awaitParams.slug as keyof typeof groupsData]
 

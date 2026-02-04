@@ -3,6 +3,13 @@ import { ArrowLeft, BookOpen, Coffee, MapPin, Building } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 
+import { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Nuestras Instalaciones | Cristo la Solución",
+  description: "Conoce nuestros espacios: auditorio, cafetería, librería y más. Un lugar pensado para ti.",
+}
+
 export default function InstalacionesPage() {
   const instalaciones = [
     {
@@ -35,14 +42,14 @@ export default function InstalacionesPage() {
     <div className="min-h-screen pt-20 bg-gray-50">
       {/* Header */}
       <div className="relative h-[50vh] overflow-hidden -mt-20">
-        <Image 
-          src="/color2.jpg" 
-          alt="Instalaciones Cristo La Solución" 
-          fill 
-          className="object-cover" 
-          priority 
+        <Image
+          src="/color2.jpg"
+          alt="Instalaciones Cristo La Solución"
+          fill
+          className="object-cover"
+          priority
         />
-        
+
         <div className="absolute inset-0 flex items-center justify-center text-white">
           <div className="text-center max-w-4xl px-4">
             <h1 className="text-5xl md:text-6xl font-bold mb-6 drop-shadow-lg">INSTALACIONES</h1>
@@ -77,7 +84,7 @@ export default function InstalacionesPage() {
                   </div>
                 </div>
               </div>
-              
+
               <CardContent className="p-6">
                 <h3 className="text-2xl font-bold church-text mb-4">{instalacion.title}</h3>
                 <p className="church-text-muted leading-relaxed text-lg">
@@ -97,7 +104,7 @@ export default function InstalacionesPage() {
               <span className="text-xl">Juan Manuel de Rosas 4357, San Justo, Buenos Aires</span>
             </div>
           </div>
-          
+
           {/* Google Maps */}
           <div className="aspect-video rounded-xl overflow-hidden shadow-lg">
             <iframe
