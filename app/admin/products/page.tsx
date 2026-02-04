@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState, useCallback } from 'react'
+import { ProductsSkeleton } from '@/components/admin/products-skeleton'
 import { AdminSidebar } from '@/components/admin/admin-sidebar'
 import { ProductEditModal } from '@/components/admin/product-edit-modal'
 import { ProductViewModal } from '@/components/admin/product-view-modal'
@@ -12,11 +13,11 @@ import { Badge } from '@/components/ui/badge'
 import { createClient } from '@/lib/supabase/client'
 import { Loader2 } from 'lucide-react'
 import Image from 'next/image'
-import { 
-  Plus, 
-  Search, 
-  Edit, 
-  Trash2, 
+import {
+  Plus,
+  Search,
+  Edit,
+  Trash2,
   Eye,
   Package,
   Star
@@ -54,7 +55,7 @@ export default function AdminProductsPage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [selectedStatus, setSelectedStatus] = useState('all')
-  
+
   // Estados para modales
   const [editModalOpen, setEditModalOpen] = useState(false)
   const [viewModalOpen, setViewModalOpen] = useState(false)
@@ -87,7 +88,7 @@ export default function AdminProductsPage() {
       // Obtener información del usuario desde Supabase
       const supabase = createClient()
       const { data: { user: supabaseUser }, error } = await supabase.auth.getUser()
-      
+
       if (error || !supabaseUser) {
         console.error('Error obteniendo usuario:', error)
         return
@@ -222,209 +223,205 @@ export default function AdminProductsPage() {
   }
 
   if (loading || !user) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <Loader2 className="h-8 w-8 animate-spin" />
-      </div>
-    )
+    return <ProductsSkeleton />
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-50 to-gray-100">
       <div className="flex">
         <AdminSidebar user={user} />
-        
-        <div className="flex-1 lg:ml-64">
-          <div className="p-4 lg:p-8">
-            <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center mb-8 gap-4">
+
+        <div className="flex-1 lg:ml-72">
+          <div className="p-4 md:p-6 lg:p-8">
+            {/* Header mejorado */}
+            <div className="flex flex-col gap-4 mb-6 md:mb-8">
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">Productos</h1>
-                <p className="text-gray-600">Gestiona el catálogo de productos</p>
+                <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-2">Productos</h1>
+                <p className="text-sm md:text-base text-gray-600">Gestiona el catálogo de productos de la tienda</p>
               </div>
-              <Button onClick={handleCreateProduct}>
-                <Plus className="mr-2 h-4 w-4" />
+              <Button
+                onClick={handleCreateProduct}
+                className="w-full sm:w-auto bg-gradient-to-r from-church-electric-600 to-church-electric-700 hover:from-church-electric-700 hover:to-church-electric-800 shadow-lg shadow-church-electric-600/30 hover:shadow-xl hover:shadow-church-electric-600/40 transition-all duration-200"
+              >
+                <Plus className="mr-2 h-4 w-4 md:h-5 md:w-5" />
                 Nuevo Producto
               </Button>
             </div>
 
-            {/* Filtros */}
-            <Card className="mb-6">
-              <CardContent className="pt-6">
-                <div className="flex flex-col lg:flex-row gap-4">
-                  <div className="flex-1">
-                    <div className="relative">
-                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                      <Input
-                        placeholder="Buscar productos..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="pl-10"
-                      />
-                    </div>
+            {/* Filtros mejorados */}
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-200/50 p-4 md:p-6 mb-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
+                <div className="md:col-span-1">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4 md:h-5 md:w-5" />
+                    <Input
+                      placeholder="Buscar productos..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="pl-9 md:pl-10 h-10 md:h-11"
+                    />
                   </div>
-                  <select
-                    value={selectedCategory}
-                    onChange={(e) => setSelectedCategory(e.target.value)}
-                    className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="all">Todas las categorías</option>
-                    <option value="books">Libros</option>
-                    <option value="music">Música</option>
-                    <option value="accessories">Accesorios</option>
-                  </select>
-                  <select
-                    value={selectedStatus}
-                    onChange={(e) => setSelectedStatus(e.target.value)}
-                    className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="all">Todos los estados</option>
-                    <option value="true">Activos</option>
-                    <option value="false">Inactivos</option>
-                  </select>
                 </div>
-              </CardContent>
-            </Card>
+                <select
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                  className="h-10 md:h-11 px-3 md:px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-church-electric-500 focus:border-transparent transition-all"
+                >
+                  <option value="all">Todas las categorías</option>
+                  <option value="books">Libros</option>
+                  <option value="music">Música</option>
+                  <option value="accessories">Accesorios</option>
+                </select>
+                <select
+                  value={selectedStatus}
+                  onChange={(e) => setSelectedStatus(e.target.value)}
+                  className="h-10 md:h-11 px-3 md:px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-church-electric-500 focus:border-transparent transition-all"
+                >
+                  <option value="all">Todos los estados</option>
+                  <option value="true">Activos</option>
+                  <option value="false">Inactivos</option>
+                </select>
+              </div>
+            </div>
 
-            {/* Lista de productos */}
-            <div className="space-y-4">
+            {/* Lista de productos mejorada */}
+            <div className="space-y-3 md:space-y-4">
               {products.length === 0 ? (
-                <Card>
-                  <CardContent className="text-center py-12">
-                    <Package className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-                    <h3 className="text-lg font-medium text-gray-900 mb-2">No hay productos</h3>
-                    <p className="text-gray-500 mb-4">Comienza agregando tu primer producto.</p>
-                    <Button onClick={handleCreateProduct}>
+                <div className="bg-white rounded-2xl shadow-sm border border-gray-200/50 p-8 md:p-12">
+                  <div className="text-center">
+                    <div className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 rounded-full bg-gray-100 mb-4">
+                      <Package className="h-8 w-8 md:h-10 md:w-10 text-gray-400" />
+                    </div>
+                    <h3 className="text-lg md:text-xl font-semibold text-gray-900 mb-2">No hay productos</h3>
+                    <p className="text-sm md:text-base text-gray-500 mb-6">Comienza agregando tu primer producto al catálogo.</p>
+                    <Button onClick={handleCreateProduct} className="bg-gradient-to-r from-church-electric-600 to-church-electric-700">
                       <Plus className="mr-2 h-4 w-4" />
                       Agregar Producto
                     </Button>
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
               ) : (
                 products.map((product) => (
-                  <Card key={product.id} className="overflow-hidden">
-                    <CardContent className="p-4 lg:p-6">
-                      <div className="flex flex-col lg:flex-row lg:items-start gap-4">
+                  <div key={product.id} className="bg-white rounded-2xl shadow-sm border border-gray-200/50 overflow-hidden hover:shadow-md hover:border-church-electric-300 transition-all duration-200">
+                    <div className="p-4 md:p-6">
+                      <div className="flex flex-col lg:flex-row gap-4">
                         {/* Imagen del producto */}
-                        <div className="w-full lg:w-20 h-48 lg:h-20 bg-gray-200 rounded-lg flex-shrink-0 flex items-center justify-center">
+                        <div className="w-full lg:w-24 h-48 lg:h-24 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl flex-shrink-0 flex items-center justify-center overflow-hidden">
                           {product.image ? (
-                            <Image 
-                              src={product.image} 
+                            <Image
+                              src={product.image}
                               alt={product.name}
-                              width={80}
-                              height={80}
-                              className="w-full h-full object-cover rounded-lg"
+                              width={96}
+                              height={96}
+                              className="w-full h-full object-cover"
                             />
                           ) : (
-                            <Package className="h-8 w-8 text-gray-400" />
+                            <Package className="h-8 w-8 md:h-10 md:w-10 text-gray-400" />
                           )}
                         </div>
 
                         {/* Información del producto */}
                         <div className="flex-1 min-w-0">
-                          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
-                            <div className="flex-1">
+                          <div className="flex flex-col gap-4">
+                            {/* Cabecera */}
+                            <div>
                               <div className="flex flex-wrap items-center gap-2 mb-2">
-                                <h3 className="text-lg font-semibold text-gray-900">
+                                <h3 className="text-base md:text-lg font-bold text-gray-900">
                                   {product.name}
                                 </h3>
                                 {product.featured && (
-                                  <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">
+                                  <Badge variant="secondary" className="bg-yellow-100 text-yellow-800 border-yellow-200">
                                     <Star className="w-3 h-3 mr-1" />
                                     Destacado
                                   </Badge>
                                 )}
-                                <Badge variant={product.active ? "default" : "secondary"}>
+                                <Badge variant={product.active ? "default" : "secondary"} className={product.active ? "bg-green-100 text-green-800 border-green-200" : ""}>
                                   {product.active ? 'Activo' : 'Inactivo'}
                                 </Badge>
                               </div>
-                              <p className="text-sm text-gray-600 mb-2">por {product.author}</p>
-                              <p className="text-sm text-gray-500 mb-3 line-clamp-2">
+                              <p className="text-xs md:text-sm text-gray-600 mb-2">por {product.author}</p>
+                              <p className="text-sm text-gray-500 line-clamp-2 mb-3">
                                 {product.description}
                               </p>
-                              
+
                               {/* Información adicional */}
-                              <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 mb-4">
-                                <div>
-                                  <span className="text-lg font-bold text-gray-900">
+                              <div className="flex flex-wrap items-center gap-3 md:gap-4 text-xs md:text-sm">
+                                <div className="flex items-center gap-2">
+                                  <span className="text-lg md:text-xl font-bold text-gray-900">
                                     {formatCurrency(product.price)}
                                   </span>
                                   {product.originalPrice && (
-                                    <span className="ml-2 text-sm text-gray-500 line-through">
+                                    <span className="text-sm text-gray-500 line-through">
                                       {formatCurrency(product.originalPrice)}
                                     </span>
                                   )}
                                 </div>
-                                <div>
-                                  Stock: <span className={product.stock <= 5 ? 'text-red-600 font-medium' : ''}>{product.stock}</span>
+                                <div className="flex items-center gap-1 text-gray-600">
+                                  <Package className="h-4 w-4" />
+                                  <span className={product.stock <= 5 ? 'text-red-600 font-semibold' : 'font-medium'}>
+                                    {product.stock} en stock
+                                  </span>
                                 </div>
-                                <div>
-                                  Categoría: {product.category}
+                                <div className="px-2 py-1 bg-gray-100 rounded-md text-gray-700 font-medium capitalize">
+                                  {product.category}
                                 </div>
                               </div>
                             </div>
 
-                            {/* Acciones */}
-                            <div className="flex flex-wrap lg:flex-col gap-2">
+                            {/* Acciones - Grid responsive  */}
+                            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
                               <Button
                                 variant="outline"
                                 size="sm"
                                 onClick={() => toggleFeatured(product.id, product.featured)}
-                                className="flex-1 lg:flex-none"
+                                className="text-xs hover:bg-yellow-50 hover:border-yellow-300 hover:text-yellow-700"
                               >
-                                <Star className={`h-4 w-4 mr-2 ${product.featured ? 'fill-current text-yellow-500' : ''}`} />
-                                {product.featured ? 'Quitar destacado' : 'Destacar'}
+                                <Star className={`h-3 w-3 md:h-4 md:w-4 mr-1 ${product.featured ? 'fill-current text-yellow-500' : ''}`} />
+                                <span className="hidden sm:inline">{product.featured ? 'Quitar' : 'Destacar'}</span>
+                                <span className="sm:hidden">★</span>
                               </Button>
-                              <Button 
-                                variant="outline" 
-                                size="sm" 
-                                className="flex-1 lg:flex-none"
+                              <Button
+                                variant="outline"
+                                size="sm"
                                 onClick={() => handleViewProduct(product)}
+                                className="text-xs hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700"
                               >
-                                <Eye className="h-4 w-4 mr-2" />
-                                Ver
+                                <Eye className="h-3 w-3 md:h-4 md:w-4 sm:mr-1" />
+                                <span className="hidden sm:inline">Ver</span>
                               </Button>
-                              <Button 
-                                variant="outline" 
-                                size="sm" 
-                                className="flex-1 lg:flex-none"
+                              <Button
+                                variant="outline"
+                                size="sm"
                                 onClick={() => handleEditProduct(product)}
+                                className="text-xs hover:bg-purple-50 hover:border-purple-300 hover:text-purple-700"
                               >
-                                <Edit className="h-4 w-4 mr-2" />
-                                Editar
+                                <Edit className="h-3 w-3 md:h-4 md:w-4 sm:mr-1" />
+                                <span className="hidden sm:inline">Editar</span>
                               </Button>
                               <Button
                                 variant="outline"
                                 size="sm"
                                 onClick={() => toggleProductStatus(product.id, product.active)}
-                                className={`flex-1 lg:flex-none ${product.active ? 'text-orange-600 hover:text-orange-700' : 'text-green-600 hover:text-green-700'}`}
+                                className={`text-xs ${product.active ? 'hover:bg-orange-50 hover:border-orange-300 hover:text-orange-700' : 'hover:bg-green-50 hover:border-green-300 hover:text-green-700'}`}
                               >
-                                {product.active ? (
-                                  <>
-                                    <Package className="h-4 w-4 mr-2" />
-                                    Desactivar
-                                  </>
-                                ) : (
-                                  <>
-                                    <Package className="h-4 w-4 mr-2" />
-                                    Activar
-                                  </>
-                                )}
+                                <Package className="h-3 w-3 md:h-4 md:w-4 sm:mr-1" />
+                                <span className="hidden sm:inline">{product.active ? 'Desactivar' : 'Activar'}</span>
                               </Button>
                               <Button
                                 variant="outline"
                                 size="sm"
                                 onClick={() => handleDeleteProduct(product.id)}
-                                className="flex-1 lg:flex-none text-red-600 hover:text-red-700 hover:bg-red-50"
+                                className="text-xs hover:bg-red-50 hover:border-red-300 hover:text-red-700 col-span-2 sm:col-span-1 lg:col-span-2"
                               >
-                                <Trash2 className="h-4 w-4 mr-2" />
+                                <Trash2 className="h-3 w-3 md:h-4 md:w-4 mr-1" />
                                 Eliminar
                               </Button>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </CardContent>
-                  </Card>
+                    </div>
+                  </div>
                 ))
               )}
             </div>

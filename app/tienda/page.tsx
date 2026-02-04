@@ -11,15 +11,9 @@ import { useCart } from "@/lib/hooks/use-cart"
 import { useShare } from "@/lib/hooks/use-share"
 import { useProductsInStock } from "@/lib/hooks/use-products"
 import { ProductGridSkeleton } from "@/components/product-skeleton"
-// import { MercadoPagoStatus } from "@/components/mercadopago-status"
-import type { Product } from "@/lib/db/schema"
+import type { Product, Category } from "@/lib/db/schema"
 import Image from "next/image"
-
-const categories = [
-  { id: "all", name: "Todos", icon: Package },
-  { id: "books", name: "Libros", icon: Book },
-  { id: "merch", name: "Merchandising", icon: Shirt },
-]
+import * as LucideIcons from "lucide-react"
 
 export default function TiendaPage() {
   const [searchTerm, setSearchTerm] = useState("")
@@ -28,16 +22,50 @@ export default function TiendaPage() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [quantity, setQuantity] = useState(1)
   const [shareMessage, setShareMessage] = useState("")
+  const [dbCategories, setDbCategories] = useState<Category[]>([])
+  const [loadingCategories, setLoadingCategories] = useState(true)
+
   const { dispatch } = useCart()
   const { shareProduct } = useShare()
   const searchParams = useSearchParams()
 
+  // Cargar categorías
+  useEffect(() => {
+    async function fetchCategories() {
+      try {
+        const res = await fetch('/api/categories')
+        if (res.ok) {
+          const data = await res.json()
+          setDbCategories(data)
+        }
+      } catch (error) {
+        console.error('Error fetching categories:', error)
+      } finally {
+        setLoadingCategories(false)
+      }
+    }
+    fetchCategories()
+  }, [])
+
+  // Combinar categoría "Todos" con las de la DB
+  const categories = useMemo(() => {
+    const allCategory = { id: "all", name: "Todos", icon: "Package" }
+
+    const mappedCategories = dbCategories.map(cat => ({
+      id: cat.slug,
+      name: cat.name,
+      icon: cat.icon || "Package"
+    }))
+
+    return [allCategory, ...mappedCategories]
+  }, [dbCategories])
+
   // Usar el hook optimizado para cargar productos
-  const { 
-    data: products = [], 
-    isLoading: loading, 
+  const {
+    data: products = [],
+    isLoading: loading,
     error,
-    refetch 
+    refetch
   } = useProductsInStock({
     category: selectedCategory !== 'all' ? selectedCategory : undefined,
     search: searchTerm.length > 2 ? searchTerm : undefined,
@@ -56,7 +84,7 @@ export default function TiendaPage() {
       if (product) {
         setSelectedProduct(product)
         setIsModalOpen(true)
-        
+
         // Limpiar el parámetro de la URL sin recargar la página
         const url = new URL(window.location.href)
         url.searchParams.delete('product')
@@ -123,8 +151,6 @@ export default function TiendaPage() {
     closeModal()
   }
 
-
-
   // Función para formatear precios en pesos argentinos
   const formatPrice = (price: string | number): string => {
     const numPrice = typeof price === 'string' ? parseFloat(price) : price
@@ -160,6 +186,12 @@ export default function TiendaPage() {
     }
   }
 
+  // Helper para renderizar iconos dinámicos
+  const renderIcon = (iconName: string) => {
+    const Icon = (LucideIcons[iconName as keyof typeof LucideIcons] || LucideIcons.Package) as React.ElementType
+    return <Icon className="w-3 h-3 sm:w-4 sm:h-4" />
+  }
+
   // Mostrar error si hay problemas cargando productos
   if (error) {
     return (
@@ -190,9 +222,6 @@ export default function TiendaPage() {
           </p>
         </div>
 
-        {/* Estado de Mercado Pago
-        <MercadoPagoStatus /> */}
-
         {/* Barra de búsqueda y filtros */}
         <div className="flex flex-col gap-4 sm:gap-6 mb-12">
           <div className="w-full relative">
@@ -205,21 +234,26 @@ export default function TiendaPage() {
             />
           </div>
           <div className="flex flex-wrap gap-2 sm:gap-3 justify-center sm:justify-start">
-            {categories.map((category) => (
-              <Button
-                key={category.id}
-                variant={selectedCategory === category.id ? "default" : "outline"}
-                onClick={() => setSelectedCategory(category.id)}
-                className={`flex items-center space-x-2 px-4 sm:px-6 py-2 sm:py-3 h-10 sm:h-12 rounded-full border-2 transition-all duration-300 text-sm sm:text-base ${
-                  selectedCategory === category.id
-                    ? "bg-church-electric-600 text-white border-church-electric-600"
-                    : "border-church-electric-200 hover:bg-church-electric-50 hover:border-church-electric-400 bg-transparent"
-                }`}
-              >
-                <category.icon className="w-3 h-3 sm:w-4 sm:h-4" />
-                <span>{category.name}</span>
-              </Button>
-            ))}
+            {loadingCategories ? (
+              [1, 2, 3].map(i => (
+                <div key={i} className="h-10 sm:h-12 w-24 bg-gray-200 rounded-full animate-pulse" />
+              ))
+            ) : (
+              categories.map((category) => (
+                <Button
+                  key={category.id}
+                  variant={selectedCategory === category.id ? "default" : "outline"}
+                  onClick={() => setSelectedCategory(category.id)}
+                  className={`flex items-center space-x-2 px-4 sm:px-6 py-2 sm:py-3 h-10 sm:h-12 rounded-full border-2 transition-all duration-300 text-sm sm:text-base ${selectedCategory === category.id
+                      ? "bg-church-electric-600 text-white border-church-electric-600"
+                      : "border-church-electric-200 hover:bg-church-electric-50 hover:border-church-electric-400 bg-transparent"
+                    }`}
+                >
+                  {typeof category.icon === 'string' ? renderIcon(category.icon) : <category.icon className="w-3 h-3 sm:w-4 sm:h-4" />}
+                  <span>{category.name}</span>
+                </Button>
+              ))
+            )}
           </div>
         </div>
 
@@ -254,7 +288,7 @@ export default function TiendaPage() {
                           </Badge>
                         )}
                       </div>
-                      
+
                       {/* Contenido */}
                       <CardContent className="w-full md:w-3/5 p-4 md:p-6 flex flex-col justify-between">
                         <div>
@@ -349,11 +383,11 @@ export default function TiendaPage() {
                         <span className="text-xl font-bold text-church-electric-600">{formatPrice(product.price)}</span>
                       </div>
                     </div>
-                    <Button 
+                    <Button
                       onClick={(e) => {
                         e.stopPropagation()
                         addToCart(product)
-                      }} 
+                      }}
                       className="w-full church-button-primary"
                     >
                       <ShoppingCart className="w-4 h-4 mr-2" />
@@ -365,17 +399,15 @@ export default function TiendaPage() {
             </div>
           )}
         </div>
-
-        
       </div>
 
       {/* Modal del Producto */}
       {isModalOpen && selectedProduct && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4"
           onClick={closeModal}
         >
-          <div 
+          <div
             className="bg-white rounded-lg sm:rounded-2xl max-w-4xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-y-auto shadow-2xl relative z-10"
             onClick={(e) => e.stopPropagation()}
           >
@@ -410,11 +442,11 @@ export default function TiendaPage() {
                       </Badge>
                     )}
                   </div>
-                  
+
                   {/* Botones de Acción Secundarios */}
                   <div className="flex gap-3">
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       className="flex-1"
                       onClick={() => handleShare(selectedProduct)}
                     >
@@ -422,7 +454,7 @@ export default function TiendaPage() {
                       Compartir
                     </Button>
                   </div>
-                  
+
                   {/* Mensaje de compartir */}
                   {shareMessage && (
                     <div className="bg-green-100 border border-green-200 text-green-800 px-4 py-2 rounded-lg text-sm text-center">
@@ -441,8 +473,6 @@ export default function TiendaPage() {
                       Por {selectedProduct.author}
                     </p>
                   </div>
-
-
 
                   {/* Precio */}
                   <div className="bg-gray-50 rounded-xl p-4">

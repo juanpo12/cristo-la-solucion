@@ -1,12 +1,12 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { X, Save, Loader2, Upload, Star } from 'lucide-react'
+import { X, Save, Loader2, Upload, Star, Plus, Check } from 'lucide-react'
 import Image from 'next/image'
 
 interface ProductCreateModalProps {
@@ -28,6 +28,12 @@ interface NewProduct {
   stock: number
 }
 
+interface Category {
+  id: number
+  name: string
+  slug: string
+}
+
 export function ProductCreateModal({ isOpen, onClose, onSave }: ProductCreateModalProps) {
   const [formData, setFormData] = useState<NewProduct>({
     name: '',
@@ -41,8 +47,70 @@ export function ProductCreateModal({ isOpen, onClose, onSave }: ProductCreateMod
     active: true,
     stock: 0
   })
+
   const [loading, setSaving] = useState(false)
   const [imagePreview, setImagePreview] = useState<string>('')
+
+  // Categorías
+  const [categories, setCategories] = useState<Category[]>([])
+  const [loadingCategories, setLoadingCategories] = useState(true)
+  const [isCreatingCategory, setIsCreatingCategory] = useState(false)
+  const [newCategoryName, setNewCategoryName] = useState('')
+  const [creatingCategory, setCreatingCategory] = useState(false)
+
+  // Cargar categorías cuando se abre el modal
+  useEffect(() => {
+    if (isOpen) {
+      loadCategories()
+    }
+  }, [isOpen])
+
+  const loadCategories = async () => {
+    try {
+      setLoadingCategories(true)
+      const res = await fetch('/api/admin/categories')
+      if (res.ok) {
+        const data = await res.json()
+        setCategories(data)
+        // Set default category if available and none selected
+        if (data.length > 0 && !formData.category) {
+          setFormData(prev => ({ ...prev, category: data[0].slug }))
+        }
+      }
+    } catch (error) {
+      console.error('Error loading categories:', error)
+    } finally {
+      setLoadingCategories(false)
+    }
+  }
+
+  const handleCreateCategory = async () => {
+    if (!newCategoryName.trim()) return
+
+    try {
+      setCreatingCategory(true)
+      const res = await fetch('/api/admin/categories', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: newCategoryName })
+      })
+
+      if (res.ok) {
+        const { category } = await res.json()
+        setCategories(prev => [...prev, category])
+        setFormData(prev => ({ ...prev, category: category.slug }))
+        setNewCategoryName('')
+        setIsCreatingCategory(false)
+      } else {
+        alert('Error al crear categoría')
+      }
+    } catch (error) {
+      console.error('Error creating category:', error)
+      alert('Error de conexión')
+    } finally {
+      setCreatingCategory(false)
+    }
+  }
 
   const handleInputChange = (field: keyof NewProduct, value: string | boolean | number) => {
     setFormData(prev => ({
@@ -69,7 +137,7 @@ export function ProductCreateModal({ isOpen, onClose, onSave }: ProductCreateMod
 
   const handleSave = async () => {
     // Validaciones básicas
-    if (!formData.name || !formData.author || !formData.description || !formData.price) {
+    if (!formData.name || !formData.author || !formData.description || !formData.price || !formData.category) {
       alert('Por favor completa todos los campos obligatorios')
       return
     }
@@ -122,6 +190,8 @@ export function ProductCreateModal({ isOpen, onClose, onSave }: ProductCreateMod
       stock: 0
     })
     setImagePreview('')
+    setIsCreatingCategory(false)
+    setNewCategoryName('')
     onClose()
   }
 
@@ -136,7 +206,7 @@ export function ProductCreateModal({ isOpen, onClose, onSave }: ProductCreateMod
             <X className="h-4 w-4" />
           </Button>
         </CardHeader>
-        
+
         <CardContent className="space-y-6">
           {/* Imagen del producto */}
           <div className="space-y-2">
@@ -144,8 +214,8 @@ export function ProductCreateModal({ isOpen, onClose, onSave }: ProductCreateMod
             <div className="flex items-center gap-4">
               <div className="w-24 h-24 bg-gray-200 rounded-lg flex items-center justify-center overflow-hidden">
                 {imagePreview ? (
-                  <Image 
-                    src={imagePreview} 
+                  <Image
+                    src={imagePreview}
                     alt="Preview"
                     width={96}
                     height={96}
@@ -180,7 +250,7 @@ export function ProductCreateModal({ isOpen, onClose, onSave }: ProductCreateMod
                 placeholder="Nombre del producto"
               />
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="author">Autor *</Label>
               <Input
@@ -217,7 +287,7 @@ export function ProductCreateModal({ isOpen, onClose, onSave }: ProductCreateMod
                 placeholder="0.00"
               />
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="originalPrice">Precio original</Label>
               <Input
@@ -229,7 +299,7 @@ export function ProductCreateModal({ isOpen, onClose, onSave }: ProductCreateMod
                 placeholder="0.00"
               />
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="stock">Stock *</Label>
               <Input
@@ -242,20 +312,62 @@ export function ProductCreateModal({ isOpen, onClose, onSave }: ProductCreateMod
             </div>
           </div>
 
-          {/* Categoría */}
+          {/* Categoría Dinámica */}
           <div className="space-y-2">
-            <Label htmlFor="category">Categoría</Label>
-            <select
-              id="category"
-              value={formData.category}
-              onChange={(e) => handleInputChange('category', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="books">Libros</option>
-              <option value="music">Música</option>
-              <option value="accessories">Accesorios</option>
-              <option value="other">Otro</option>
-            </select>
+            <div className="flex justify-between items-center">
+              <Label htmlFor="category">Categoría *</Label>
+              {!isCreatingCategory && (
+                <button
+                  type="button"
+                  onClick={() => setIsCreatingCategory(true)}
+                  className="text-sm text-blue-600 hover:text-blue-700 flex items-center gap-1"
+                >
+                  <Plus className="h-3 w-3" />
+                  Nueva categoría
+                </button>
+              )}
+            </div>
+
+            {isCreatingCategory ? (
+              <div className="flex gap-2 items-center">
+                <Input
+                  value={newCategoryName}
+                  onChange={(e) => setNewCategoryName(e.target.value)}
+                  placeholder="Nombre de la nueva categoría"
+                  className="flex-1"
+                  autoFocus
+                />
+                <Button
+                  size="sm"
+                  onClick={handleCreateCategory}
+                  disabled={creatingCategory || !newCategoryName.trim()}
+                >
+                  {creatingCategory ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
+                </Button>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => {
+                    setIsCreatingCategory(false)
+                    setNewCategoryName('')
+                  }}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            ) : (
+              <select
+                id="category"
+                value={formData.category}
+                onChange={(e) => handleInputChange('category', e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="">Seleccionar categoría</option>
+                {categories.map(cat => (
+                  <option key={cat.id} value={cat.slug}>{cat.name}</option>
+                ))}
+              </select>
+            )}
           </div>
 
           {/* Estados */}
@@ -273,7 +385,7 @@ export function ProductCreateModal({ isOpen, onClose, onSave }: ProductCreateMod
                 Producto destacado
               </Label>
             </div>
-            
+
             <div className="flex items-center space-x-2">
               <input
                 type="checkbox"

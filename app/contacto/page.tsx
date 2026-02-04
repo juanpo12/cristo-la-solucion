@@ -2,6 +2,13 @@ import { Card, CardContent } from "@/components/ui/card"
 import { MapPin, Phone, Mail, MessageCircle } from "lucide-react"
 import Link from "next/link"
 
+import { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Contacto | Cristo la Solución",
+  description: "Estamos aquí para escucharte. Contáctanos por teléfono, email o visítanos en San Justo.",
+}
+
 export default function ContactoPage() {
   return (
     <div className="min-h-screen bg-gray-50 pt-20">
@@ -12,7 +19,7 @@ export default function ContactoPage() {
           <div className="text-center mb-16">
             <h1 className="text-4xl md:text-6xl font-bold mb-6 drop-shadow-lg">¿CÓMO PODEMOS AYUDARTE?</h1>
           </div>
-          
+
           {/* Contenido en dos columnas */}
           <div className="grid lg:grid-cols-1 gap-12 mb-12">
             {/* Columna Izquierda - Texto descriptivo */}
