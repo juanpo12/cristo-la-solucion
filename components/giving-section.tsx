@@ -8,9 +8,9 @@ import Image from "next/image"
 export default function GivingSection() {
   const [isDonationModalOpen, setIsDonationModalOpen] = useState(false)
   const givingMethods = [
-    { icon: CreditCard, title: "Transferencia Bancaria", description: "CBU: 1234567890123456789012" },
+    { icon: CreditCard, title: "Transferencia Bancaria", description: "CBU: 011-00907-2000-9000-377-686" },
     { icon: Building, title: "En Persona", description: "Durante los servicios" },
-    { icon: Smartphone, title: "Mercado Pago", description: "Alias: iglesia.cristo.solucion", image: "/qr-mp-02.jpg", logo: "/MP_RGB_HANDSHAKE_color_horizontal.png" },
+    { icon: Smartphone, title: "Mercado Pago", description: "", image: "/qr-mp-02.jpg", logo: "/MP_RGB_HANDSHAKE_color_horizontal.png" },
   ]
 
   return (
@@ -71,9 +71,9 @@ export default function GivingSection() {
                     <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center flex-shrink-0 shadow-md">
                       <method.icon className="text-white" size={24} />
                     </div>
-                    <div className="flex-1">
+                    <div className="flex-1 min-w-0">
                       <h4 className="font-bold text-gray-800 mb-2 text-lg">{method.title}</h4>
-                      <p className="text-sm text-gray-600 font-medium">{method.description}</p>
+                      <p className="text-sm text-gray-600 font-medium break-words">{method.description}</p>
                     </div>
                   </div>
                 </div>
