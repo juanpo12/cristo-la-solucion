@@ -245,11 +245,11 @@ export default function TiendaPage() {
                   variant={selectedCategory === category.id ? "default" : "outline"}
                   onClick={() => setSelectedCategory(category.id)}
                   className={`flex items-center space-x-2 px-4 sm:px-6 py-2 sm:py-3 h-10 sm:h-12 rounded-full border-2 transition-all duration-300 text-sm sm:text-base ${selectedCategory === category.id
-                      ? "bg-church-electric-600 text-white border-church-electric-600"
-                      : "border-church-electric-200 hover:bg-church-electric-50 hover:border-church-electric-400 bg-transparent"
+                    ? "bg-church-electric-600 text-white border-church-electric-600"
+                    : "border-church-electric-200 hover:bg-church-electric-50 hover:border-church-electric-400 bg-transparent"
                     }`}
                 >
-                  {typeof category.icon === 'string' ? renderIcon(category.icon) : <category.icon className="w-3 h-3 sm:w-4 sm:h-4" />}
+                  {renderIcon(category.icon as string)}
                   <span>{category.name}</span>
                 </Button>
               ))

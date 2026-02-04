@@ -5,6 +5,7 @@ import "./globals.css"
 import { Poppins } from 'next/font/google'
 import { LayoutWrapper } from "@/components/layout-wrapper"
 import { QueryProvider } from "@/components/providers/query-provider"
+import { Analytics } from "@vercel/analytics/next"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -51,6 +52,7 @@ export default function RootLayout({
         <QueryProvider>
           <LayoutWrapper>
             {children}
+            <Analytics />
           </LayoutWrapper>
         </QueryProvider>
       </body>
