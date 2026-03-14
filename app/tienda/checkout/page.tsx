@@ -278,17 +278,17 @@ export default function CheckoutPage() {
           {/* Columna Derecha: Order Summary Sticky */}
           <div className="w-full lg:w-[400px] xl:w-[450px] order-1 lg:order-2">
             <div className="sticky top-28">
-              <Card className="border-0 shadow-xl rounded-2xl overflow-hidden bg-gray-900 border-gray-800 text-white">
+              <Card className="border-0 shadow-xl rounded-2xl overflow-hidden bg-white">
                 <div className="p-6 md:p-8">
-                  <h3 className="text-xl font-bold flex items-center mb-6">
-                    <ShoppingCart className="w-5 h-5 mr-3 text-church-electric-400" />
+                  <h3 className="text-xl font-bold flex items-center mb-6 text-gray-900">
+                    <ShoppingCart className="w-5 h-5 mr-3 text-church-electric-600" />
                     Resumen de Compra
                   </h3>
 
                   <div className="space-y-4 max-h-[40vh] overflow-y-auto pr-2 custom-scrollbar">
                     {state.items.map((item) => (
-                      <div key={`${item.id}-${Math.random()}`} className="flex gap-4 p-3 bg-gray-800/50 rounded-xl border border-gray-700/50">
-                        <div className="relative w-16 h-20 rounded-lg overflow-hidden flex-shrink-0 border border-gray-700">
+                      <div key={`${item.id}-${Math.random()}`} className="flex gap-4 p-3 bg-gray-50 rounded-xl border border-gray-100">
+                        <div className="relative w-16 h-20 rounded-lg overflow-hidden flex-shrink-0 border border-gray-200">
                           <Image
                             src={item.image || "/placeholder.svg"}
                             alt={item.name}
@@ -297,31 +297,31 @@ export default function CheckoutPage() {
                           />
                         </div>
                         <div className="flex-1 flex flex-col justify-center min-w-0">
-                          <h4 className="font-bold text-sm text-gray-100 leading-tight mb-1 truncate">{item.name}</h4>
-                          <p className="text-xs text-gray-400 truncate w-full mb-1">Por {item.author}</p>
+                          <h4 className="font-bold text-sm text-gray-900 leading-tight mb-1 truncate">{item.name}</h4>
+                          <p className="text-xs text-gray-500 truncate w-full mb-1">Por {item.author}</p>
                           <div className="flex items-center justify-between text-sm mt-auto">
-                            <span className="text-gray-400">Cant: <span className="text-white font-medium">{item.quantity}</span></span>
-                            <span className="font-bold text-church-electric-400">${(item.price * item.quantity).toFixed(2)}</span>
+                            <span className="text-gray-500">Cant: <span className="text-gray-900 font-medium">{item.quantity}</span></span>
+                            <span className="font-bold text-church-electric-600">${(item.price * item.quantity).toFixed(2)}</span>
                           </div>
                         </div>
                       </div>
                     ))}
                   </div>
 
-                  <div className="mt-8 pt-6 border-t border-gray-700/80">
-                    <div className="flex justify-between items-center mb-4 text-gray-300">
+                  <div className="mt-8 pt-6 border-t border-gray-100">
+                    <div className="flex justify-between items-center mb-4 text-gray-600">
                       <span>Subtotal ({state.items.reduce((acc, curr) => acc + curr.quantity, 0)} items)</span>
                       <span>${total.toFixed(2)}</span>
                     </div>
-                    <div className="flex justify-between items-center mb-6 text-gray-300">
+                    <div className="flex justify-between items-center mb-6 text-gray-600">
                       <span>Envío</span>
                       <span className="text-sm font-medium">A coordinar / Retiro</span>
                     </div>
                     <div className="flex justify-between items-end">
-                      <span className="text-lg font-bold text-gray-200">TOTAL</span>
+                      <span className="text-lg font-bold text-gray-900">TOTAL</span>
                       <div className="text-right">
-                        <span className="text-3xl font-black text-white block">${total.toFixed(2)}</span>
-                        <span className="text-xs text-gray-400 font-medium">ARS (Pesos Argentinos)</span>
+                        <span className="text-3xl font-black text-church-electric-600 block">${total.toFixed(2)}</span>
+                        <span className="text-xs text-gray-500 font-medium">ARS (Pesos Argentinos)</span>
                       </div>
                     </div>
                   </div>
