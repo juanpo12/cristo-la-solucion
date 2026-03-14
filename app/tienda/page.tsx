@@ -246,6 +246,7 @@ export default function TiendaPage() {
                           </div>
                           <Button
                             onClick={(e) => {
+                              e.preventDefault() // prevent navigating to /tienda/[id]
                               e.stopPropagation()
                               addToCart(product)
                             }}
@@ -323,6 +324,7 @@ export default function TiendaPage() {
                     </div>
                     <Button
                       onClick={(e) => {
+                        e.preventDefault() // prevent navigating to /tienda/[id]
                         e.stopPropagation()
                         addToCart(product)
                       }}
