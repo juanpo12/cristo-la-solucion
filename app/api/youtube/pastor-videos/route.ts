@@ -196,36 +196,52 @@ async function getPastorVideos(maxResults: number = 50) {
     const detailsData = await detailsResponse.json()
 
     // Combinar datos y categorizar videos
-    const videos = videosData.items.map((item: any, index: number) => {
+    const rawVideos = videosData.items.map((item: any, index: number) => {
       const details = detailsData.items[index]
-      const title = item.snippet.title.toLowerCase()
+      const decodedTitle = decodeHTMLEntities(item.snippet.title)
+      const decodedDescription = decodeHTMLEntities(item.snippet.description)
+      const titleLower = decodedTitle.toLowerCase()
 
       // Categorizar automáticamente basado en el título
       let category = "Enseñanza"
-      if (title.includes("conferencia") || title.includes("evento")) {
+      if (titleLower.includes("conferencia") || titleLower.includes("evento")) {
         category = "Conferencia"
-      } else if (title.includes("serie") || title.includes("parte")) {
+      } else if (titleLower.includes("serie") || titleLower.includes("parte")) {
         category = "Serie"
-      } else if (title.includes("estudio") || title.includes("salmo") || title.includes("biblia")) {
+      } else if (titleLower.includes("estudio") || titleLower.includes("salmo") || titleLower.includes("biblia")) {
         category = "Estudio Bíblico"
       }
 
       return {
         id: item.id.videoId,
-        title: item.snippet.title,
-        description: item.snippet.description,
+        title: decodedTitle,
+        description: decodedDescription,
         thumbnail: item.snippet.thumbnails.maxres?.url || item.snippet.thumbnails.high.url,
         publishedAt: item.snippet.publishedAt,
-        duration: details.contentDetails.duration,
+        duration: details.contentDetails.duration, // Ej: PT1M30S
         viewCount: details.statistics.viewCount,
         url: `https://youtube.com/watch?v=${item.id.videoId}`,
         category
       }
     })
 
+    // Filtrar shorts (asumimos que los shorts duran 60 segundos o menos)
+    // En formato ISO 8601, duraciones cortas son PT...S o a lo sumo PT1M
+    const videos = rawVideos.filter((v: any) => {
+        const d = v.duration;
+        // Si tiene horas, no es short
+        if (d.includes('H')) return true;
+        // Si tiene más de 1 minuto, no es short
+        const minMatch = d.match(/(\d+)M/);
+        if (minMatch && parseInt(minMatch[1]) > 1) return true;
+        
+        // Si es exactamente 1 minuto o menos (e.g. PT1M, PT59S), lo filtramos asumiendo que es short
+        return false;
+    });
+
     return {
       videos,
-      totalResults: videosData.pageInfo.totalResults,
+      totalResults: videos.length,
       channelInfo
     }
 
@@ -261,6 +277,19 @@ function formatDuration(duration: string): string {
   } else {
     return `${minutes}:${seconds.toString().padStart(2, '0')}`
   }
+}
+
+// Función para decodificar entidades HTML
+function decodeHTMLEntities(text: string): string {
+  if (!text) return text;
+  return text
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&#(\d+);/g, (match, dec) => String.fromCharCode(parseInt(dec, 10)))
+    .replace(/&#x([0-9a-f]+);/gi, (match, hex) => String.fromCharCode(parseInt(hex, 16)));
 }
 
 export async function GET(request: NextRequest) {
