@@ -8,25 +8,20 @@ import { Badge } from "@/components/ui/badge"
 import { ShoppingCart, Book, Shirt, Filter, Search, X, Plus, Minus, Share2, BookOpen, Calendar, Package } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { useCart } from "@/lib/hooks/use-cart"
-import { useShare } from "@/lib/hooks/use-share"
 import { useProductsInStock } from "@/lib/hooks/use-products"
 import { ProductGridSkeleton } from "@/components/product-skeleton"
 import type { Product, Category } from "@/lib/db/schema"
 import Image from "next/image"
+import Link from "next/link"
 import * as LucideIcons from "lucide-react"
 
 export default function TiendaPage() {
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("all")
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [quantity, setQuantity] = useState(1)
-  const [shareMessage, setShareMessage] = useState("")
   const [dbCategories, setDbCategories] = useState<Category[]>([])
   const [loadingCategories, setLoadingCategories] = useState(true)
 
   const { dispatch } = useCart()
-  const { shareProduct } = useShare()
   const searchParams = useSearchParams()
 
   // Cargar categorías
@@ -76,20 +71,14 @@ export default function TiendaPage() {
     staleTime: 5 * 60 * 1000, // 5 minutos
   })
 
-  // Detectar producto compartido en URL y abrir modal automáticamente
+  // Detectar producto compartido en URL (obsoleto, pero preservamos limpieza de URL si acaso)
   useEffect(() => {
     const productId = searchParams.get('product')
     if (productId && products.length > 0) {
-      const product = products.find(p => p.id === parseInt(productId))
-      if (product) {
-        setSelectedProduct(product)
-        setIsModalOpen(true)
-
-        // Limpiar el parámetro de la URL sin recargar la página
-        const url = new URL(window.location.href)
-        url.searchParams.delete('product')
-        window.history.replaceState({}, '', url.toString())
-      }
+      // Limpiar el parámetro de la URL sin recargar la página
+      const url = new URL(window.location.href)
+      url.searchParams.delete('product')
+      window.history.replaceState({}, '', url.toString())
     }
   }, [searchParams, products])
 
@@ -121,35 +110,7 @@ export default function TiendaPage() {
     })
   }
 
-  const openProductModal = (product: Product) => {
-    setSelectedProduct(product)
-    setIsModalOpen(true)
-  }
 
-  const closeModal = () => {
-    setIsModalOpen(false)
-    setSelectedProduct(null)
-    setQuantity(1)
-  }
-
-  const increaseQuantity = () => setQuantity(prev => prev + 1)
-  const decreaseQuantity = () => setQuantity(prev => prev > 1 ? prev - 1 : 1)
-
-  const addToCartWithQuantity = (product: Product, qty: number) => {
-    for (let i = 0; i < qty; i++) {
-      dispatch({
-        type: "ADD_ITEM",
-        payload: {
-          id: product.id,
-          name: product.name,
-          author: product.author,
-          price: parseFloat(product.price),
-          image: product.image || '',
-        },
-      })
-    }
-    closeModal()
-  }
 
   // Función para formatear precios en pesos argentinos
   const formatPrice = (price: string | number): string => {
@@ -162,29 +123,7 @@ export default function TiendaPage() {
     })
   }
 
-  const handleShare = async (product: Product) => {
-    const result = await shareProduct({
-      id: product.id,
-      name: product.name,
-      author: product.author,
-      price: parseFloat(product.price),
-      originalPrice: product.originalPrice ? parseFloat(product.originalPrice) : undefined,
-      image: product.image || '',
-      description: product.description,
-    })
 
-    if (result.success) {
-      if (result.method === "native") {
-        setShareMessage("¡Producto compartido exitosamente!")
-      } else {
-        setShareMessage("¡Enlace copiado al portapapeles!")
-      }
-      setTimeout(() => setShareMessage(""), 3000)
-    } else {
-      setShareMessage("Error al compartir el producto")
-      setTimeout(() => setShareMessage(""), 3000)
-    }
-  }
 
   // Helper para renderizar iconos dinámicos
   const renderIcon = (iconName: string) => {
@@ -267,10 +206,9 @@ export default function TiendaPage() {
               {filteredProducts
                 .filter((product) => product.featured)
                 .map((product) => (
+                  <Link href={`/tienda/${product.id}`} key={product.id} className="block group">
                   <Card
-                    key={product.id}
-                    className="overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:scale-105 border-0 shadow-lg bg-white cursor-pointer"
-                    onClick={() => openProductModal(product)}
+                    className="overflow-hidden hover:shadow-2xl transition-all duration-300 transform group-hover:-translate-y-1 border-0 shadow-lg bg-white cursor-pointer h-full"
                   >
                     {/* Layout responsive: vertical en móvil, horizontal en desktop */}
                     <div className="flex flex-col md:flex-row h-full">
@@ -320,6 +258,7 @@ export default function TiendaPage() {
                       </CardContent>
                     </div>
                   </Card>
+                  </Link>
                 ))}
             </div>
           </div>
@@ -352,10 +291,9 @@ export default function TiendaPage() {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
               {filteredProducts.map((product) => (
+                <Link href={`/tienda/${product.id}`} key={product.id} className="block group h-full">
                 <Card
-                  key={product.id}
-                  className="overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-0 shadow-lg group bg-white cursor-pointer"
-                  onClick={() => openProductModal(product)}
+                  className="overflow-hidden hover:shadow-xl transition-all duration-300 transform group-hover:-translate-y-1 border-0 shadow-lg bg-white cursor-pointer h-full flex flex-col"
                 >
                   <div className="relative aspect-[3/4] overflow-hidden">
                     <Image
@@ -395,177 +333,14 @@ export default function TiendaPage() {
                     </Button>
                   </CardContent>
                 </Card>
+                </Link>
               ))}
             </div>
           )}
         </div>
       </div>
 
-      {/* Modal del Producto */}
-      {isModalOpen && selectedProduct && (
-        <div
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4"
-          onClick={closeModal}
-        >
-          <div
-            className="bg-white rounded-lg sm:rounded-2xl max-w-4xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-y-auto shadow-2xl relative z-10"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Header del Modal */}
-            <div className="sticky top-0 bg-white border-b border-gray-200 p-3 sm:p-4 flex items-center justify-between rounded-t-lg sm:rounded-t-2xl z-20">
-              <h2 className="text-lg sm:text-2xl font-bold church-text">Detalles del Producto</h2>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={closeModal}
-                className="rounded-full p-2 hover:bg-gray-100 h-8 w-8 sm:h-10 sm:w-10"
-              >
-                <X className="w-4 h-4 sm:w-5 sm:h-5" />
-              </Button>
-            </div>
 
-            {/* Contenido del Modal */}
-            <div className="p-4 sm:p-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
-                {/* Imagen del Producto */}
-                <div className="space-y-4">
-                  <div className="relative aspect-[3/4] rounded-xl overflow-hidden bg-gray-100 z-0">
-                    <Image
-                      src={selectedProduct.image || "/placeholder.svg"}
-                      alt={selectedProduct.name}
-                      fill
-                      className="object-cover"
-                    />
-                    {selectedProduct.originalPrice && (
-                      <Badge className="absolute top-4 left-4 bg-red-500 text-white text-lg px-4 py-2">
-                        ¡Oferta!
-                      </Badge>
-                    )}
-                  </div>
-
-                  {/* Botones de Acción Secundarios */}
-                  <div className="flex gap-3">
-                    <Button
-                      variant="outline"
-                      className="flex-1"
-                      onClick={() => handleShare(selectedProduct)}
-                    >
-                      <Share2 className="w-4 h-4 mr-2" />
-                      Compartir
-                    </Button>
-                  </div>
-
-                  {/* Mensaje de compartir */}
-                  {shareMessage && (
-                    <div className="bg-green-100 border border-green-200 text-green-800 px-4 py-2 rounded-lg text-sm text-center">
-                      {shareMessage}
-                    </div>
-                  )}
-                </div>
-
-                {/* Información del Producto */}
-                <div className="space-y-6">
-                  {/* Título y Autor */}
-                  <div>
-                    <h1 className="text-3xl font-bold church-text mb-2">{selectedProduct.name}</h1>
-                    <p className="text-xl text-church-text-muted flex items-center">
-                      <BookOpen className="w-5 h-5 mr-2" />
-                      Por {selectedProduct.author}
-                    </p>
-                  </div>
-
-                  {/* Precio */}
-                  <div className="bg-gray-50 rounded-xl p-4">
-                    <div className="flex items-center space-x-3">
-                      {selectedProduct.originalPrice && (
-                        <span className="text-2xl text-gray-400 line-through">
-                          {formatPrice(selectedProduct.originalPrice)}
-                        </span>
-                      )}
-                      <span className="text-4xl font-bold text-church-electric-600">
-                        {formatPrice(selectedProduct.price)}
-                      </span>
-                      {selectedProduct.originalPrice && (
-                        <Badge className="bg-green-100 text-green-800 text-sm">
-                          Ahorra {formatPrice((parseFloat(selectedProduct.originalPrice || '0') - parseFloat(selectedProduct.price)).toString())}
-                        </Badge>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Descripción Detallada */}
-                  <div>
-                    <h3 className="text-xl font-bold church-text mb-3">Descripción</h3>
-                    <p className="text-church-text-muted leading-relaxed text-lg">
-                      {selectedProduct.description}
-                    </p>
-                  </div>
-
-                  {/* Información Adicional */}
-                  <div className="bg-blue-50 rounded-xl p-4">
-                    <h4 className="font-semibold church-text mb-3">Información del Libro</h4>
-                    <div className="grid grid-cols-2 gap-4 text-sm">
-                      <div className="flex items-center">
-                        <Book className="w-4 h-4 mr-2 text-church-electric-600" />
-                        <span>Formato: Libro físico</span>
-                      </div>
-                      <div className="flex items-center">
-                        <Calendar className="w-4 h-4 mr-2 text-church-electric-600" />
-                        <span>Disponible ahora</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Selector de Cantidad y Botón de Compra */}
-                  <div className="space-y-4">
-                    <div className="flex items-center space-x-4">
-                      <span className="font-semibold church-text">Cantidad:</span>
-                      <div className="flex items-center border border-gray-300 rounded-lg">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={decreaseQuantity}
-                          className="px-3 py-2 hover:bg-gray-100"
-                        >
-                          <Minus className="w-4 h-4" />
-                        </Button>
-                        <span className="px-4 py-2 font-semibold min-w-[3rem] text-center">
-                          {quantity}
-                        </span>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={increaseQuantity}
-                          className="px-3 py-2 hover:bg-gray-100"
-                        >
-                          <Plus className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    </div>
-
-                    {/* Total */}
-                    <div className="flex items-center justify-between text-xl font-bold church-text">
-                      <span>Total:</span>
-                      <span className="text-church-electric-600">
-                        ${(parseFloat(selectedProduct.price) * quantity).toFixed(2)}
-                      </span>
-                    </div>
-
-                    {/* Botón de Añadir al Carrito */}
-                    <Button
-                      onClick={() => addToCartWithQuantity(selectedProduct, quantity)}
-                      className="w-full church-button-primary h-14 text-lg"
-                    >
-                      <ShoppingCart className="w-6 h-6 mr-3" />
-                      Añadir {quantity} {quantity === 1 ? 'libro' : 'libros'} al Carrito
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   )
 }
