@@ -25,6 +25,17 @@ export function Cart() {
     dispatch({ type: "CLEAR_CART" })
   }
 
+  // Función para formatear precios en pesos argentinos
+  const formatPrice = (price: string | number): string => {
+    const numPrice = typeof price === 'string' ? parseFloat(price) : price
+    return numPrice.toLocaleString('es-AR', {
+      style: 'currency',
+      currency: 'ARS',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    })
+  }
+
   return (
     <>
       {/* Botón flotante del carrito */}
@@ -91,7 +102,7 @@ export function Cart() {
                       <h3 className="font-semibold church-text text-sm leading-tight mb-1">{item.name}</h3>
                       <p className="text-xs text-gray-500 mb-2">{item.author}</p>
                       <div className="flex items-center justify-between">
-                        <span className="font-bold text-church-electric-600">${item.price.toFixed(2)}</span>
+                        <span className="font-bold text-church-electric-600">{formatPrice(item.price)}</span>
                         <div className="flex items-center space-x-2">
                           <Button
                             variant="outline"
@@ -132,7 +143,7 @@ export function Cart() {
             <div className="border-t border-gray-200 p-6 space-y-4">
               <div className="flex justify-between items-center text-lg font-bold">
                 <span className="church-text">Total:</span>
-                <span className="text-church-electric-600">${state.total.toFixed(2)}</span>
+                <span className="text-church-electric-600">{formatPrice(state.total)}</span>
               </div>
 
               <div className="space-y-3">

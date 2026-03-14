@@ -58,6 +58,17 @@ export default function CheckoutPage() {
     }
   }, [isMounted, state.items.length, router])
 
+  // Función para formatear precios en pesos argentinos
+  const formatPrice = (price: string | number): string => {
+    const numPrice = typeof price === 'string' ? parseFloat(price) : price
+    return numPrice.toLocaleString('es-AR', {
+      style: 'currency',
+      currency: 'ARS',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    })
+  }
+
   const handleInputChange = (field: string, value: string) => {
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: undefined }))
@@ -301,7 +312,7 @@ export default function CheckoutPage() {
                           <p className="text-xs text-gray-500 truncate w-full mb-1">Por {item.author}</p>
                           <div className="flex items-center justify-between text-sm mt-auto">
                             <span className="text-gray-500">Cant: <span className="text-gray-900 font-medium">{item.quantity}</span></span>
-                            <span className="font-bold text-church-electric-600">${(item.price * item.quantity).toFixed(2)}</span>
+                            <span className="font-bold text-church-electric-600">{formatPrice(item.price * item.quantity)}</span>
                           </div>
                         </div>
                       </div>
@@ -311,7 +322,7 @@ export default function CheckoutPage() {
                   <div className="mt-8 pt-6 border-t border-gray-100">
                     <div className="flex justify-between items-center mb-4 text-gray-600">
                       <span>Subtotal ({state.items.reduce((acc, curr) => acc + curr.quantity, 0)} items)</span>
-                      <span>${total.toFixed(2)}</span>
+                      <span>{formatPrice(total)}</span>
                     </div>
                     <div className="flex justify-between items-center mb-6 text-gray-600">
                       <span>Envío</span>
@@ -320,8 +331,8 @@ export default function CheckoutPage() {
                     <div className="flex justify-between items-end">
                       <span className="text-lg font-bold text-gray-900">TOTAL</span>
                       <div className="text-right">
-                        <span className="text-3xl font-black text-church-electric-600 block">${total.toFixed(2)}</span>
-                        <span className="text-xs text-gray-500 font-medium">ARS (Pesos Argentinos)</span>
+                        <span className="text-3xl font-black text-church-electric-600 block">{formatPrice(total)}</span>
+                        <span className="text-xs text-gray-500 font-medium mt-1 inline-block">ARS (Pesos Argentinos)</span>
                       </div>
                     </div>
                   </div>
