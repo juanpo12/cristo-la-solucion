@@ -35,7 +35,6 @@ export default function VideosPage() {
   const [searchTerm, setSearchTerm] = useState("")
   const [sortBy, setSortBy] = useState("Más Recientes")
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
-  const [selectedVideo, setSelectedVideo] = useState<PastorVideo | null>(null)
   const [isLoading, setIsLoading] = useState(false)
 
   console.log(setIsLoading);
@@ -226,13 +225,12 @@ export default function VideosPage() {
             : "space-y-4"
           }>
             {filteredAndSortedVideos.map((video) => (
-              <Card
-                key={video.id}
-                className={`church-card overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:scale-105 cursor-pointer bg-white ${
-                  viewMode === "list" ? "flex" : ""
-                }`}
-                onClick={() => setSelectedVideo(video)}
-              >
+              <Link href={`/videos/${video.id}`} key={video.id} className="block h-full group">
+                <Card
+                  className={`church-card overflow-hidden hover:shadow-xl transition-all duration-300 transform group-hover:-translate-y-1 cursor-pointer bg-white h-full ${
+                    viewMode === "list" ? "flex" : "flex flex-col"
+                  }`}
+                >
                 <div className={`relative ${viewMode === "list" ? "w-full sm:w-80 flex-shrink-0" : "aspect-video"}`}>
                   <div 
                     className="absolute inset-0 bg-cover bg-center"
@@ -274,89 +272,8 @@ export default function VideosPage() {
                   </div>
                 </CardContent>
               </Card>
+              </Link>
             ))}
-          </div>
-        )}
-
-        {/* Modal de Video */}
-        {selectedVideo && (
-          <div 
-            className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-2 sm:p-4"
-            onClick={(e) => {
-              // Solo cerrar si se hace clic fuera del contenido del modal
-              if (e.target === e.currentTarget) {
-                setSelectedVideo(null);
-              }
-            }}
-          >
-            <div 
-              className="bg-white rounded-lg sm:rounded-2xl w-full max-w-5xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="p-3 sm:p-6">
-                <div className="flex items-center justify-between mb-3 sm:mb-4">
-                  <h3 className="text-lg sm:text-2xl font-bold church-text">Detalles del Video</h3>
-                  <Button
-                    variant="ghost"
-                    onClick={() => setSelectedVideo(null)}
-                    className="rounded-full h-8 w-8 sm:h-10 sm:w-10 p-0"
-                  >
-                    ✕
-                  </Button>
-                </div>
-                
-                <div className="aspect-video bg-gray-100 rounded-lg mb-4 sm:mb-6 relative">
-                  {/* Reproductor de YouTube */}
-                  {selectedVideo.url && selectedVideo.url !== '#' ? (
-                    <div key={selectedVideo.id} className="absolute inset-0">
-                      <YouTubePlayer 
-                        videoId={selectedVideo.url || selectedVideo.id} 
-                        className="rounded-lg overflow-hidden w-full h-full"
-                        autoplay={true}
-                      />
-                    </div>
-                  ) : (
-                    <div className="absolute inset-0 flex items-center justify-center bg-gray-200 rounded-lg">
-                      <div className="text-center text-gray-600">
-                        <div className="w-16 h-16 mx-auto mb-4 bg-gray-300 rounded-full flex items-center justify-center">
-                          <Play className="w-8 h-8" />
-                        </div>
-                        <p className="text-lg font-medium mb-2">Video no disponible</p>
-                        <p className="text-sm">Este video aún no está configurado</p>
-                      </div>
-                    </div>
-                  )}
-                </div>
-                <div className="flex justify-end mb-4">
-                  <Link 
-                    href={selectedVideo.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Button variant="outline" size="sm" className="flex items-center">
-                      <ExternalLink className="w-4 h-4 mr-2" />
-                      Ver en YouTube
-                    </Button>
-                  </Link>
-                </div>
-                
-                <div className="space-y-4">
-                  <div className="flex items-center space-x-4">
-                    <div className="flex items-center space-x-1 text-church-text-muted">
-                      <Clock className="w-4 h-4" />
-                      <span>{selectedVideo.duration}</span>
-                    </div>
-                    <div className="flex items-center space-x-1 text-church-text-muted">
-                      <Eye className="w-4 h-4" />
-                      <span>{selectedVideo.viewCount} vistas</span>
-                    </div>
-                  </div>
-                  
-                  <h4 className="text-xl font-bold church-text">{selectedVideo.title}</h4>
-                  <p className="church-text-muted leading-relaxed">{selectedVideo.description}</p>
-                </div>
-              </div>
-            </div>
           </div>
         )}
 
