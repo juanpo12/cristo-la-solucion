@@ -92,7 +92,7 @@ export default function CheckoutPage() {
     // Convertir items
     const cartItems = state.items.map(item => ({
       id: item.id.toString(),
-      title: item.name, 
+      title: item.name,
       name: item.name,
       author: item.author,
       price: item.price,
@@ -112,7 +112,7 @@ export default function CheckoutPage() {
   if (!isMounted || state.items.length === 0) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center pt-20">
-         <Loader2 className="w-8 h-8 animate-spin text-church-electric-600" />
+        <Loader2 className="w-8 h-8 animate-spin text-church-electric-600" />
       </div>
     )
   }
@@ -120,7 +120,7 @@ export default function CheckoutPage() {
   return (
     <div className="min-h-screen bg-gray-50 pt-24 pb-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+
         {/* Header / Nav de retroceso */}
         <div className="mb-8">
           <Link href="/tienda" className="inline-flex items-center text-church-navy-600 hover:text-church-electric-600 transition-colors font-medium">
@@ -128,19 +128,19 @@ export default function CheckoutPage() {
             Volver a la tienda
           </Link>
           <h1 className="text-3xl sm:text-4xl font-extrabold text-church-navy-900 mt-4 flex items-center gap-3">
-            <ShieldCheck className="w-8 h-8 text-green-500 hidden sm:block"/>
+            <ShieldCheck className="w-8 h-8 text-green-500 hidden sm:block" />
             Finalizar Compra
           </h1>
           <p className="text-gray-500 mt-2">Completa tus datos para procesar el pedido en Mercado Pago de forma segura.</p>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
-          
+
           {/* Columna Izquierda: Información del comprador */}
           <div className="flex-1 w-full order-2 lg:order-1">
             <Card className="border-0 shadow-lg rounded-2xl overflow-hidden">
               <div className="bg-white p-6 sm:p-8 space-y-8">
-                
+
                 {/* Datos Personales */}
                 <div className="space-y-6">
                   <div className="flex items-center border-b border-gray-100 pb-4">
@@ -152,35 +152,35 @@ export default function CheckoutPage() {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div className="space-y-2">
-                       <Label htmlFor="name" className="text-gray-700 font-semibold">Nombre *</Label>
-                       <Input
-                          id="name"
-                          value={payerInfo.name}
-                          onChange={(e) => handleInputChange('name', e.target.value)}
-                          placeholder="Ingresa tu nombre"
-                          className={`h-12 bg-gray-50/50 border-gray-200 focus-visible:ring-church-electric-500 focus-visible:border-church-electric-500 ${errors.name ? "border-red-500 bg-red-50/20" : ""}`}
-                          required
-                        />
-                        {errors.name && <p className="text-red-500 text-sm flex items-center mt-1.5"><Info className="w-4 h-4 mr-1"/>{errors.name}</p>}
+                      <Label htmlFor="name" className="text-gray-700 font-semibold">Nombre *</Label>
+                      <Input
+                        id="name"
+                        value={payerInfo.name}
+                        onChange={(e) => handleInputChange('name', e.target.value)}
+                        placeholder="Ingresa tu nombre"
+                        className={`h-12 bg-gray-50/50 border-gray-200 focus-visible:ring-church-electric-500 focus-visible:border-church-electric-500 ${errors.name ? "border-red-500 bg-red-50/20" : ""}`}
+                        required
+                      />
+                      {errors.name && <p className="text-red-500 text-sm flex items-center mt-1.5"><Info className="w-4 h-4 mr-1" />{errors.name}</p>}
                     </div>
-                    
+
                     <div className="space-y-2">
-                       <Label htmlFor="surname" className="text-gray-700 font-semibold">Apellido *</Label>
-                       <Input
-                          id="surname"
-                          value={payerInfo.surname}
-                          onChange={(e) => handleInputChange('surname', e.target.value)}
-                          placeholder="Ingresa tu apellido"
-                          className={`h-12 bg-gray-50/50 border-gray-200 focus-visible:ring-church-electric-500 focus-visible:border-church-electric-500 ${errors.surname ? "border-red-500 bg-red-50/20" : ""}`}
-                          required
-                        />
-                        {errors.surname && <p className="text-red-500 text-sm flex items-center mt-1.5"><Info className="w-4 h-4 mr-1"/>{errors.surname}</p>}
+                      <Label htmlFor="surname" className="text-gray-700 font-semibold">Apellido *</Label>
+                      <Input
+                        id="surname"
+                        value={payerInfo.surname}
+                        onChange={(e) => handleInputChange('surname', e.target.value)}
+                        placeholder="Ingresa tu apellido"
+                        className={`h-12 bg-gray-50/50 border-gray-200 focus-visible:ring-church-electric-500 focus-visible:border-church-electric-500 ${errors.surname ? "border-red-500 bg-red-50/20" : ""}`}
+                        required
+                      />
+                      {errors.surname && <p className="text-red-500 text-sm flex items-center mt-1.5"><Info className="w-4 h-4 mr-1" />{errors.surname}</p>}
                     </div>
                   </div>
 
                   <div className="space-y-2">
                     <Label htmlFor="email" className="text-gray-700 font-semibold flex items-center">
-                       <Mail className="w-4 h-4 mr-1.5 text-gray-400" /> Correo Electrónico *
+                      <Mail className="w-4 h-4 mr-1.5 text-gray-400" /> Correo Electrónico *
                     </Label>
                     <Input
                       id="email"
@@ -191,12 +191,12 @@ export default function CheckoutPage() {
                       className={`h-12 bg-gray-50/50 border-gray-200 focus-visible:ring-church-electric-500 focus-visible:border-church-electric-500 ${errors.email ? "border-red-500 bg-red-50/20" : ""}`}
                       required
                     />
-                    {errors.email && <p className="text-red-500 text-sm flex items-center mt-1.5"><Info className="w-4 h-4 mr-1"/>{errors.email}</p>}
+                    {errors.email && <p className="text-red-500 text-sm flex items-center mt-1.5"><Info className="w-4 h-4 mr-1" />{errors.email}</p>}
                   </div>
 
                   <div className="space-y-2">
-                     <Label htmlFor="phone" className="text-gray-700 font-semibold flex items-center">
-                       <Phone className="w-4 h-4 mr-1.5 text-gray-400" /> Teléfono (Opcional)
+                    <Label htmlFor="phone" className="text-gray-700 font-semibold flex items-center">
+                      <Phone className="w-4 h-4 mr-1.5 text-gray-400" /> Teléfono (Opcional)
                     </Label>
                     <div className="flex space-x-3">
                       <Input
@@ -230,15 +230,15 @@ export default function CheckoutPage() {
                   </div>
 
                   <div className="bg-blue-50/60 border border-blue-100/50 rounded-xl p-5 shadow-sm">
-                     <p className="text-blue-900 font-medium">
-                        La coordinación del envío o punto de retiro se realiza luego a través de Mercado Pago o coordinando con nosotros. Si eres congregante, puedes retirarlo personalmente en la Iglesia.
-                     </p>
+                    <p className="text-blue-900 font-medium">
+                      La coordinación del envío o punto de retiro se realiza luego a través de Mercado Pago o coordinando con nosotros. Si eres congregante, puedes retirarlo personalmente en la Iglesia.
+                    </p>
                   </div>
                 </div>
 
                 {/* Payment Action */}
                 <div className="pt-8">
-                   {mpError && (
+                  {mpError && (
                     <div className="bg-red-50 border border-red-200 text-red-700 px-5 py-4 rounded-xl mb-6 shadow-sm flex items-start">
                       <Info className="w-5 h-5 mr-3 flex-shrink-0 mt-0.5 text-red-500" />
                       <p className="font-medium">{mpError}</p>
@@ -262,10 +262,10 @@ export default function CheckoutPage() {
                       </>
                     )}
                   </Button>
-                  
+
                   <div className="mt-6 flex flex-col items-center justify-center space-y-2 cursor-default">
                     <div className="flex items-center text-sm font-medium text-gray-500">
-                      <ShieldCheck className="w-4 h-4 mr-1.5 text-green-500" /> 
+                      <ShieldCheck className="w-4 h-4 mr-1.5 text-green-500" />
                       Proceso 100% encriptado y seguro por <span className="font-bold text-[#009ee3] ml-1">Mercado Pago</span>
                     </div>
                     <p className="text-xs text-gray-400">Aceptamos todas las tarjetas, dinero en cuenta o pagofácil/rapipago.</p>
@@ -310,12 +310,12 @@ export default function CheckoutPage() {
 
                   <div className="mt-8 pt-6 border-t border-gray-700/80">
                     <div className="flex justify-between items-center mb-4 text-gray-300">
-                       <span>Subtotal ({state.items.reduce((acc, curr) => acc + curr.quantity, 0)} items)</span>
-                       <span>${total.toFixed(2)}</span>
+                      <span>Subtotal ({state.items.reduce((acc, curr) => acc + curr.quantity, 0)} items)</span>
+                      <span>${total.toFixed(2)}</span>
                     </div>
-                     <div className="flex justify-between items-center mb-6 text-gray-300">
-                       <span>Envío</span>
-                       <span className="text-sm font-medium">A coordinar / Retiro</span>
+                    <div className="flex justify-between items-center mb-6 text-gray-300">
+                      <span>Envío</span>
+                      <span className="text-sm font-medium">A coordinar / Retiro</span>
                     </div>
                     <div className="flex justify-between items-end">
                       <span className="text-lg font-bold text-gray-200">TOTAL</span>
