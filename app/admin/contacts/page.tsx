@@ -509,9 +509,9 @@ export default function ContactsPage() {
                                   )}
                                   <div>
                                     <label className="text-sm font-medium text-gray-700">Tipo</label>
-                                    <p className="mt-1">
+                                    <div className="mt-1">
                                       <Badge variant="outline">{getTypeLabel(selectedContact.type)}</Badge>
-                                    </p>
+                                    </div>
                                   </div>
                                 </div>
 
