@@ -424,9 +424,9 @@ export default function AdminDashboard() {
                         <p className="text-lg md:text-xl font-bold text-gray-900">
                           {formatCurrency(order?.total || 0)}
                         </p>
-                        <button className="px-3 py-1.5 text-xs font-medium text-church-electric-600 bg-church-electric-50 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-church-electric-100">
+                        <a href={`/admin/orders?search=${order?.externalReference}`} className="px-3 py-1.5 inline-block text-xs font-medium text-church-electric-600 bg-church-electric-50 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-church-electric-100">
                           Ver detalles
-                        </button>
+                        </a>
                       </div>
                     </div>
                   ))
