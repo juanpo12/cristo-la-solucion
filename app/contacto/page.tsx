@@ -71,7 +71,7 @@ export default function ContactoPage() {
                     </div>
                     <div>
                       <h3 className="text-xl font-bold church-text mb-2">Email</h3>
-                      <p className="church-text-muted">oficinasclsj@gmail.com</p>
+                      <p className="church-text-muted">contacto@cristolasolucionsj.com</p>
                     </div>
                   </div>
                 </CardContent>

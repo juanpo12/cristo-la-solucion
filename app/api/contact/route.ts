@@ -15,7 +15,7 @@ async function sendWithResend(data: Record<string, unknown>) {
       },
       body: JSON.stringify({
         from: 'contacto@cristolasolucion.com', // Cambiar por tu dominio
-        to: ['oficinasclsj@gmail.com'],
+        to: ['contacto@cristolasolucion.com'],
         subject: `Nueva petición: ${subject || type}`,
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
