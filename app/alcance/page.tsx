@@ -22,7 +22,6 @@ export default function AlcancePage() {
     "Choferes de colectivos",
     "Evangelización en semáforos",
     "Evangelización en plazas",
-    "Evangelización en plazas",
     "Personas en situación de calle"
   ]
 
