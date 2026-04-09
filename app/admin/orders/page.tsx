@@ -63,7 +63,29 @@ export default function AdminOrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const search = new URLSearchParams(window.location.search).get("search");
+      if (search) {
+        setSearchTerm(search);
+      }
+    }
+  }, []);
   const [selectedStatus, setSelectedStatus] = useState("all");
+  const [expandedOrders, setExpandedOrders] = useState<Set<number>>(new Set());
+
+  const toggleOrderDetails = (orderId: number) => {
+    setExpandedOrders((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(orderId)) {
+        newSet.delete(orderId);
+      } else {
+        newSet.add(orderId);
+      }
+      return newSet;
+    });
+  };
 
   const loadOrders = useCallback(async () => {
     try {
@@ -269,9 +291,9 @@ export default function AdminOrdersPage() {
                 >
                   <div className="p-4 md:p-6">
                     {/* Header de la orden - Responsive */}
-                    <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-4 mb-4">
+                    <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
                       <div className="flex-1 min-w-0">
-                        <div className="flex flex-wrap items-center gap-2 md:gap-3 mb-3">
+                        <div className="flex flex-wrap items-center gap-2 md:gap-3 mb-2">
                           <h3 className="text-base md:text-lg font-bold text-gray-900">
                             #{order.externalReference}
                           </h3>
@@ -283,34 +305,16 @@ export default function AdminOrdersPage() {
                           </Badge>
                         </div>
 
-                        {/* Info del cliente */}
-                        <div className="space-y-1.5 text-xs md:text-sm text-gray-600">
-                          {order.payerName && (
-                            <div className="flex items-center gap-2">
-                              <span className="font-medium text-gray-700">Cliente:</span>
-                              <span>{order.payerName} {order.payerSurname}</span>
-                            </div>
-                          )}
-                          {order.payerEmail && (
-                            <div className="flex items-center gap-2">
-                              <span className="font-medium text-gray-700">Email:</span>
-                              <span className="truncate">{order.payerEmail}</span>
-                            </div>
-                          )}
-                          {order.payerPhone && (
-                            <div className="flex items-center gap-2">
-                              <span className="font-medium text-gray-700">Teléfono:</span>
-                              <span>{order.payerPhone}</span>
-                            </div>
-                          )}
+                        {/* Info visible siempre */}
+                        <div className="space-y-1 text-sm text-gray-600 mb-4">
                           <div className="flex items-center gap-2">
-                            <span className="font-medium text-gray-700">Fecha:</span>
+                            <Clock className="h-4 w-4 text-gray-400" />
                             <span>{formatDate(order.createdAt)}</span>
                           </div>
-                          {order.paymentMethod && (
+                          {order.payerName && (
                             <div className="flex items-center gap-2">
-                              <span className="font-medium text-gray-700">Pago:</span>
-                              <span className="capitalize">{order.paymentMethod}</span>
+                              <span className="font-medium text-gray-700 text-sm">Cliente:</span>
+                              <span className="text-sm">{order.payerName} {order.payerSurname}</span>
                             </div>
                           )}
                         </div>
@@ -340,18 +344,59 @@ export default function AdminOrdersPage() {
                           <Button
                             variant="outline"
                             size="sm"
+                            onClick={() => toggleOrderDetails(order.id)}
                             className="text-xs hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 h-8"
                           >
                             <Eye className="h-3 w-3 md:h-4 md:w-4 mr-1" />
-                            Ver detalles
+                            {expandedOrders.has(order.id) ? "Ocultar detalles" : "Ver detalles"}
                           </Button>
                         </div>
                       </div>
                     </div>
 
-                    {/* Items de la orden */}
-                    {order.items && order.items.length > 0 && (
-                      <div className="border-t border-gray-200/50 pt-4 mt-4">
+                    {/* Detalles de la orden (colapsables) */}
+                    {expandedOrders.has(order.id) && (
+                      <div className="mt-4 pt-4 border-t border-gray-200/50 animate-in fade-in slide-in-from-top-2 duration-300">
+                        {/* Info del cliente */}
+                        <div className="bg-gray-50 rounded-xl p-4 mb-4">
+                          <h4 className="text-sm font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                            Información del cliente y pago
+                          </h4>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600">
+                            <div className="space-y-2">
+                              {order.payerEmail && (
+                                <div className="flex items-center gap-2">
+                                  <span className="font-medium text-gray-700">Email:</span>
+                                  <span className="truncate">{order.payerEmail}</span>
+                                </div>
+                              )}
+                              {order.payerPhone && (
+                                <div className="flex items-center gap-2">
+                                  <span className="font-medium text-gray-700">Teléfono:</span>
+                                  <span>{order.payerPhone}</span>
+                                </div>
+                              )}
+                            </div>
+                            <div className="space-y-2">
+                              {order.paymentMethod && (
+                                <div className="flex items-center gap-2">
+                                  <span className="font-medium text-gray-700">Método de pago:</span>
+                                  <span className="capitalize">{order.paymentMethod}</span>
+                                </div>
+                              )}
+                              {order.mercadoPagoId && (
+                                <div className="flex items-center gap-2">
+                                  <span className="font-medium text-gray-700">ID Pago:</span>
+                                  <span className="truncate">{order.mercadoPagoId}</span>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Items de la orden */}
+                        {order.items && order.items.length > 0 && (
+                          <div>
                         <h4 className="text-sm font-semibold text-gray-900 mb-3 flex items-center gap-2">
                           <Package className="h-4 w-4 text-church-electric-600" />
                           Productos ({order.items.length})
@@ -386,10 +431,12 @@ export default function AdminOrdersPage() {
                       </div>
                     )}
                   </div>
-                </div>
-              ))
-            )}
-          </div>
+                )}
+              </div>
+            </div>
+          ))
+        )}
+      </div>
         </div>
       </div>
     </div>

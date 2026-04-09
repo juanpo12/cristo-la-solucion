@@ -166,3 +166,20 @@ export type NewContact = typeof contacts.$inferInsert
 export type StoreConfig = typeof storeConfig.$inferSelect
 export type NewStoreConfig = typeof storeConfig.$inferInsert
 // AdminUser types removed - using Supabase Auth types
+
+// Tabla de inscripciones de Día de Alcance
+export const alcanceSignups = pgTable('alcance_signups', {
+  id: serial('id').primaryKey(),
+  nombre: varchar('nombre', { length: 255 }).notNull(),
+  telefono: varchar('telefono', { length: 50 }).notNull(),
+  edad: integer('edad').notNull(),
+  lider: varchar('lider', { length: 255 }).notNull(),
+  area: varchar('area', { length: 255 }).notNull(),
+  createdAt: timestamp('created_at').defaultNow(),
+})
+
+export const insertAlcanceSignupSchema = createInsertSchema(alcanceSignups)
+export const selectAlcanceSignupSchema = createSelectSchema(alcanceSignups)
+
+export type AlcanceSignup = typeof alcanceSignups.$inferSelect
+export type NewAlcanceSignup = typeof alcanceSignups.$inferInsert

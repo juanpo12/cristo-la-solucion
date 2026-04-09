@@ -14,7 +14,8 @@ import {
   Menu,
   X,
   MessageSquare,
-  ChevronRight
+  ChevronRight,
+  HeartHandshake
 } from 'lucide-react'
 
 const navigation = [
@@ -41,6 +42,12 @@ const navigation = [
     href: '/admin/contacts',
     icon: MessageSquare,
     description: 'Mensajes'
+  },
+  {
+    name: 'Alcance',
+    href: '/admin/alcance',
+    icon: HeartHandshake,
+    description: 'Inscripciones'
   },
   {
     name: 'Configuración',

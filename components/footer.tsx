@@ -60,7 +60,7 @@ export function Footer() {
               <p>Av. Juan Manuel de Rosas 4357</p>
               <p>San Justo</p>
               <p>+54 9 11 2864-8642</p>
-              <p>oficinasclsj@gmail.com</p>
+              <p>contacto@cristolasolucionsj.com</p>
             </div>
             
             {/* Redes Sociales */}
