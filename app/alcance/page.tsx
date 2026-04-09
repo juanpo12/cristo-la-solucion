@@ -1,9 +1,13 @@
+"use client"
+
 import Image from "next/image"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
+import { submitAlcanceSignup } from "@/lib/actions/alcance"
+import { useState } from "react"
 
 export default function AlcancePage() {
   const serviceAreas = [
@@ -18,8 +22,26 @@ export default function AlcancePage() {
     "Choferes de colectivos",
     "Evangelización en semáforos",
     "Evangelización en plazas",
+    "Evangelización en plazas",
     "Personas en situación de calle"
   ]
+
+  const [loading, setLoading] = useState(false)
+  const [success, setSuccess] = useState(false)
+  const [errorMsg, setErrorMsg] = useState('')
+
+  async function clientAction(formData: FormData) {
+    setLoading(true)
+    setErrorMsg('')
+    setSuccess(false)
+    const res = await submitAlcanceSignup(formData)
+    setLoading(false)
+    if (res?.error) {
+      setErrorMsg(res.error)
+    } else {
+      setSuccess(true)
+    }
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50">
@@ -74,26 +96,37 @@ export default function AlcancePage() {
               <p className="text-gray-600 mt-2">Completa tus datos para sumarte al Día de Alcance</p>
             </div>
 
-            <form className="space-y-6">
+            {success ? (
+              <div className="bg-green-50 border border-green-200 text-green-800 rounded-xl p-8 text-center">
+                <h3 className="text-2xl font-bold mb-2">¡Inscripción Exitosa!</h3>
+                <p>Tu formulario se ha enviado correctamente. Gracias por sumarte al Día de Alcance.</p>
+              </div>
+            ) : (
+            <form action={clientAction} className="space-y-6">
+              {errorMsg && (
+                <div className="bg-red-50 text-red-600 p-4 rounded-md text-sm border border-red-200">
+                  {errorMsg}
+                </div>
+              )}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label htmlFor="nombre" className="block text-sm font-medium text-gray-700 mb-1">Nombre y Apellido</label>
-                  <Input id="nombre" type="text" placeholder="Tu nombre completo" className="w-full" required />
+                  <Input id="nombre" name="nombre" type="text" placeholder="Tu nombre completo" className="w-full" required />
                 </div>
 
                 <div>
                   <label htmlFor="telefono" className="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
-                  <Input id="telefono" type="tel" placeholder="Tu número de celular" className="w-full" required />
+                  <Input id="telefono" name="telefono" type="tel" placeholder="Tu número de celular" className="w-full" required />
                 </div>
 
                 <div>
                   <label htmlFor="edad" className="block text-sm font-medium text-gray-700 mb-1">Edad</label>
-                  <Input id="edad" type="number" min="1" placeholder="Tu edad" className="w-full" required />
+                  <Input id="edad" name="edad" type="number" min="1" placeholder="Tu edad" className="w-full" required />
                 </div>
 
                 <div>
                   <label htmlFor="lider" className="block text-sm font-medium text-gray-700 mb-1">Nombre y apellido del líder</label>
-                  <Input id="lider" type="text" placeholder="Nombre de tu líder" className="w-full" required />
+                  <Input id="lider" name="lider" type="text" placeholder="Nombre de tu líder" className="w-full" required />
                 </div>
               </div>
 
@@ -101,10 +134,12 @@ export default function AlcancePage() {
                 <label htmlFor="area" className="block text-sm font-medium text-gray-700 mb-1">Área que te gustaría servir</label>
                 <select
                   id="area"
-                  className="w-full h-10 px-3 py-2 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                  name="area"
+                  defaultValue=""
+                  className="w-full h-10 px-3 py-2 rounded-md border border-input bg-background text-sm ring-offset-background disabled:cursor-not-allowed disabled:opacity-50"
                   required
                 >
-                  <option value="" disabled selected>Seleccioná un área...</option>
+                  <option value="" disabled>Seleccioná un área...</option>
                   {serviceAreas.map((area, index) => (
                     <option key={index} value={area}>{area}</option>
                   ))}
@@ -112,11 +147,12 @@ export default function AlcancePage() {
               </div>
 
               <div className="pt-4">
-                <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white h-12 text-lg font-medium transition-colors">
-                  Inscribirme al Día de Alcance
+                <Button type="submit" disabled={loading} className="w-full bg-blue-600 hover:bg-blue-700 text-white h-12 text-lg font-medium transition-colors">
+                  {loading ? 'Enviando...' : 'Inscribirme al Día de Alcance'}
                 </Button>
               </div>
             </form>
+            )}
           </div>
         </div>
       </main>
