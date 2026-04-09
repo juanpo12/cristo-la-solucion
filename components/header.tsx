@@ -133,6 +133,7 @@ export function Header() {
     { href: "/videos", label: "Videos", type: "link" },
     { href: "oracion", label: "Oración", type: "scroll" },
     { href: "dar", label: "Dar", type: "scroll" },
+    { href: "/alcance", label: "Alcance", type: "link" },
     { href: "/contacto", label: "Contacto", type: "link" },
   ]
 
@@ -157,6 +158,8 @@ export function Header() {
           return 'Novedades'
         case '/arte':
           return 'Arte'
+        case '/alcance':
+          return 'Día de Alcance'
         default:
           return 'Cristo la Solución'
       }
