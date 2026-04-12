@@ -213,22 +213,7 @@ export default function AlcancePage() {
                       </p>
                     </div>
                     
-                    {area.notes && area.notes.length > 0 && (
-                      <div className="mt-4 pt-4 border-t border-slate-100 space-y-2">
-                        {area.notes.map((note, noteIdx) => (
-                          <div key={noteIdx} className="flex gap-2 text-sm text-gray-600">
-                            {note.includes("NO") ? (
-                              <AlertCircle className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
-                            ) : (
-                              <div className="w-1.5 h-1.5 rounded-full bg-slate-400 mt-2 shrink-0" />
-                            )}
-                            <span className={note.includes("NO") ? "text-red-700 font-medium" : ""}>
-                              {note}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    )}
+                    
                   </div>
                 )
               })}
