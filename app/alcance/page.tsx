@@ -5,7 +5,10 @@ import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
+import { 
+  Building2, Baby, Shield, Activity, Users, 
+  Music, Bus, Car, TreePine, Coffee, Flame, AlertCircle
+} from "lucide-react"
 import { submitAlcanceSignup } from "@/lib/actions/alcance"
 import { useState } from "react"
 
@@ -23,6 +26,100 @@ export default function AlcancePage() {
     "Evangelización en semáforos",
     "Evangelización en plazas",
     "Personas en situación de calle"
+  ]
+
+  const serviceAreasData = [
+    {
+      title: "Hospital del Niño",
+      icon: Building2,
+      color: "text-blue-600",
+      bgColor: "bg-blue-100",
+      task: "Llevar un juguete a los niños internados y a las familias un kit con provisiones.",
+      notes: ["NO está permitido repartir golosinas o ningún otro alimento."]
+    },
+    {
+      title: "Policlínico Central",
+      icon: Baby,
+      color: "text-pink-600",
+      bgColor: "bg-pink-100",
+      task: "Bendecir a las familias en la maternidad, llevando un kit de Recién Nacido (RN).",
+      notes: ["NO está permitido repartir golosinas o ningún otro alimento."]
+    },
+    {
+      title: "Comisaría y Policía Científica",
+      icon: Shield,
+      color: "text-indigo-600",
+      bgColor: "bg-indigo-100",
+      task: "Ser de bendición a los servidores públicos acercando una merienda a su destacamento.",
+      notes: ["Entregaremos una tarjeta de gratitud y un presente."]
+    },
+    {
+      title: "Bomberos Voluntarios",
+      icon: Flame,
+      color: "text-red-600",
+      bgColor: "bg-red-100",
+      task: "Ser de bendición acercando una merienda al cuartel de bomberos.",
+      notes: ["Entregaremos una tarjeta de gratitud y un presente."]
+    },
+    {
+      title: "Centro de Rehabilitación (CEMEFIR)",
+      icon: Activity,
+      color: "text-teal-600",
+      bgColor: "bg-teal-100",
+      task: "Llevar una propuesta artística (por ejemplo, una obra de teatro) para compartir.",
+      notes: ["Entregaremos pochoclos, bebida y un muffin a cada participante."]
+    },
+    {
+      title: "Institución Hogar de Niños",
+      icon: Users,
+      color: "text-orange-600",
+      bgColor: "bg-orange-100",
+      task: "Llevar una actividad deportiva para compartir con los niños alojados.",
+      notes: [
+        "NO preguntar a los niños por su historia personal o familia.",
+        "NO tomar fotos ni subir a redes (solo equipo multimedia)."
+      ]
+    },
+    {
+      title: "Residencias de Adultos Mayores",
+      icon: Music,
+      color: "text-purple-600",
+      bgColor: "bg-purple-100",
+      task: "Llevar una propuesta musical alegre, folletos y compartir una merienda.",
+      notes: ["Entregaremos un presente y una tarjeta con palabras de bendición."]
+    },
+    {
+      title: "Choferes de Colectivo",
+      icon: Bus,
+      color: "text-yellow-600",
+      bgColor: "bg-yellow-100",
+      task: "Ser de bendición a los choferes que brindan un servicio público fundamental.",
+      notes: ["Entregaremos una tarjeta de gratitud y un presente (Bon o Bon)."]
+    },
+    {
+      title: "Autos en Semáforos",
+      icon: Car,
+      color: "text-slate-600",
+      bgColor: "bg-slate-100",
+      task: "Impactar visualmente con pancartas con mensajes positivos en cada luz roja.",
+      notes: ["Entregaremos folletos con una bolsa de caramelos a los autos."]
+    },
+    {
+      title: "Plazas",
+      icon: TreePine,
+      color: "text-green-600",
+      bgColor: "bg-green-100",
+      task: "Realizar una tarea evangelística en plazas, apoyada de actividades infantiles.",
+      notes: ["Llevaremos globos, bolsas de caramelos, pochoclos y folletos."]
+    },
+    {
+      title: "Situación de Calle",
+      icon: Coffee,
+      color: "text-stone-600",
+      bgColor: "bg-stone-100",
+      task: "Salir al encuentro de personas en situación vulnerable para brindar contención.",
+      notes: ["Acercaremos un plato de comida caliente, ropa de abrigo y mantas."]
+    }
   ]
 
   const [loading, setLoading] = useState(false)
@@ -59,8 +156,8 @@ export default function AlcancePage() {
         </div>
 
         {/* Content Section */}
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-12">
-          <div className="bg-white rounded-2xl shadow-xl p-8 md:p-12 mb-12 border border-gray-100">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-12">
+          <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl p-8 md:p-12 mb-16 border border-gray-100">
             <h2 className="text-3xl font-bold text-gray-900 mb-6 border-b pb-4">
               ¿Qué es el "Día de Alcance"?
             </h2>
@@ -88,8 +185,43 @@ export default function AlcancePage() {
             </div>
           </div>
 
+          <div className="mb-20">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Lugares de Servicio y Tareas</h2>
+              <p className="text-gray-600 mt-4 text-lg max-w-2xl mx-auto">
+                Conocé de qué trata cada área, qué tareas vamos a estar realizando y encontrá tu lugar para servir.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {serviceAreasData.map((area, idx) => {
+                const Icon = area.icon;
+                return (
+                  <div key={idx} className="bg-white rounded-xl shadow-lg border border-slate-100 p-6 flex flex-col hover:shadow-xl transition-shadow duration-300">
+                    <div className="flex items-center gap-4 mb-4">
+                      <div className={`p-4 rounded-xl ${area.bgColor} ${area.color} flex-shrink-0`}>
+                        <Icon className="w-7 h-7" />
+                      </div>
+                      <h3 className="text-xl font-bold text-gray-900 leading-tight">
+                        {area.title}
+                      </h3>
+                    </div>
+                    
+                    <div className="flex-grow">
+                      <p className="text-gray-700 font-medium mb-4">
+                        {area.task}
+                      </p>
+                    </div>
+                    
+                    
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+
           {/* Form Section */}
-          <div className="bg-white rounded-2xl shadow-xl p-8 md:p-12 border border-gray-100" id="inscripcion">
+          <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl p-8 md:p-12 mb-12 border border-gray-100" id="inscripcion">
             <div className="text-center mb-8">
               <h2 className="text-3xl font-bold text-gray-900">Formulario de Inscripción</h2>
               <p className="text-gray-600 mt-2">Completa tus datos para sumarte al Día de Alcance</p>
@@ -160,3 +292,4 @@ export default function AlcancePage() {
     </div>
   )
 }
+

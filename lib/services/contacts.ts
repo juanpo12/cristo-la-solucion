@@ -1,6 +1,6 @@
 import { db } from '@/lib/db'
 import { contacts, insertContactSchema, type Contact, type NewContact } from '@/lib/db/schema'
-import { eq, desc, and, count } from 'drizzle-orm'
+import { eq, desc, and, count, sql } from 'drizzle-orm'
 
 export interface ContactsFilters {
   status?: string
@@ -129,64 +129,36 @@ export async function updateContactStatus(
 }
 
 /**
- * Obtener estadísticas de contactos
+ * Obtener estadísticas de contactos — una sola query con agregación condicional
  */
 export async function getContactsStats() {
-  const totalResult = await db.select({ count: count() }).from(contacts)
-  const pendingResult = await db
-    .select({ count: count() })
+  const [row] = await db
+    .select({
+      total: count(),
+      pending:   sql<number>`count(*) filter (where ${contacts.status} = 'pending')`,
+      read:      sql<number>`count(*) filter (where ${contacts.status} = 'read')`,
+      responded: sql<number>`count(*) filter (where ${contacts.status} = 'responded')`,
+      closed:    sql<number>`count(*) filter (where ${contacts.status} = 'closed')`,
+      general:   sql<number>`count(*) filter (where ${contacts.type} = 'general')`,
+      prayer:    sql<number>`count(*) filter (where ${contacts.type} = 'prayer')`,
+      pastoral:  sql<number>`count(*) filter (where ${contacts.type} = 'pastoral')`,
+      group:     sql<number>`count(*) filter (where ${contacts.type} = 'group')`,
+    })
     .from(contacts)
-    .where(eq(contacts.status, 'pending'))
-  
-  const readResult = await db
-    .select({ count: count() })
-    .from(contacts)
-    .where(eq(contacts.status, 'read'))
-  
-  const respondedResult = await db
-    .select({ count: count() })
-    .from(contacts)
-    .where(eq(contacts.status, 'responded'))
-  
-  const closedResult = await db
-    .select({ count: count() })
-    .from(contacts)
-    .where(eq(contacts.status, 'closed'))
-
-  // Estadísticas por tipo
-  const generalResult = await db
-    .select({ count: count() })
-    .from(contacts)
-    .where(eq(contacts.type, 'general'))
-  
-  const prayerResult = await db
-    .select({ count: count() })
-    .from(contacts)
-    .where(eq(contacts.type, 'prayer'))
-  
-  const pastoralResult = await db
-    .select({ count: count() })
-    .from(contacts)
-    .where(eq(contacts.type, 'pastoral'))
-  
-  const groupResult = await db
-    .select({ count: count() })
-    .from(contacts)
-    .where(eq(contacts.type, 'group'))
 
   return {
-    total: totalResult[0]?.count || 0,
+    total: row?.total || 0,
     byStatus: {
-      pending: pendingResult[0]?.count || 0,
-      read: readResult[0]?.count || 0,
-      responded: respondedResult[0]?.count || 0,
-      closed: closedResult[0]?.count || 0
+      pending:   row?.pending   || 0,
+      read:      row?.read      || 0,
+      responded: row?.responded || 0,
+      closed:    row?.closed    || 0,
     },
     byType: {
-      general: generalResult[0]?.count || 0,
-      prayer: prayerResult[0]?.count || 0,
-      pastoral: pastoralResult[0]?.count || 0,
-      group: groupResult[0]?.count || 0
+      general:  row?.general  || 0,
+      prayer:   row?.prayer   || 0,
+      pastoral: row?.pastoral || 0,
+      group:    row?.group    || 0,
     }
   }
 }

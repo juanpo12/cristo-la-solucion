@@ -183,35 +183,22 @@ export class ProductService {
     return result[0] || null
   }
 
-  // Obtener estadísticas de productos
+  // Obtener estadísticas de productos — una sola query con agregación condicional
   static async getStats() {
-    const totalProducts = await db
-      .select({ count: sql<number>`count(*)` })
-      .from(products)
-      .where(eq(products.active, true))
-
-    const featuredProducts = await db
-      .select({ count: sql<number>`count(*)` })
-      .from(products)
-      .where(and(eq(products.active, true), eq(products.featured, true)))
-
-    const lowStockProducts = await db
-      .select({ count: sql<number>`count(*)` })
-      .from(products)
-      .where(and(eq(products.active, true), sql`${products.stock} <= 5`))
-
-    const totalValue = await db
+    const [row] = await db
       .select({
-        total: sql<number>`sum(${products.price}::numeric * ${products.stock})`
+        totalProducts:       sql<number>`count(*) filter (where ${products.active} = true)`,
+        featuredProducts:    sql<number>`count(*) filter (where ${products.active} = true and ${products.featured} = true)`,
+        lowStockProducts:    sql<number>`count(*) filter (where ${products.active} = true and ${products.stock} <= 5)`,
+        totalInventoryValue: sql<number>`coalesce(sum(${products.price}::numeric * ${products.stock}) filter (where ${products.active} = true), 0)`,
       })
       .from(products)
-      .where(eq(products.active, true))
 
     return {
-      totalProducts: totalProducts[0]?.count || 0,
-      featuredProducts: featuredProducts[0]?.count || 0,
-      lowStockProducts: lowStockProducts[0]?.count || 0,
-      totalInventoryValue: totalValue[0]?.total || 0,
+      totalProducts:       row?.totalProducts       || 0,
+      featuredProducts:    row?.featuredProducts    || 0,
+      lowStockProducts:    row?.lowStockProducts    || 0,
+      totalInventoryValue: row?.totalInventoryValue || 0,
     }
   }
 

@@ -48,10 +48,30 @@ export function Footer() {
           <div>
             <h4 className="font-bold mb-6 text-xl">Ministerios</h4>
             <div className="space-y-3">
-              <p className="text-gray-300 text-lg">Invictos Kids</p>
-              <p className="text-gray-300 text-lg">Invictos Teens</p>
-              <p className="text-gray-300 text-lg">Invictos</p>
-              <p className="text-gray-300 text-lg">GDC</p>
+              <Link
+                href="/grupos/invictos-kids"
+                className="block text-gray-300 hover:text-church-electric-400 transition-colors text-lg"
+              >
+                Invictos Kids
+              </Link>
+              <Link
+                href="/grupos/invictos-teens"
+                className="block text-gray-300 hover:text-church-electric-400 transition-colors text-lg"
+              >
+                Invictos Teens
+              </Link>
+              <Link
+                href="/grupos/invictos"
+                className="block text-gray-300 hover:text-church-electric-400 transition-colors text-lg"
+              >
+                Invictos
+              </Link>
+              <Link
+                href="/grupos/gdc"
+                className="block text-gray-300 hover:text-church-electric-400 transition-colors text-lg"
+              >
+                GDC
+              </Link>
             </div>
           </div>
           <div>

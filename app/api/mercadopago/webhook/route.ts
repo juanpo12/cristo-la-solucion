@@ -4,6 +4,7 @@ import { db } from '@/lib/db'
 import { orders } from '@/lib/db/schema'
 import { eq } from 'drizzle-orm'
 import { env } from '@/lib/env'
+import { ProductService } from '@/lib/services/products'
 import crypto from 'crypto'
 
 const client = new MercadoPagoConfig({
@@ -99,16 +100,17 @@ export async function POST(request: NextRequest) {
 
             console.log('✅ Order updated successfully:', existingOrder.id)
 
-            // Si el pago fue aprobado, reducir stock de productos
-            if (paymentInfo.status === 'approved' && existingOrder.items) {
+            // Si el pago fue aprobado y venía de un estado no aprobado, reducir stock
+            const wasAlreadyApproved = existingOrder.status === 'approved'
+            if (paymentInfo.status === 'approved' && !wasAlreadyApproved && existingOrder.items) {
               try {
                 const items = existingOrder.items as Array<{ name: string; quantity: number; id: number }>
-                for (const item of items) {
-                  // Aquí podrías reducir el stock si tienes esa funcionalidad
-                  console.log(`📦 Product sold: ${item.name} x${item.quantity}`)
-                }
+                await Promise.all(
+                  items.map((item) => ProductService.reduceStock(item.id, item.quantity))
+                )
+                console.log(`📦 Stock reducido para ${items.length} producto(s) de la orden ${existingOrder.id}`)
               } catch (stockError) {
-                console.error('Error updating stock:', stockError)
+                console.error('Error actualizando stock:', stockError)
               }
             }
           } else {
