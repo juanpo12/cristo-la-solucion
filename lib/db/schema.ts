@@ -1,4 +1,4 @@
-import { pgTable, serial, varchar, text, decimal, integer, timestamp, boolean, jsonb } from 'drizzle-orm/pg-core'
+import { pgTable, serial, varchar, text, decimal, integer, timestamp, boolean, jsonb, index } from 'drizzle-orm/pg-core'
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod'
 import { z } from 'zod'
 
@@ -19,7 +19,12 @@ export const products = pgTable('products', {
   reviewCount: integer('review_count').default(0),
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at').defaultNow(),
-})
+}, (t) => [
+  index('idx_products_active').on(t.active),
+  index('idx_products_category').on(t.category),
+  index('idx_products_featured').on(t.featured),
+  index('idx_products_created_at').on(t.createdAt),
+])
 
 // Tabla de órdenes
 export const orders = pgTable('orders', {
@@ -45,7 +50,11 @@ export const orders = pgTable('orders', {
   lastModified: timestamp('last_modified'),
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at').defaultNow(),
-})
+}, (t) => [
+  index('idx_orders_status').on(t.status),
+  index('idx_orders_created_at').on(t.createdAt),
+  index('idx_orders_payer_email').on(t.payerEmail),
+])
 
 // Tabla de items de orden (relación muchos a muchos entre orders y products)
 export const orderItems = pgTable('order_items', {
@@ -87,7 +96,11 @@ export const contacts = pgTable('contacts', {
   status: varchar('status', { length: 50 }).default('pending'), // pending, read, responded, closed
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at').defaultNow(),
-})
+}, (t) => [
+  index('idx_contacts_status').on(t.status),
+  index('idx_contacts_type').on(t.type),
+  index('idx_contacts_created_at').on(t.createdAt),
+])
 
 // Tabla de configuración de la tienda
 export const storeConfig = pgTable('store_config', {

@@ -15,6 +15,13 @@
       "when": 1775767602035,
       "tag": "0001_polite_wither",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1776085381747,
+      "tag": "0002_tiresome_korg",
+      "breakpoints": true
     }
   ]
 }
