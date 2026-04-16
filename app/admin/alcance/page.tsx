@@ -1,14 +1,21 @@
 import { db } from '@/lib/db'
 import { alcanceSignups } from '@/lib/db/schema'
-import { desc } from 'drizzle-orm'
+import { desc, gte, count } from 'drizzle-orm'
 import { AdminSidebar } from '@/components/admin/admin-sidebar'
 
 export const dynamic = 'force-dynamic'
 
 export default async function AdminAlcancePage() {
-  const signups = await db.query.alcanceSignups.findMany({
-    orderBy: [desc(alcanceSignups.createdAt)],
-  })
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+
+  const [signups, [{ total }], [{ hoy }]] = await Promise.all([
+    db.query.alcanceSignups.findMany({
+      orderBy: [desc(alcanceSignups.createdAt)],
+    }),
+    db.select({ total: count() }).from(alcanceSignups),
+    db.select({ hoy: count() }).from(alcanceSignups).where(gte(alcanceSignups.createdAt, today)),
+  ])
 
   // We mock a user for the sidebar as it expects it
   const mockUser = {
@@ -31,6 +38,32 @@ export default async function AdminAlcancePage() {
             <p className="text-sm md:text-base text-gray-600">
               Registros del formulario de voluntarios
             </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-200/50 p-6 flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center shrink-0">
+                <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a4 4 0 00-5.197-3.764M9 20H4v-2a4 4 0 015.197-3.764M15 11a4 4 0 10-8 0 4 4 0 008 0zm6 0a3 3 0 10-6 0 3 3 0 006 0z" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-sm text-gray-500 font-medium">Total Registros</p>
+                <p className="text-3xl font-bold text-gray-900">{total}</p>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-200/50 p-6 flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center shrink-0">
+                <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-sm text-gray-500 font-medium">Registros Hoy</p>
+                <p className="text-3xl font-bold text-gray-900">{hoy}</p>
+              </div>
+            </div>
           </div>
 
           <div className="bg-white rounded-2xl shadow-sm border border-gray-200/50 overflow-hidden">
