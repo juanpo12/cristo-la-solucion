@@ -1,22 +1,53 @@
 import { db } from '@/lib/db'
 import { alcanceSignups } from '@/lib/db/schema'
-import { desc } from 'drizzle-orm'
+import { desc, gte, count, sql } from 'drizzle-orm'
 import { AdminSidebar } from '@/components/admin/admin-sidebar'
+import { AlcanceTable } from '@/components/admin/alcance-table'
 
 export const dynamic = 'force-dynamic'
 
 export default async function AdminAlcancePage() {
-  const signups = await db.query.alcanceSignups.findMany({
-    orderBy: [desc(alcanceSignups.createdAt)],
-  })
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
 
-  // We mock a user for the sidebar as it expects it
+  // Deduplicate by (nombre, telefono, area), keeping the latest entry
+  const [signups, [{ total }], [{ hoy }]] = await Promise.all([
+    db.execute(sql`
+      SELECT * FROM (
+        SELECT DISTINCT ON (nombre, telefono, area) *
+        FROM alcance_signups
+        ORDER BY nombre, telefono, area, created_at DESC
+      ) deduped
+      ORDER BY created_at DESC
+    `),
+    db.select({ total: count() }).from(alcanceSignups),
+    db.select({ hoy: count() }).from(alcanceSignups).where(gte(alcanceSignups.createdAt, today)),
+  ])
+
   const mockUser = {
     id: '1',
     email: 'admin',
     role: 'admin',
     username: 'Admin',
   }
+
+  const rows = (signups as unknown as Array<{
+    id: number
+    nombre: string
+    telefono: string
+    edad: number
+    lider: string
+    area: string
+    created_at: Date | null
+  }>).map((r) => ({
+    id: r.id,
+    nombre: r.nombre,
+    telefono: r.telefono,
+    edad: r.edad,
+    lider: r.lider,
+    area: r.area,
+    createdAt: r.created_at,
+  }))
 
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-gray-50 via-gray-50 to-gray-100">
@@ -33,48 +64,7 @@ export default async function AdminAlcancePage() {
             </p>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-200/50 overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-sm text-gray-600">
-                <thead className="bg-gray-50 text-gray-900 border-b border-gray-200/50">
-                  <tr>
-                    <th className="px-6 py-4 font-semibold">Nombre</th>
-                    <th className="px-6 py-4 font-semibold">Teléfono</th>
-                    <th className="px-6 py-4 font-semibold">Edad</th>
-                    <th className="px-6 py-4 font-semibold">Líder</th>
-                    <th className="px-6 py-4 font-semibold">Área Asignada</th>
-                    <th className="px-6 py-4 font-semibold">Fecha de Registro</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200/50">
-                  {signups.length === 0 ? (
-                    <tr>
-                      <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
-                        No hay inscriptos todavía.
-                      </td>
-                    </tr>
-                  ) : (
-                    signups.map((signup) => (
-                      <tr key={signup.id} className="hover:bg-gray-50/50 transition-colors">
-                        <td className="px-6 py-4 font-medium text-gray-900">{signup.nombre}</td>
-                        <td className="px-6 py-4">{signup.telefono}</td>
-                        <td className="px-6 py-4">{signup.edad}</td>
-                        <td className="px-6 py-4">{signup.lider}</td>
-                        <td className="px-6 py-4">
-                          <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                            {signup.area}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4">
-                          {signup.createdAt ? new Date(signup.createdAt).toLocaleString('es-AR') : 'N/A'}
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </div>
+          <AlcanceTable signups={rows} total={total} hoy={hoy} />
         </div>
       </div>
     </div>
