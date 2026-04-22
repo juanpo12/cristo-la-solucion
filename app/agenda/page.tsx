@@ -2,7 +2,7 @@
 
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
-import { CalendarDays, Clock, MapPin } from "lucide-react"
+import { CalendarDays, Clock } from "lucide-react"
 
 export default function AgendaPage() {
   const agendaData = [
@@ -34,7 +34,7 @@ export default function AgendaPage() {
     {
       month: "MAYO 2026",
       events: [
-        { day: "Viernes 1", title: "Reunión presencial Administración Financiera – Pr. Alfredo Dimiro", time: "19:30 hs" },
+        { day: "Viernes 1", title: "Reunión presencial Administración Financiera – Pr. Alfredo Dimiro", time: "19:00 hs" },
         { day: "Sábado 2", title: "Arte CIs / Invictos Kids, Teens e Invictos especial Adm. Financiera", time: "19:30 hs" },
         { day: "Domingo 3", title: "Reunión (nuevo horario) – Administración Financiera", time: "11 y 18 hs – Oración 10:15 y 17:15" },
       ]
