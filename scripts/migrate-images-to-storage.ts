@@ -11,38 +11,27 @@ const BUCKET = 'productos'
 
 async function main() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
   const databaseUrl = process.env.DATABASE_URL!
 
-  if (!supabaseUrl || !supabaseKey || !databaseUrl) {
-    console.error('❌ Faltan variables de entorno. Verificá .env.local')
+  if (!supabaseUrl || !databaseUrl) {
+    console.error('❌ Faltan NEXT_PUBLIC_SUPABASE_URL o DATABASE_URL en .env.local')
+    process.exit(1)
+  }
+  if (!serviceRoleKey) {
+    console.error('❌ Falta SUPABASE_SERVICE_ROLE_KEY en .env.local')
+    console.error('   La encontrás en: Supabase Dashboard → Settings → API → service_role key')
     process.exit(1)
   }
 
-  const supabase = createClient(supabaseUrl, supabaseKey)
+  // Service role bypasea RLS — necesario para subir archivos desde scripts
+  const supabase = createClient(supabaseUrl, serviceRoleKey, {
+    auth: { autoRefreshToken: false, persistSession: false }
+  })
   const client = postgres(databaseUrl, { prepare: false, ssl: 'require' })
   const db = drizzle(client)
 
-  // Verificar que el bucket existe
-  const { data: buckets, error: bucketsError } = await supabase.storage.listBuckets()
-  if (bucketsError) {
-    console.error('❌ No se pudo conectar a Supabase Storage:', bucketsError.message)
-    process.exit(1)
-  }
-
-  const bucketExists = buckets?.some((b) => b.name === BUCKET)
-  if (!bucketExists) {
-    console.log(`⚙️  Creando bucket "${BUCKET}"...`)
-    const { error } = await supabase.storage.createBucket(BUCKET, { public: true })
-    if (error) {
-      console.error(`❌ No se pudo crear el bucket "${BUCKET}":`, error.message)
-      console.error('   Crealo manualmente en Supabase Dashboard → Storage → New bucket')
-      process.exit(1)
-    }
-    console.log(`✅ Bucket "${BUCKET}" creado`)
-  } else {
-    console.log(`✅ Bucket "${BUCKET}" encontrado`)
-  }
+  console.log(`✅ Usando bucket "${BUCKET}"`)
 
   // Traer solo productos con imagen base64
   const rows = await db
