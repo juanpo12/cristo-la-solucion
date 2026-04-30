@@ -3,13 +3,8 @@ import { resources } from '@/lib/db/schema'
 import { and, eq } from 'drizzle-orm'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import nextDynamic from 'next/dynamic'
 import { ArrowLeft, Clock, Tag } from 'lucide-react'
-
-const ResourceContent = nextDynamic(
-  () => import('@/components/resource-content').then((m) => m.ResourceContent),
-  { ssr: false, loading: () => <div className="animate-pulse space-y-4"><div className="h-5 bg-gray-100 rounded w-full" /><div className="h-5 bg-gray-100 rounded w-4/5" /><div className="h-5 bg-gray-100 rounded w-full" /></div> }
-)
+import { ResourceContent } from '@/components/resource-content'
 
 export const dynamic = 'force-dynamic'
 
