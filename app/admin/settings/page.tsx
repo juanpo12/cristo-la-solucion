@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { AdminSidebar } from '@/components/admin/admin-sidebar'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -141,10 +140,6 @@ export default function SettingsPage() {
     }
 
     return (
-        <div className="flex min-h-screen bg-gradient-to-br from-gray-50 via-gray-50 to-gray-100">
-            <AdminSidebar />
-
-            <div className="flex-1 lg:ml-72">
                 <div className="p-4 md:p-6 lg:p-8">
                     <div className="mb-6 md:mb-8">
                         <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
@@ -279,8 +274,6 @@ export default function SettingsPage() {
                             </Card>
                         </TabsContent>
                     </Tabs>
-                </div>
-            </div>
 
             {/* Modal Crear */}
             <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>

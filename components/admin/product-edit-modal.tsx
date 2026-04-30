@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 import { X, Save, Loader2, Upload, Star } from 'lucide-react'
 import Image from 'next/image'
+import { createClient } from '@/lib/supabase/client'
 
 interface Product {
   id: number
@@ -35,10 +36,18 @@ interface ProductEditModalProps {
   onSave: (product: Product) => void
 }
 
+interface Category {
+  id: number
+  name: string
+  slug: string
+}
+
 export function ProductEditModal({ product, isOpen, onClose, onSave }: ProductEditModalProps) {
   const [formData, setFormData] = useState<Partial<Product>>({})
   const [loading, setSaving] = useState(false)
+  const [uploading, setUploading] = useState(false)
   const [imagePreview, setImagePreview] = useState<string>('')
+  const [categories, setCategories] = useState<Category[]>([])
 
   useEffect(() => {
     if (product) {
@@ -47,6 +56,14 @@ export function ProductEditModal({ product, isOpen, onClose, onSave }: ProductEd
     }
   }, [product])
 
+  useEffect(() => {
+    if (!isOpen) return
+    fetch('/api/admin/categories')
+      .then((r) => r.json())
+      .then((data) => setCategories(Array.isArray(data) ? data : []))
+      .catch(() => {})
+  }, [isOpen])
+
   const handleInputChange = (field: keyof Product, value: string | boolean | number) => {
     setFormData(prev => ({
       ...prev,
@@ -54,19 +71,29 @@ export function ProductEditModal({ product, isOpen, onClose, onSave }: ProductEd
     }))
   }
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
-    if (file) {
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        const result = e.target?.result as string
-        setImagePreview(result)
-        setFormData(prev => ({
-          ...prev,
-          image: result
-        }))
-      }
-      reader.readAsDataURL(file)
+    if (!file) return
+
+    setUploading(true)
+    try {
+      const supabase = createClient()
+      const ext = file.name.split('.').pop()
+      const path = `products/${Date.now()}.${ext}`
+
+      const { error: uploadError } = await supabase.storage
+        .from('productos')
+        .upload(path, file, { upsert: true })
+
+      if (uploadError) throw uploadError
+
+      const { data } = supabase.storage.from('productos').getPublicUrl(path)
+      setImagePreview(data.publicUrl)
+      setFormData(prev => ({ ...prev, image: data.publicUrl }))
+    } catch {
+      alert('No se pudo subir la imagen. Verificá que el bucket "productos" existe en Supabase Storage.')
+    } finally {
+      setUploading(false)
     }
   }
 
@@ -144,10 +171,19 @@ export function ProductEditModal({ product, isOpen, onClose, onSave }: ProductEd
                   accept="image/*"
                   onChange={handleImageChange}
                   className="mb-2"
+                  disabled={uploading}
                 />
-                <p className="text-sm text-gray-500">
-                  Sube una imagen para el producto (JPG, PNG)
-                </p>
+                {uploading && (
+                  <p className="text-sm text-gray-500 flex items-center gap-1.5">
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    Subiendo imagen...
+                  </p>
+                )}
+                {!uploading && (
+                  <p className="text-sm text-gray-500">
+                    Se guarda en Supabase Storage (JPG, PNG)
+                  </p>
+                )}
               </div>
             </div>
           </div>
@@ -230,14 +266,14 @@ export function ProductEditModal({ product, isOpen, onClose, onSave }: ProductEd
             <Label htmlFor="category">Categoría</Label>
             <select
               id="category"
-              value={formData.category || 'books'}
+              value={formData.category || ''}
               onChange={(e) => handleInputChange('category', e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              <option value="books">Libros</option>
-              <option value="music">Música</option>
-              <option value="accessories">Accesorios</option>
-              <option value="other">Otro</option>
+              <option value="">Seleccionar categoría</option>
+              {categories.map((cat) => (
+                <option key={cat.id} value={cat.slug}>{cat.name}</option>
+              ))}
             </select>
           </div>
 

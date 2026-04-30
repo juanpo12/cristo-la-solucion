@@ -3,43 +3,31 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import { AdminSidebar } from '@/components/admin/admin-sidebar'
+import { AdminUserContext, type AdminUser } from './context'
 import { Loader2 } from 'lucide-react'
 
-interface AdminUser {
-  id: string
-  email: string
-  role: string
-  username?: string
-}
+const PUBLIC_ROUTES = ['/admin/login', '/admin/unauthorized', '/admin/setup']
 
-export default function AdminLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter()
   const pathname = usePathname()
   const [user, setUser] = useState<AdminUser | null>(null)
   const [loading, setLoading] = useState(true)
   const supabase = createClient()
 
-  // Rutas que no requieren autenticación
-  const publicRoutes = ['/admin/login', '/admin/unauthorized']
-  const isPublicRoute = publicRoutes.includes(pathname)
+  const isPublicRoute = PUBLIC_ROUTES.includes(pathname)
 
   const checkAuth = useCallback(async () => {
     try {
       const { data: { user: supabaseUser }, error } = await supabase.auth.getUser()
-      
+
       if (error || !supabaseUser) {
         setUser(null)
-        if (!isPublicRoute) {
-          router.push('/admin/login')
-        }
+        if (!isPublicRoute) router.push('/admin/login')
         return
       }
 
-      // Verificar que el usuario tenga rol de admin
       const role = supabaseUser.user_metadata?.role
       if (role !== 'admin' && role !== 'superadmin') {
         setUser(null)
@@ -51,15 +39,11 @@ export default function AdminLayout({
         id: supabaseUser.id,
         email: supabaseUser.email!,
         role,
-        username: supabaseUser.user_metadata?.username
+        username: supabaseUser.user_metadata?.username,
       })
-
-    } catch (error) {
-      console.error('Error verificando autenticación:', error)
+    } catch {
       setUser(null)
-      if (!isPublicRoute) {
-        router.push('/admin/login')
-      }
+      if (!isPublicRoute) router.push('/admin/login')
     } finally {
       setLoading(false)
     }
@@ -73,19 +57,14 @@ export default function AdminLayout({
 
     checkAuth()
 
-    // Escuchar cambios en la autenticación
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        if (event === 'SIGNED_OUT' || !session) {
-          setUser(null)
-          if (!isPublicRoute) {
-            router.push('/admin/login')
-          }
-        } else if (event === 'SIGNED_IN' && session) {
-          checkAuth()
-        }
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_OUT' || !session) {
+        setUser(null)
+        if (!isPublicRoute) router.push('/admin/login')
+      } else if (event === 'SIGNED_IN') {
+        checkAuth()
       }
-    )
+    })
 
     return () => subscription.unsubscribe()
   }, [pathname, isPublicRoute, checkAuth, router, supabase.auth])
@@ -93,28 +72,25 @@ export default function AdminLayout({
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <Loader2 className="h-8 w-8 animate-spin" />
+        <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
       </div>
     )
   }
 
-  // Para rutas públicas, mostrar el contenido directamente sin header ni footer
   if (isPublicRoute) {
-    return (
-      <div className="min-h-screen bg-gray-50">
-        {children}
-      </div>
-    )
+    return <div className="min-h-screen bg-gray-50">{children}</div>
   }
 
-  // Para rutas protegidas, mostrar solo si está autenticado, sin header ni footer
-  if (!user) {
-    return null
-  }
+  if (!user) return null
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {children}
-    </div>
+    <AdminUserContext.Provider value={user}>
+      <div className="flex min-h-screen bg-gradient-to-br from-gray-50 via-gray-50 to-gray-100">
+        <AdminSidebar user={user} />
+        <div className="flex-1 lg:ml-72">
+          {children}
+        </div>
+      </div>
+    </AdminUserContext.Provider>
   )
 }

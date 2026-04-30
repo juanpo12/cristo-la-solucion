@@ -196,3 +196,32 @@ export const selectAlcanceSignupSchema = createSelectSchema(alcanceSignups)
 
 export type AlcanceSignup = typeof alcanceSignups.$inferSelect
 export type NewAlcanceSignup = typeof alcanceSignups.$inferInsert
+
+// Tabla de recursos (artículos / devocionales / sermones)
+export const resources = pgTable('resources', {
+  id: serial('id').primaryKey(),
+  title: varchar('title', { length: 255 }).notNull(),
+  slug: varchar('slug', { length: 255 }).notNull().unique(),
+  content: jsonb('content').notNull(),
+  excerpt: text('excerpt'),
+  category: varchar('category', { length: 100 }).notNull().default('general'),
+  published: boolean('published').default(false),
+  coverImage: text('cover_image'),
+  author: varchar('author', { length: 255 }),
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
+}, (t) => [
+  index('idx_resources_published').on(t.published),
+  index('idx_resources_category').on(t.category),
+  index('idx_resources_created_at').on(t.createdAt),
+])
+
+export const insertResourceSchema = createInsertSchema(resources, {
+  title: z.string().min(1, 'El título es requerido').max(255),
+  slug: z.string().min(1).max(255).regex(/^[a-z0-9-]+$/, 'Solo letras minúsculas, números y guiones'),
+  category: z.enum(['general', 'sermon', 'devocional', 'estudio', 'testimonio']),
+})
+export const selectResourceSchema = createSelectSchema(resources)
+
+export type Resource = typeof resources.$inferSelect
+export type NewResource = typeof resources.$inferInsert
