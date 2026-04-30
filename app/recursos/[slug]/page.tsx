@@ -28,14 +28,12 @@ export default async function RecursoPage({ params }: { params: Promise<{ slug: 
 
   return (
     <div className="min-h-screen bg-gray-50 pt-20">
-      {/* Cover */}
       {resource.coverImage && (
         <div className="w-full h-56 md:h-80 overflow-hidden">
           <img src={resource.coverImage} alt={resource.title} className="w-full h-full object-cover" />
         </div>
       )}
 
-      {/* Back nav */}
       <div className="bg-white border-b border-gray-200/50">
         <div className="max-w-3xl mx-auto px-4 py-4">
           <Link href={backHref} className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-church-electric-600 transition-colors">
@@ -52,7 +50,6 @@ export default async function RecursoPage({ params }: { params: Promise<{ slug: 
               resource.type === 'apunte'
                 ? 'text-blue-700 bg-blue-50 border-blue-100'
                 : 'text-church-electric-700 bg-church-electric-50 border-church-electric-100'
-
             }`}>
               <Tag className="h-3 w-3" />
               {categoryTitle}
