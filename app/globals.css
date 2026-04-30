@@ -119,3 +119,30 @@ main {
     @apply bg-white text-church-electric-600 border-2 border-church-electric-600 hover:bg-church-electric-50 shadow-lg hover:shadow-xl transition-all duration-300;
   }
 }
+
+/* TipTap editor styles */
+.tiptap p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: #9ca3af;
+  pointer-events: none;
+  height: 0;
+}
+
+.tiptap h1 { @apply text-3xl font-bold text-gray-900 mt-6 mb-3; }
+.tiptap h2 { @apply text-2xl font-bold text-gray-900 mt-5 mb-2; }
+.tiptap h3 { @apply text-xl font-semibold text-gray-900 mt-4 mb-2; }
+.tiptap p  { @apply text-gray-700 leading-relaxed mb-3; }
+.tiptap ul  { @apply list-disc ml-6 mb-3 space-y-1; }
+.tiptap ol  { @apply list-decimal ml-6 mb-3 space-y-1; }
+.tiptap li  { @apply text-gray-700; }
+.tiptap blockquote { @apply border-l-4 border-church-electric-400 pl-5 py-1 italic text-gray-600 my-4 bg-blue-50/50 rounded-r-lg; }
+.tiptap hr  { @apply my-6 border-gray-200; }
+.tiptap a   { @apply text-church-electric-600 underline; }
+.tiptap strong { @apply font-bold; }
+.tiptap em     { @apply italic; }
+.tiptap u      { @apply underline; }
+.tiptap s      { @apply line-through; }
+.tiptap code   { @apply bg-gray-100 px-1.5 py-0.5 rounded text-sm font-mono text-gray-800; }
+.tiptap pre    { @apply bg-gray-900 text-gray-100 rounded-xl p-5 font-mono text-sm overflow-x-auto my-4; }
+.tiptap pre code { @apply bg-transparent p-0 text-inherit; }

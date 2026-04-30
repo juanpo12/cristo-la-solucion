@@ -15,7 +15,8 @@ import {
   X,
   MessageSquare,
   ChevronRight,
-  HeartHandshake
+  HeartHandshake,
+  BookOpen,
 } from 'lucide-react'
 
 const navigation = [
@@ -42,6 +43,12 @@ const navigation = [
     href: '/admin/contacts',
     icon: MessageSquare,
     description: 'Mensajes'
+  },
+  {
+    name: 'Recursos',
+    href: '/admin/recursos',
+    icon: BookOpen,
+    description: 'Artículos'
   },
   {
     name: 'Alcance',
@@ -127,7 +134,9 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
           {/* Navigation con efectos premium */}
           <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
             {navigation.map((item) => {
-              const isActive = pathname === item.href
+              const isActive = item.href === '/admin'
+                ? pathname === '/admin'
+                : pathname === item.href || pathname.startsWith(item.href + '/')
               return (
                 <Link
                   key={item.name}

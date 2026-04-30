@@ -1,9 +1,9 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
 import { DashboardSkeleton } from '@/components/admin/dashboard-skeleton'
-import { AdminSidebar } from '@/components/admin/admin-sidebar'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { useAdminUser } from './context'
 import {
   Package,
   DollarSign,
@@ -11,15 +11,7 @@ import {
   Clock,
   ChevronRight,
   MessageSquare,
-  Users
 } from 'lucide-react'
-
-interface AdminUser {
-  id: string
-  username?: string
-  email: string
-  role: string
-}
 
 interface DashboardStats {
   products: {
@@ -52,7 +44,7 @@ interface RecentOrder {
 }
 
 export default function AdminDashboard() {
-  const [user, setUser] = useState<AdminUser | null>(null)
+  const user = useAdminUser()
   const [stats, setStats] = useState<DashboardStats | null>(null)
   const [recentOrders, setRecentOrders] = useState<RecentOrder[]>([])
   const [loading, setLoading] = useState(true)
@@ -65,25 +57,6 @@ export default function AdminDashboard() {
   const loadDashboardData = async () => {
     try {
       setError(null)
-
-      // Obtener información del usuario desde Supabase
-      const { createClient } = await import('@/lib/supabase/client')
-      const supabase = createClient()
-
-      const { data: { user: supabaseUser }, error: userError } = await supabase.auth.getUser()
-
-      if (userError || !supabaseUser) {
-        console.error('Error obteniendo usuario:', userError)
-        setError('Error al obtener información del usuario')
-        return
-      }
-
-      setUser({
-        id: supabaseUser.id,
-        email: supabaseUser.email || '',
-        role: supabaseUser.user_metadata?.role || 'admin',
-        username: supabaseUser.user_metadata?.username
-      })
 
       // Obtener estadísticas de productos con manejo de errores
       let productsStats = {
@@ -233,46 +206,25 @@ export default function AdminDashboard() {
 
   if (error) {
     return (
-      <div className="flex min-h-screen bg-gradient-to-br from-gray-50 via-gray-50 to-gray-100">
-        <div className="flex-1 lg:ml-72 flex items-center justify-center p-4">
-          <div className="text-center max-w-md">
-            <div className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 rounded-full bg-red-100 mb-6">
-              <AlertTriangle className="h-8 w-8 md:h-10 md:w-10 text-red-600" />
-            </div>
-            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">Error al cargar</h2>
-            <p className="text-sm md:text-base text-red-600 mb-6">{error}</p>
-            <button
-              onClick={loadDashboardData}
-              className="px-6 py-3 bg-gradient-to-r from-church-electric-600 to-church-electric-700 text-white rounded-xl hover:from-church-electric-700 hover:to-church-electric-800 font-medium shadow-lg shadow-church-electric-600/30 hover:shadow-xl hover:shadow-church-electric-600/40 transition-all duration-200"
-            >
-              Reintentar
-            </button>
+      <div className="flex items-center justify-center min-h-[60vh] p-4">
+        <div className="text-center max-w-md">
+          <div className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 rounded-full bg-red-100 mb-6">
+            <AlertTriangle className="h-8 w-8 md:h-10 md:w-10 text-red-600" />
           </div>
-        </div>
-      </div>
-    )
-  }
-
-  if (!user) {
-    return (
-      <div className="flex min-h-screen bg-gradient-to-br from-gray-50 via-gray-50 to-gray-100">
-        <div className="flex-1 lg:ml-72 flex items-center justify-center p-4">
-          <div className="text-center">
-            <div className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 rounded-full bg-gray-100 mb-6">
-              <AlertTriangle className="h-8 w-8 md:h-10 md:w-10 text-gray-400" />
-            </div>
-            <p className="text-base md:text-lg font-medium text-gray-600">Usuario no autenticado</p>
-          </div>
+          <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">Error al cargar</h2>
+          <p className="text-sm md:text-base text-red-600 mb-6">{error}</p>
+          <button
+            onClick={loadDashboardData}
+            className="px-6 py-3 bg-gradient-to-r from-church-electric-600 to-church-electric-700 text-white rounded-xl hover:from-church-electric-700 hover:to-church-electric-800 font-medium shadow-lg shadow-church-electric-600/30 hover:shadow-xl hover:shadow-church-electric-600/40 transition-all duration-200"
+          >
+            Reintentar
+          </button>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-gray-50 via-gray-50 to-gray-100">
-      <AdminSidebar user={user} />
-
-      <div className="flex-1 lg:ml-72">
         <div className="p-4 md:p-6 lg:p-8">
           {/* Header mejorado */}
           <div className="mb-6 md:mb-8">
@@ -424,9 +376,9 @@ export default function AdminDashboard() {
                         <p className="text-lg md:text-xl font-bold text-gray-900">
                           {formatCurrency(order?.total || 0)}
                         </p>
-                        <a href={`/admin/orders?search=${order?.externalReference}`} className="px-3 py-1.5 inline-block text-xs font-medium text-church-electric-600 bg-church-electric-50 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-church-electric-100">
+                        <Link href={`/admin/orders?search=${order?.externalReference}`} className="px-3 py-1.5 inline-block text-xs font-medium text-church-electric-600 bg-church-electric-50 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-church-electric-100">
                           Ver detalles
-                        </a>
+                        </Link>
                       </div>
                     </div>
                   ))
@@ -435,16 +387,14 @@ export default function AdminDashboard() {
 
               {recentOrders && recentOrders.length > 0 && (
                 <div className="mt-4 pt-4 border-t border-gray-200/50 text-center">
-                  <a href="/admin/orders" className="inline-flex items-center text-sm font-medium text-church-electric-600 hover:text-church-electric-700 transition-colors">
+                  <Link href="/admin/orders" className="inline-flex items-center text-sm font-medium text-church-electric-600 hover:text-church-electric-700 transition-colors">
                     Ver todas las órdenes
                     <ChevronRight className="h-4 w-4 ml-1" />
-                  </a>
+                  </Link>
                 </div>
               )}
             </div>
           </div>
         </div>
-      </div>
-    </div>
   )
 }

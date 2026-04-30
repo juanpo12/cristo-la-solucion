@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState, useCallback } from 'react'
-import { AdminSidebar } from '@/components/admin/admin-sidebar'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -273,10 +272,6 @@ export default function ContactsPage() {
   }
 
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-gray-50 via-gray-50 to-gray-100">
-      <AdminSidebar />
-
-      <div className="flex-1 lg:ml-72">
         <div className="p-4 md:p-6 lg:p-8">
           {/* Header mejorado */}
           <div className="mb-6 md:mb-8">
@@ -626,7 +621,5 @@ export default function ContactsPage() {
             </div>
           )}
         </div>
-      </div>
-    </div>
   )
 }

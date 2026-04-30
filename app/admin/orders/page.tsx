@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { OrdersSkeleton } from "@/components/admin/orders-skeleton";
-import { AdminSidebar } from "@/components/admin/admin-sidebar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
@@ -23,13 +22,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-interface AdminUser {
-  id: string;
-  username: string;
-  email: string;
-  role: string;
-}
 
 interface OrderItem {
   id: number;
@@ -59,7 +51,6 @@ interface Order {
 }
 
 export default function AdminOrdersPage() {
-  const [user, setUser] = useState<AdminUser | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -102,30 +93,8 @@ export default function AdminOrdersPage() {
   }, [searchTerm, selectedStatus]);
 
   useEffect(() => {
-    const loadUserAndOrders = async () => {
-      try {
-        // Obtener información del usuario
-        const userResponse = await fetch("/api/admin/auth/me");
-        const userData = await userResponse.json();
-        setUser(userData.user);
-
-        // Obtener órdenes
-        await loadOrders();
-      } catch (error) {
-        console.error("Error cargando datos:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadUserAndOrders();
+    loadOrders().finally(() => setLoading(false));
   }, [loadOrders]);
-
-  useEffect(() => {
-    if (!loading) {
-      loadOrders();
-    }
-  }, [searchTerm, selectedStatus, loading, loadOrders]);
 
   const formatCurrency = (amount: string) => {
     return new Intl.NumberFormat("es-AR", {
@@ -221,15 +190,11 @@ export default function AdminOrdersPage() {
     }
   };
 
-  if (loading || !user) {
+  if (loading) {
     return <OrdersSkeleton />;
   }
 
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-gray-50 via-gray-50 to-gray-100">
-      <AdminSidebar user={user} />
-
-      <div className="flex-1 lg:ml-72">
         <div className="p-4 md:p-6 lg:p-8">
           {/* Header mejorado */}
           <div className="mb-6 md:mb-8">
@@ -436,8 +401,6 @@ export default function AdminOrdersPage() {
             </div>
           ))
         )}
-      </div>
-        </div>
       </div>
     </div>
   );

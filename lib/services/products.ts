@@ -47,7 +47,6 @@ export class ProductService {
         }
       }
 
-      // Construir query de manera más compatible
       const baseQuery = db.select().from(products)
 
       // Aplicar filtros

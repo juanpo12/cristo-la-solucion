@@ -14,7 +14,8 @@
     "db:seed": "tsx lib/db/seed.ts",
     "db:seed-simple": "node scripts/seed-db.js",
     "db:verify": "node scripts/verify-db.js",
-    "db:migrate-admin": "node scripts/run-migration.js"
+    "db:migrate-admin": "node scripts/run-migration.js",
+    "migrate:images": "tsx scripts/migrate-images-to-storage.ts"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.15",
@@ -24,8 +25,15 @@
     "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/ssr": "^0.7.0",
     "@supabase/supabase-js": "^2.56.0",
+    "@tailwindcss/typography": "^0.5.19",
     "@tanstack/react-query": "^5.87.1",
     "@tanstack/react-query-devtools": "^5.87.1",
+    "@tiptap/extension-link": "^3.22.5",
+    "@tiptap/extension-placeholder": "^3.22.5",
+    "@tiptap/extension-underline": "^3.22.5",
+    "@tiptap/pm": "^3.22.5",
+    "@tiptap/react": "^3.22.5",
+    "@tiptap/starter-kit": "^3.22.5",
     "@types/pg": "^8.15.5",
     "@vercel/analytics": "^1.6.1",
     "better-sqlite3": "^12.2.0",
