@@ -48,7 +48,7 @@ export default async function RecursosPage({ searchParams }: Props) {
       date ? new Date(date).toLocaleDateString('es-AR', { day: '2-digit', month: 'long', year: 'numeric' }) : ''
 
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-50 pt-20">
         {/* Hero compacto con imagen de categoría */}
         <section className={`relative text-white py-14 md:py-20 overflow-hidden ${
           validTipo === 'apunte'
@@ -139,7 +139,7 @@ export default async function RecursosPage({ searchParams }: Props) {
     const accentColor = validTipo === 'apunte' ? 'from-blue-700 via-blue-600 to-cyan-700' : 'from-church-electric-700 via-church-electric-600 to-purple-700'
 
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-50 pt-20">
         {/* Hero */}
         <section className={`bg-gradient-to-br ${accentColor} text-white py-16 md:py-24`}>
           <div className="max-w-6xl mx-auto px-4 text-center">
@@ -230,7 +230,7 @@ export default async function RecursosPage({ searchParams }: Props) {
 
   // — Vista 1: landing — elegir tipo —
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 pt-20">
       <section className="bg-gradient-to-br from-church-electric-700 via-church-electric-600 to-purple-700 text-white py-16 md:py-24">
         <div className="max-w-6xl mx-auto px-4 text-center">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white/15 mb-6 backdrop-blur-sm">

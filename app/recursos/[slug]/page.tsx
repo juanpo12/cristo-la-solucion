@@ -25,7 +25,7 @@ export default async function RecursoPage({ params }: { params: Promise<{ slug: 
     date ? new Date(date).toLocaleDateString('es-AR', { day: '2-digit', month: 'long', year: 'numeric' }) : ''
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 pt-20">
       {/* Cover */}
       {resource.coverImage && (
         <div className="w-full h-56 md:h-80 overflow-hidden">
