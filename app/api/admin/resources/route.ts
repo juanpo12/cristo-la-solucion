@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { resources } from '@/lib/db/schema'
-import { desc, eq, ilike, or, and } from 'drizzle-orm'
+import { desc, eq, ilike, and } from 'drizzle-orm'
 import { createClient } from '@/lib/supabase/server'
+import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 
 async function requireAdmin() {
@@ -31,6 +32,7 @@ const createSchema = z.object({
   content: z.record(z.string(), z.unknown()),
   excerpt: z.string().optional().nullable(),
   category: z.string().default('general'),
+  type: z.enum(['apunte', 'articulo']).default('articulo'),
   published: z.boolean().default(false),
   coverImage: z.string().optional().nullable(),
   author: z.string().optional().nullable(),
@@ -45,9 +47,11 @@ export async function GET(req: NextRequest) {
   const category = searchParams.get('category')
   const published = searchParams.get('published')
 
+  const type = searchParams.get('type')
   const conditions = []
   if (search) conditions.push(ilike(resources.title, `%${search}%`))
   if (category && category !== 'all') conditions.push(eq(resources.category, category))
+  if (type && type !== 'all') conditions.push(eq(resources.type, type))
   if (published === 'true') conditions.push(eq(resources.published, true))
   if (published === 'false') conditions.push(eq(resources.published, false))
 
@@ -79,10 +83,12 @@ export async function POST(req: NextRequest) {
     content: data.content,
     excerpt: data.excerpt ?? null,
     category: data.category,
+    type: data.type,
     published: data.published,
     coverImage: data.coverImage ?? null,
     author: data.author ?? null,
   }).returning()
 
+  revalidatePath('/recursos')
   return NextResponse.json({ resource: created }, { status: 201 })
 }

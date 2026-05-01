@@ -48,7 +48,11 @@ const navigation = [
     name: 'Recursos',
     href: '/admin/recursos',
     icon: BookOpen,
-    description: 'Artículos'
+    description: 'Artículos',
+    children: [
+      { name: 'Todos los recursos', href: '/admin/recursos' },
+      { name: 'Categorías', href: '/admin/recursos/categorias' },
+    ]
   },
   {
     name: 'Alcance',
@@ -138,58 +142,66 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
                 ? pathname === '/admin'
                 : pathname === item.href || pathname.startsWith(item.href + '/')
               return (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  onClick={() => setSidebarOpen(false)}
-                  prefetch={true}
-                  className={cn(
-                    "group flex items-center justify-between px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200 relative overflow-hidden",
-                    isActive
-                      ? "bg-gradient-to-r from-church-electric-600 to-church-electric-700 text-white shadow-lg shadow-church-electric-600/30 scale-[1.02]"
-                      : "text-gray-700 hover:bg-gradient-to-r hover:from-gray-100 hover:to-gray-50 hover:shadow-md hover:scale-[1.01]"
-                  )}
-                >
-                  {/* Indicador de activo (barra izquierda) */}
-                  {isActive && (
-                    <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-white rounded-r-full" />
-                  )}
-
-                  <div className="flex items-center flex-1 min-w-0">
-                    <div className={cn(
-                      "flex items-center justify-center w-10 h-10 rounded-lg mr-3 transition-all duration-200",
+                <div key={item.name}>
+                  <Link
+                    href={item.href}
+                    onClick={() => setSidebarOpen(false)}
+                    prefetch={true}
+                    className={cn(
+                      "group flex items-center justify-between px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200 relative overflow-hidden",
                       isActive
-                        ? "bg-white/20"
-                        : "bg-gray-100 group-hover:bg-white group-hover:shadow-sm"
-                    )}>
-                      <item.icon className={cn(
-                        "h-5 w-5 transition-transform duration-200 group-hover:scale-110",
-                        isActive ? "text-white" : "text-church-electric-600"
-                      )} />
-                    </div>
-                    <div className="flex-1 min-w-0">
+                        ? "bg-gradient-to-r from-church-electric-600 to-church-electric-700 text-white shadow-lg shadow-church-electric-600/30 scale-[1.02]"
+                        : "text-gray-700 hover:bg-gradient-to-r hover:from-gray-100 hover:to-gray-50 hover:shadow-md hover:scale-[1.01]"
+                    )}
+                  >
+                    {isActive && (
+                      <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-white rounded-r-full" />
+                    )}
+                    <div className="flex items-center flex-1 min-w-0">
                       <div className={cn(
-                        "font-semibold truncate",
-                        isActive ? "text-white" : "text-gray-900"
+                        "flex items-center justify-center w-10 h-10 rounded-lg mr-3 transition-all duration-200",
+                        isActive ? "bg-white/20" : "bg-gray-100 group-hover:bg-white group-hover:shadow-sm"
                       )}>
-                        {item.name}
+                        <item.icon className={cn(
+                          "h-5 w-5 transition-transform duration-200 group-hover:scale-110",
+                          isActive ? "text-white" : "text-church-electric-600"
+                        )} />
                       </div>
-                      <div className={cn(
-                        "text-xs truncate",
-                        isActive ? "text-white/80" : "text-gray-500"
-                      )}>
-                        {item.description}
+                      <div className="flex-1 min-w-0">
+                        <div className={cn("font-semibold truncate", isActive ? "text-white" : "text-gray-900")}>
+                          {item.name}
+                        </div>
+                        <div className={cn("text-xs truncate", isActive ? "text-white/80" : "text-gray-500")}>
+                          {item.description}
+                        </div>
                       </div>
                     </div>
-                  </div>
+                    <ChevronRight className={cn(
+                      "h-4 w-4 transition-all duration-200",
+                      isActive ? "text-white opacity-100 translate-x-0" : "text-gray-400 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0"
+                    )} />
+                  </Link>
 
-                  <ChevronRight className={cn(
-                    "h-4 w-4 transition-all duration-200",
-                    isActive
-                      ? "text-white opacity-100 translate-x-0"
-                      : "text-gray-400 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0"
-                  )} />
-                </Link>
+                  {'children' in item && isActive && (
+                    <div className="ml-14 mt-1 mb-1 space-y-0.5">
+                      {item.children!.map((child) => (
+                        <Link
+                          key={child.href}
+                          href={child.href}
+                          onClick={() => setSidebarOpen(false)}
+                          className={cn(
+                            "block px-3 py-1.5 text-xs rounded-lg transition-colors",
+                            pathname === child.href
+                              ? "text-church-electric-700 font-semibold bg-church-electric-50"
+                              : "text-gray-500 hover:text-gray-800 hover:bg-gray-100"
+                          )}
+                        >
+                          {child.name}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
               )
             })}
           </nav>

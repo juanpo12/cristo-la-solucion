@@ -1,15 +1,22 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { ArrowLeft, Save, Eye, EyeOff, Loader2, Upload, X, Clock, Tag } from 'lucide-react'
+import { ArrowLeft, Save, Eye, EyeOff, Loader2, Upload, X, Clock, Tag, FolderOpen, FileText, BookMarked } from 'lucide-react'
 import Link from 'next/link'
 import { ResourceEditor } from './resource-editor'
 import { ResourceContent } from '@/components/resource-content'
-import { createClient } from '@/lib/supabase/client'
+
+interface ResourceCategory {
+  id: number
+  title: string
+  slug: string
+  description: string | null
+  image: string | null
+}
 
 interface ResourceFormProps {
   initial?: {
@@ -18,24 +25,13 @@ interface ResourceFormProps {
     slug: string
     excerpt: string
     category: string
+    type?: string
     author: string
     published: boolean
     content: object | null
     coverImage?: string | null
   }
 }
-
-const CATEGORIES = [
-  { value: 'general', label: 'General' },
-  { value: 'sermon', label: 'Sermón' },
-  { value: 'devocional', label: 'Devocional' },
-  { value: 'estudio', label: 'Estudio Bíblico' },
-  { value: 'testimonio', label: 'Testimonio' },
-]
-
-const CATEGORY_LABELS: Record<string, string> = Object.fromEntries(
-  CATEGORIES.map((c) => [c.value, c.label])
-)
 
 function generateSlug(title: string) {
   return title
@@ -53,10 +49,12 @@ export function ResourceForm({ initial }: ResourceFormProps) {
   const isEdit = !!initial?.id
   const fileInputRef = useRef<HTMLInputElement>(null)
 
+  const [categories, setCategories] = useState<ResourceCategory[]>([])
   const [title, setTitle] = useState(initial?.title ?? '')
   const [slug, setSlug] = useState(initial?.slug ?? '')
   const [excerpt, setExcerpt] = useState(initial?.excerpt ?? '')
-  const [category, setCategory] = useState(initial?.category ?? 'general')
+  const [category, setCategory] = useState(initial?.category ?? '')
+  const [type, setType] = useState<'articulo' | 'apunte'>((initial?.type as 'articulo' | 'apunte') ?? 'articulo')
   const [author, setAuthor] = useState(initial?.author ?? '')
   const [published, setPublished] = useState(initial?.published ?? false)
   const [content, setContent] = useState<object | null>(initial?.content ?? null)
@@ -65,6 +63,17 @@ export function ResourceForm({ initial }: ResourceFormProps) {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
   const [showPreview, setShowPreview] = useState(false)
+
+  useEffect(() => {
+    fetch('/api/admin/resource-categories')
+      .then((r) => r.json())
+      .then((data) => {
+        const cats: ResourceCategory[] = data.categories ?? []
+        setCategories(cats)
+        if (!initial?.category && cats.length > 0) setCategory(cats[0].slug)
+      })
+      .catch(() => {})
+  }, [])
 
   const handleTitleChange = (val: string) => {
     setTitle(val)
@@ -77,20 +86,17 @@ export function ResourceForm({ initial }: ResourceFormProps) {
 
     setUploading(true)
     try {
-      const supabase = createClient()
-      const ext = file.name.split('.').pop()
-      const path = `covers/${Date.now()}.${ext}`
+      const formData = new FormData()
+      formData.append('file', file)
+      formData.append('bucket', 'recursos')
+      formData.append('folder', 'covers')
 
-      const { error: uploadError } = await supabase.storage
-        .from('recursos')
-        .upload(path, file, { upsert: true })
-
-      if (uploadError) throw uploadError
-
-      const { data } = supabase.storage.from('recursos').getPublicUrl(path)
-      setCoverImage(data.publicUrl)
+      const res = await fetch('/api/admin/upload', { method: 'POST', body: formData })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error ?? 'Upload failed')
+      setCoverImage(data.url)
     } catch {
-      setError('No se pudo subir la imagen. Verificá que el bucket "recursos" existe en Supabase Storage.')
+      setError('No se pudo subir la imagen.')
     } finally {
       setUploading(false)
     }
@@ -103,7 +109,7 @@ export function ResourceForm({ initial }: ResourceFormProps) {
     setSaving(true)
     setError('')
 
-    const payload = { title, slug, excerpt, category, author, published, content, coverImage: coverImage || null }
+    const payload = { title, slug, excerpt, category, type, author, published, content, coverImage: coverImage || null }
     const url = isEdit ? `/api/admin/resources/${initial!.id}` : '/api/admin/resources'
     const method = isEdit ? 'PUT' : 'POST'
 
@@ -149,6 +155,37 @@ export function ResourceForm({ initial }: ResourceFormProps) {
           <div className="bg-white rounded-2xl border border-gray-200/50 shadow-sm p-6 space-y-5">
             <h2 className="font-semibold text-gray-900 text-base">Información general</h2>
 
+            {/* Type selector */}
+            <div>
+              <Label className="text-sm font-medium text-gray-700 mb-2 block">Tipo *</Label>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => setType('articulo')}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${
+                    type === 'articulo'
+                      ? 'border-church-electric-500 bg-church-electric-50 text-church-electric-700 shadow-sm'
+                      : 'border-gray-200 bg-white text-gray-500 hover:border-gray-300 hover:bg-gray-50'
+                  }`}
+                >
+                  <FileText className="h-4 w-4" />
+                  Artículo
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setType('apunte')}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${
+                    type === 'apunte'
+                      ? 'border-blue-500 bg-blue-50 text-blue-700 shadow-sm'
+                      : 'border-gray-200 bg-white text-gray-500 hover:border-gray-300 hover:bg-gray-50'
+                  }`}
+                >
+                  <BookMarked className="h-4 w-4" />
+                  Apunte
+                </button>
+              </div>
+            </div>
+
             <div>
               <Label htmlFor="title" className="text-sm font-medium text-gray-700">Título *</Label>
               <Input
@@ -173,17 +210,29 @@ export function ResourceForm({ initial }: ResourceFormProps) {
                 />
               </div>
               <div>
-                <Label htmlFor="category" className="text-sm font-medium text-gray-700">Categoría</Label>
-                <select
-                  id="category"
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                  className="mt-1 w-full h-10 rounded-lg border border-gray-200 px-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-church-electric-500"
-                >
-                  {CATEGORIES.map((c) => (
-                    <option key={c.value} value={c.value}>{c.label}</option>
-                  ))}
-                </select>
+                <Label htmlFor="category" className="text-sm font-medium text-gray-700">
+                  Categoría{' '}
+                  <Link href="/admin/recursos/categorias" className="text-xs text-church-electric-600 hover:underline font-normal">
+                    (gestionar)
+                  </Link>
+                </Label>
+                {categories.length === 0 ? (
+                  <div className="mt-1 flex items-center gap-2 text-sm text-amber-600 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
+                    <FolderOpen className="h-4 w-4 flex-shrink-0" />
+                    <span>No hay categorías. <Link href="/admin/recursos/categorias" className="underline font-medium">Creá una primero</Link>.</span>
+                  </div>
+                ) : (
+                  <select
+                    id="category"
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
+                    className="mt-1 w-full h-10 rounded-lg border border-gray-200 px-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-church-electric-500"
+                  >
+                    {categories.map((c) => (
+                      <option key={c.id} value={c.slug}>{c.title}</option>
+                    ))}
+                  </select>
+                )}
               </div>
             </div>
 
@@ -342,7 +391,7 @@ export function ResourceForm({ initial }: ResourceFormProps) {
                   <div className="flex flex-wrap items-center gap-3 mb-4">
                     <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-church-electric-700 bg-church-electric-50 px-3 py-1.5 rounded-full border border-church-electric-100">
                       <Tag className="h-3 w-3" />
-                      {CATEGORY_LABELS[category] || category}
+                      {categories.find((c) => c.slug === category)?.title || category}
                     </span>
                   </div>
                   <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight mb-4">

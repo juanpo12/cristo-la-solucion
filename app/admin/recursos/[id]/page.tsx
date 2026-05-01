@@ -17,6 +17,7 @@ export default async function EditRecursoPage({ params }: { params: Promise<{ id
         slug: resource.slug,
         excerpt: resource.excerpt ?? '',
         category: resource.category,
+        type: resource.type,
         author: resource.author ?? '',
         published: resource.published ?? false,
         content: resource.content as object,
