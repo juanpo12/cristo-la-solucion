@@ -197,6 +197,20 @@ export const selectAlcanceSignupSchema = createSelectSchema(alcanceSignups)
 export type AlcanceSignup = typeof alcanceSignups.$inferSelect
 export type NewAlcanceSignup = typeof alcanceSignups.$inferInsert
 
+// Tabla de categorías de recursos
+export const resourceCategories = pgTable('resource_categories', {
+  id: serial('id').primaryKey(),
+  title: varchar('title', { length: 255 }).notNull(),
+  slug: varchar('slug', { length: 255 }).notNull().unique(),
+  description: text('description'),
+  image: text('image'),
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
+})
+
+export type ResourceCategory = typeof resourceCategories.$inferSelect
+export type NewResourceCategory = typeof resourceCategories.$inferInsert
+
 // Tabla de recursos (artículos / devocionales / sermones)
 export const resources = pgTable('resources', {
   id: serial('id').primaryKey(),
@@ -205,6 +219,7 @@ export const resources = pgTable('resources', {
   content: jsonb('content').notNull(),
   excerpt: text('excerpt'),
   category: varchar('category', { length: 100 }).notNull().default('general'),
+  type: varchar('type', { length: 50 }).notNull().default('articulo'),
   published: boolean('published').default(false),
   coverImage: text('cover_image'),
   author: varchar('author', { length: 255 }),
@@ -213,13 +228,14 @@ export const resources = pgTable('resources', {
 }, (t) => [
   index('idx_resources_published').on(t.published),
   index('idx_resources_category').on(t.category),
+  index('idx_resources_type').on(t.type),
   index('idx_resources_created_at').on(t.createdAt),
 ])
 
 export const insertResourceSchema = createInsertSchema(resources, {
   title: z.string().min(1, 'El título es requerido').max(255),
   slug: z.string().min(1).max(255).regex(/^[a-z0-9-]+$/, 'Solo letras minúsculas, números y guiones'),
-  category: z.enum(['general', 'sermon', 'devocional', 'estudio', 'testimonio']),
+  category: z.string().min(1),
 })
 export const selectResourceSchema = createSelectSchema(resources)
 

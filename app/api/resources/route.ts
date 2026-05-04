@@ -6,9 +6,11 @@ import { desc, eq, and } from 'drizzle-orm'
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
   const category = searchParams.get('category')
+  const type = searchParams.get('type')
 
   const conditions = [eq(resources.published, true)]
   if (category && category !== 'all') conditions.push(eq(resources.category, category))
+  if (type && type !== 'all') conditions.push(eq(resources.type, type))
 
   const rows = await db
     .select({
@@ -17,6 +19,7 @@ export async function GET(req: NextRequest) {
       slug: resources.slug,
       excerpt: resources.excerpt,
       category: resources.category,
+      type: resources.type,
       coverImage: resources.coverImage,
       author: resources.author,
       createdAt: resources.createdAt,
@@ -25,5 +28,8 @@ export async function GET(req: NextRequest) {
     .where(and(...conditions))
     .orderBy(desc(resources.createdAt))
 
-  return NextResponse.json({ resources: rows })
+  return NextResponse.json(
+    { resources: rows },
+    { headers: { 'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=30' } }
+  )
 }

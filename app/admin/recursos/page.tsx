@@ -16,25 +16,10 @@ interface Resource {
   slug: string
   excerpt: string | null
   category: string
+  type: string
   published: boolean
   author: string | null
   createdAt: string
-}
-
-const CATEGORY_LABELS: Record<string, string> = {
-  general: 'General',
-  sermon: 'Sermón',
-  devocional: 'Devocional',
-  estudio: 'Estudio Bíblico',
-  testimonio: 'Testimonio',
-}
-
-const CATEGORY_COLORS: Record<string, string> = {
-  general: 'bg-gray-100 text-gray-700',
-  sermon: 'bg-purple-100 text-purple-700',
-  devocional: 'bg-blue-100 text-blue-700',
-  estudio: 'bg-emerald-100 text-emerald-700',
-  testimonio: 'bg-orange-100 text-orange-700',
 }
 
 export default function AdminRecursosPage() {
@@ -42,19 +27,21 @@ export default function AdminRecursosPage() {
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
   const [categoryFilter, setCategoryFilter] = useState('all')
+  const [typeFilter, setTypeFilter] = useState('all')
   const [deleting, setDeleting] = useState<number | null>(null)
 
   const loadResources = useCallback(async () => {
     const params = new URLSearchParams()
     if (searchTerm) params.set('search', searchTerm)
     if (categoryFilter !== 'all') params.set('category', categoryFilter)
+    if (typeFilter !== 'all') params.set('type', typeFilter)
 
     const res = await fetch(`/api/admin/resources?${params}`)
     if (res.ok) {
       const data = await res.json()
       setResources(data.resources)
     }
-  }, [searchTerm, categoryFilter])
+  }, [searchTerm, categoryFilter, typeFilter])
 
   useEffect(() => {
     loadResources().finally(() => setLoading(false))
@@ -108,14 +95,13 @@ export default function AdminRecursosPage() {
           />
         </div>
         <select
-          value={categoryFilter}
-          onChange={(e) => setCategoryFilter(e.target.value)}
+          value={typeFilter}
+          onChange={(e) => setTypeFilter(e.target.value)}
           className="h-10 rounded-lg border border-gray-200 px-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-church-electric-500"
         >
-          <option value="all">Todas las categorías</option>
-          {Object.entries(CATEGORY_LABELS).map(([val, label]) => (
-            <option key={val} value={val}>{label}</option>
-          ))}
+          <option value="all">Todos los tipos</option>
+          <option value="archivo">Archivos</option>
+          <option value="apunte">Apuntes</option>
         </select>
       </div>
 
@@ -147,8 +133,10 @@ export default function AdminRecursosPage() {
               <div className="flex-1 min-w-0">
                 <div className="flex flex-wrap items-center gap-2 mb-1">
                   <h3 className="font-semibold text-gray-900 truncate">{resource.title}</h3>
-                  <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${CATEGORY_COLORS[resource.category] || CATEGORY_COLORS.general}`}>
-                    {CATEGORY_LABELS[resource.category] || resource.category}
+                  <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
+                    resource.type === 'apunte' ? 'bg-blue-100 text-blue-700' : 'bg-church-electric-50 text-church-electric-700'
+                  }`}>
+                    {resource.type === 'apunte' ? 'Apunte' : 'Archivo'}
                   </span>
                   {resource.published ? (
                     <span className="flex items-center gap-1 text-xs font-medium text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">

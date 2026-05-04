@@ -1,55 +1,64 @@
 import { db } from '@/lib/db'
-import { resources } from '@/lib/db/schema'
+import { resources, resourceCategories } from '@/lib/db/schema'
 import { and, eq } from 'drizzle-orm'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, Clock, Tag } from 'lucide-react'
 import { ResourceContent } from '@/components/resource-content'
 
-export const dynamic = 'force-dynamic'
-
-const CATEGORY_LABELS: Record<string, string> = {
-  general: 'General',
-  sermon: 'Sermón',
-  devocional: 'Devocional',
-  estudio: 'Estudio Bíblico',
-  testimonio: 'Testimonio',
-}
+export const revalidate = 60
 
 export default async function RecursoPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
 
-  const [resource] = await db
-    .select()
-    .from(resources)
-    .where(and(eq(resources.slug, slug), eq(resources.published, true)))
+  const [[resource], cats] = await Promise.all([
+    db.select().from(resources).where(and(eq(resources.slug, slug), eq(resources.published, true))),
+    db.select().from(resourceCategories),
+  ])
 
   if (!resource) notFound()
 
+  const categoryTitle = cats.find((c) => c.slug === resource.category)?.title ?? resource.category
+  const backHref = resource.type === 'apunte'
+    ? `/recursos?tipo=apunte&categoria=${resource.category}`
+    : `/recursos?tipo=archivo`
+
   const formatDate = (date: Date | null) =>
-    date
-      ? new Date(date).toLocaleDateString('es-AR', { day: '2-digit', month: 'long', year: 'numeric' })
-      : ''
+    date ? new Date(date).toLocaleDateString('es-AR', { day: '2-digit', month: 'long', year: 'numeric' }) : ''
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
+    <div className="min-h-screen bg-gray-50 pt-20">
+      {resource.coverImage && (
+        <div className="w-full h-56 md:h-80 overflow-hidden">
+          <img src={resource.coverImage} alt={resource.title} className="w-full h-full object-cover" />
+        </div>
+      )}
+
       <div className="bg-white border-b border-gray-200/50">
         <div className="max-w-3xl mx-auto px-4 py-4">
-          <Link href="/recursos" className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-church-electric-600 transition-colors">
+          <Link href={backHref} className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-church-electric-600 transition-colors">
             <ArrowLeft className="h-4 w-4" />
-            Volver a Recursos
+            {categoryTitle}
           </Link>
         </div>
       </div>
 
       <article className="max-w-3xl mx-auto px-4 py-10 md:py-16">
-        {/* Meta */}
         <header className="mb-10">
           <div className="flex flex-wrap items-center gap-3 mb-4">
-            <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-church-electric-700 bg-church-electric-50 px-3 py-1.5 rounded-full border border-church-electric-100">
+            <span className={`inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full border ${
+              resource.type === 'apunte'
+                ? 'text-blue-700 bg-blue-50 border-blue-100'
+                : 'text-church-electric-700 bg-church-electric-50 border-church-electric-100'
+
+            }`}>
               <Tag className="h-3 w-3" />
-              {CATEGORY_LABELS[resource.category] || resource.category}
+              {categoryTitle}
+            </span>
+            <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${
+              resource.type === 'apunte' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-600'
+            }`}>
+              {resource.type === 'apunte' ? 'Apunte' : 'Archivo'}
             </span>
           </div>
 
@@ -79,12 +88,10 @@ export default async function RecursoPage({ params }: { params: Promise<{ slug: 
           </div>
         </header>
 
-        {/* Content */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200/50 p-6 md:p-10">
           <ResourceContent content={resource.content as object} />
         </div>
 
-        {/* Footer */}
         <div className="mt-10 pt-8 border-t border-gray-200 text-center">
           <p className="text-gray-500 text-sm mb-4">¿Te fue útil este recurso?</p>
           <Link

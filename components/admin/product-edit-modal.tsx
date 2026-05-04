@@ -9,7 +9,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 import { X, Save, Loader2, Upload, Star } from 'lucide-react'
 import Image from 'next/image'
-import { createClient } from '@/lib/supabase/client'
 
 interface Product {
   id: number
@@ -77,21 +76,18 @@ export function ProductEditModal({ product, isOpen, onClose, onSave }: ProductEd
 
     setUploading(true)
     try {
-      const supabase = createClient()
-      const ext = file.name.split('.').pop()
-      const path = `products/${Date.now()}.${ext}`
+      const formData = new FormData()
+      formData.append('file', file)
+      formData.append('bucket', 'productos')
+      formData.append('folder', 'products')
 
-      const { error: uploadError } = await supabase.storage
-        .from('productos')
-        .upload(path, file, { upsert: true })
-
-      if (uploadError) throw uploadError
-
-      const { data } = supabase.storage.from('productos').getPublicUrl(path)
-      setImagePreview(data.publicUrl)
-      setFormData(prev => ({ ...prev, image: data.publicUrl }))
+      const res = await fetch('/api/admin/upload', { method: 'POST', body: formData })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error ?? 'Upload failed')
+      setImagePreview(data.url)
+      setFormData(prev => ({ ...prev, image: data.url }))
     } catch {
-      alert('No se pudo subir la imagen. Verificá que el bucket "productos" existe en Supabase Storage.')
+      alert('No se pudo subir la imagen.')
     } finally {
       setUploading(false)
     }
