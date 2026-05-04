@@ -54,7 +54,7 @@ export function ResourceForm({ initial }: ResourceFormProps) {
   const [slug, setSlug] = useState(initial?.slug ?? '')
   const [excerpt, setExcerpt] = useState(initial?.excerpt ?? '')
   const [category, setCategory] = useState(initial?.category ?? '')
-  const [type, setType] = useState<'articulo' | 'apunte'>((initial?.type as 'articulo' | 'apunte') ?? 'articulo')
+  const [type, setType] = useState<'archivo' | 'apunte'>((initial?.type as 'archivo' | 'apunte') ?? 'archivo')
   const [author, setAuthor] = useState(initial?.author ?? '')
   const [published, setPublished] = useState(initial?.published ?? false)
   const [content, setContent] = useState<object | null>(initial?.content ?? null)
@@ -161,15 +161,15 @@ export function ResourceForm({ initial }: ResourceFormProps) {
               <div className="flex gap-2">
                 <button
                   type="button"
-                  onClick={() => setType('articulo')}
+                  onClick={() => setType('archivo')}
                   className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${
-                    type === 'articulo'
+                    type === 'archivo'
                       ? 'border-church-electric-500 bg-church-electric-50 text-church-electric-700 shadow-sm'
                       : 'border-gray-200 bg-white text-gray-500 hover:border-gray-300 hover:bg-gray-50'
                   }`}
                 >
                   <FileText className="h-4 w-4" />
-                  Artículo
+                  Archivo
                 </button>
                 <button
                   type="button"

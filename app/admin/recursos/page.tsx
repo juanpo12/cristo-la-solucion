@@ -100,7 +100,7 @@ export default function AdminRecursosPage() {
           className="h-10 rounded-lg border border-gray-200 px-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-church-electric-500"
         >
           <option value="all">Todos los tipos</option>
-          <option value="articulo">Artículos</option>
+          <option value="archivo">Archivos</option>
           <option value="apunte">Apuntes</option>
         </select>
       </div>
@@ -136,7 +136,7 @@ export default function AdminRecursosPage() {
                   <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
                     resource.type === 'apunte' ? 'bg-blue-100 text-blue-700' : 'bg-church-electric-50 text-church-electric-700'
                   }`}>
-                    {resource.type === 'apunte' ? 'Apunte' : 'Artículo'}
+                    {resource.type === 'apunte' ? 'Apunte' : 'Archivo'}
                   </span>
                   {resource.published ? (
                     <span className="flex items-center gap-1 text-xs font-medium text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">

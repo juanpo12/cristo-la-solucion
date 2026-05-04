@@ -212,7 +212,7 @@ export function Header() {
               }`}>
                 <div className="p-2 space-y-1">
                   <Link
-                    href="/recursos?tipo=articulo"
+                    href="/recursos?tipo=archivo"
                     className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-700 hover:bg-church-electric-50 hover:text-church-electric-700 transition-colors group"
                     onClick={() => setIsRecursosOpen(false)}
                   >
@@ -220,8 +220,8 @@ export function Header() {
                       <FileText className="h-4 w-4 text-church-electric-600" />
                     </div>
                     <div>
-                      <div className="font-medium text-sm">Artículos</div>
-                      <div className="text-xs text-gray-400">Lecturas y reflexiones</div>
+                      <div className="font-medium text-sm">Archivos</div>
+                      <div className="text-xs text-gray-400">Documentos y recursos</div>
                     </div>
                   </Link>
                   <Link
@@ -327,12 +327,12 @@ export function Header() {
               }`}>
                 <div className="space-y-2 px-4">
                   <Link
-                    href="/recursos?tipo=articulo"
+                    href="/recursos?tipo=archivo"
                     className="flex items-center justify-center gap-2 px-6 py-3 text-white/80 hover:bg-white/10 hover:text-white rounded-lg transition-all duration-200"
                     onClick={() => { setIsMobileMenuOpen(false); setIsMobileRecursosOpen(false) }}
                   >
                     <FileText className="h-4 w-4" />
-                    Artículos
+                    Archivos
                   </Link>
                   <Link
                     href="/recursos?tipo=apunte"

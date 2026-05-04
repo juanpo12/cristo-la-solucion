@@ -21,7 +21,7 @@ const updateSchema = z.object({
   content: z.record(z.string(), z.unknown()).optional(),
   excerpt: z.string().optional().nullable(),
   category: z.string().optional(),
-  type: z.enum(['apunte', 'articulo']).optional(),
+  type: z.enum(['apunte', 'archivo']).optional(),
   published: z.boolean().optional(),
   coverImage: z.string().optional().nullable(),
   author: z.string().optional().nullable(),

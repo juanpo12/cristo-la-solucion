@@ -32,7 +32,7 @@ const createSchema = z.object({
   content: z.record(z.string(), z.unknown()),
   excerpt: z.string().optional().nullable(),
   category: z.string().default('general'),
-  type: z.enum(['apunte', 'articulo']).default('articulo'),
+  type: z.enum(['apunte', 'archivo']).default('archivo'),
   published: z.boolean().default(false),
   coverImage: z.string().optional().nullable(),
   author: z.string().optional().nullable(),

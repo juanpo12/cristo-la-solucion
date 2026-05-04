@@ -19,7 +19,9 @@ export default async function RecursoPage({ params }: { params: Promise<{ slug: 
   if (!resource) notFound()
 
   const categoryTitle = cats.find((c) => c.slug === resource.category)?.title ?? resource.category
-  const backHref = `/recursos?tipo=${resource.type}&categoria=${resource.category}`
+  const backHref = resource.type === 'apunte'
+    ? `/recursos?tipo=apunte&categoria=${resource.category}`
+    : `/recursos?tipo=archivo`
 
   const formatDate = (date: Date | null) =>
     date ? new Date(date).toLocaleDateString('es-AR', { day: '2-digit', month: 'long', year: 'numeric' }) : ''
@@ -50,6 +52,7 @@ export default async function RecursoPage({ params }: { params: Promise<{ slug: 
               resource.type === 'apunte'
                 ? 'text-blue-700 bg-blue-50 border-blue-100'
                 : 'text-church-electric-700 bg-church-electric-50 border-church-electric-100'
+
             }`}>
               <Tag className="h-3 w-3" />
               {categoryTitle}
@@ -57,7 +60,7 @@ export default async function RecursoPage({ params }: { params: Promise<{ slug: 
             <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${
               resource.type === 'apunte' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-600'
             }`}>
-              {resource.type === 'apunte' ? 'Apunte' : 'Artículo'}
+              {resource.type === 'apunte' ? 'Apunte' : 'Archivo'}
             </span>
           </div>
 
