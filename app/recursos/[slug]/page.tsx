@@ -50,6 +50,7 @@ export default async function RecursoPage({ params }: { params: Promise<{ slug: 
               resource.type === 'apunte'
                 ? 'text-blue-700 bg-blue-50 border-blue-100'
                 : 'text-church-electric-700 bg-church-electric-50 border-church-electric-100'
+
             }`}>
               <Tag className="h-3 w-3" />
               {categoryTitle}
