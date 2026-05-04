@@ -109,7 +109,7 @@ export function ResourceForm({ initial }: ResourceFormProps) {
     setSaving(true)
     setError('')
 
-    const payload = { title, slug, excerpt, category, type, author, published, content, coverImage: coverImage || null }
+    const payload = { title, slug, excerpt, category: type === 'apunte' ? category : null, type, author, published, content, coverImage: coverImage || null }
     const url = isEdit ? `/api/admin/resources/${initial!.id}` : '/api/admin/resources'
     const method = isEdit ? 'PUT' : 'POST'
 
@@ -198,7 +198,7 @@ export function ResourceForm({ initial }: ResourceFormProps) {
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className={`grid grid-cols-1 gap-4 ${type === 'apunte' ? 'md:grid-cols-2' : ''}`}>
               <div>
                 <Label htmlFor="author" className="text-sm font-medium text-gray-700">Autor</Label>
                 <Input
@@ -209,6 +209,7 @@ export function ResourceForm({ initial }: ResourceFormProps) {
                   className="mt-1"
                 />
               </div>
+              {type === 'apunte' && (
               <div>
                 <Label htmlFor="category" className="text-sm font-medium text-gray-700">
                   Categoría{' '}
@@ -234,6 +235,7 @@ export function ResourceForm({ initial }: ResourceFormProps) {
                   </select>
                 )}
               </div>
+              )}
             </div>
 
             <div>

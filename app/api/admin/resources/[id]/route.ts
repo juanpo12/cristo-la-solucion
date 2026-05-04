@@ -20,7 +20,7 @@ const updateSchema = z.object({
   slug: z.string().optional(),
   content: z.record(z.string(), z.unknown()).optional(),
   excerpt: z.string().optional().nullable(),
-  category: z.string().optional(),
+  category: z.string().nullable().optional(),
   type: z.enum(['apunte', 'archivo']).optional(),
   published: z.boolean().optional(),
   coverImage: z.string().optional().nullable(),
@@ -49,9 +49,10 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 })
   }
 
+  const { category, ...rest } = parsed.data
   const [updated] = await db
     .update(resources)
-    .set({ ...parsed.data, updatedAt: new Date() })
+    .set({ ...rest, category: category ?? '', updatedAt: new Date() })
     .where(eq(resources.id, Number(id)))
     .returning()
 
