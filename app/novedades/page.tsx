@@ -3,6 +3,8 @@ import { ArrowLeft, Calendar, Star, Zap } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
+export const revalidate = 3600;
+
 import { Metadata } from "next"
 
 export const metadata: Metadata = {

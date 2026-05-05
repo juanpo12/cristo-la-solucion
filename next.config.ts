@@ -13,9 +13,15 @@ const nextConfig: NextConfig = {
   headers: async () => {
     return [
       {
+        source: '/:all*(jpg|jpeg|png|gif|ico|svg|webp|woff|woff2|ttf|otf)',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+        ],
+      },
+      {
         source: '/api/:path*',
         headers: [
-          { key: 'Access-Control-Allow-Origin', value: '*' }, // Ajustar según necesidad en producción
+          { key: 'Access-Control-Allow-Origin', value: '*' },
           { key: 'Access-Control-Allow-Methods', value: 'GET,POST,OPTIONS' },
           { key: 'Access-Control-Allow-Headers', value: 'Content-Type, Authorization' },
           { key: 'X-Content-Type-Options', value: 'nosniff' },

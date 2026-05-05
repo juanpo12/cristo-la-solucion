@@ -2,6 +2,8 @@ import { ArrowLeft, Palette, Music, Theater, Zap } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
+export const revalidate = 3600;
+
 import { Metadata } from "next"
 
 export const metadata: Metadata = {

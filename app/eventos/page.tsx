@@ -4,6 +4,8 @@ import { ArrowLeft, Calendar, Users, Heart, Cross, Home, UserCheck, Droplets, Bu
 import Link from "next/link"
 import Image from "next/image"
 
+export const revalidate = 3600;
+
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
