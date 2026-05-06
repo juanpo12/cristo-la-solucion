@@ -58,6 +58,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
 
   if (!updated) return NextResponse.json({ error: 'Not found' }, { status: 404 })
   revalidatePath('/recursos')
+  revalidatePath('/admin/recursos')
   return NextResponse.json({ resource: updated })
 }
 
@@ -67,5 +68,7 @@ export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ 
 
   const { id } = await params
   await db.delete(resources).where(eq(resources.id, Number(id)))
+  revalidatePath('/recursos')
+  revalidatePath('/admin/recursos')
   return NextResponse.json({ success: true })
 }

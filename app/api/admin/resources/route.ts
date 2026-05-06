@@ -90,5 +90,6 @@ export async function POST(req: NextRequest) {
   }).returning()
 
   revalidatePath('/recursos')
+  revalidatePath('/admin/recursos')
   return NextResponse.json({ resource: created }, { status: 201 })
 }

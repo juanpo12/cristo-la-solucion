@@ -126,8 +126,8 @@ export function ResourceForm({ initial }: ResourceFormProps) {
       return
     }
 
-    router.push('/admin/recursos')
     router.refresh()
+    router.push('/admin/recursos')
   }
 
   return (

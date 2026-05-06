@@ -36,7 +36,7 @@ export default function AdminRecursosPage() {
     if (categoryFilter !== 'all') params.set('category', categoryFilter)
     if (typeFilter !== 'all') params.set('type', typeFilter)
 
-    const res = await fetch(`/api/admin/resources?${params}`)
+    const res = await fetch(`/api/admin/resources?${params}`, { cache: 'no-store' })
     if (res.ok) {
       const data = await res.json()
       setResources(data.resources)
