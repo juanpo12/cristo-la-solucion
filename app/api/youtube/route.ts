@@ -235,7 +235,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(
       { videos: formattedVideos, liveStream: data.liveStream, success: true },
-      { headers: { 'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=60' } }
+      { headers: { 'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=300' } }
     )
   } catch {
     return NextResponse.json(
