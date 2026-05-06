@@ -68,7 +68,7 @@ export default function AdminRecursosPage() {
     new Date(str).toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' })
 
   return (
-    <div className="p-4 md:p-6 lg:p-8">
+    <div className="p-4 md:p-6 lg:p-8 max-w-5xl mx-auto">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 md:mb-8">
         <div>
@@ -165,10 +165,11 @@ export default function AdminRecursosPage() {
                 >
                   {resource.published ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
-                <Link href={`/admin/recursos/${resource.id}`}>
-                  <button className="p-2 rounded-lg text-church-electric-600 hover:bg-church-electric-50 transition-colors">
-                    <Edit className="h-4 w-4" />
-                  </button>
+                <Link
+                  href={`/admin/recursos/${resource.id}`}
+                  className="p-2 rounded-lg text-church-electric-600 hover:bg-church-electric-50 transition-colors"
+                >
+                  <Edit className="h-4 w-4" />
                 </Link>
                 <button
                   onClick={() => deleteResource(resource.id)}
