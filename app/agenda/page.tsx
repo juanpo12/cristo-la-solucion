@@ -7,41 +7,35 @@ import { CalendarDays, Clock } from "lucide-react"
 export default function AgendaPage() {
   const agendaData = [
     {
-      month: "ABRIL 2026",
-      events: [
-        { day: "Jueves 2", title: "Reunión Velorio cancelado – Pr. Simao", time: "19:30 hs" },
-        { day: "Viernes 3", title: "Reunión Velorio cancelado – Pr. Simao", time: "19:30 hs" },
-        { day: "Sábado 4", title: "Noche de Adoración – Velorio cancelado / Cultura Music", time: "19:30 hs" },
-        { day: "Domingo 5", title: "Domingo de Resurrección con Santa Cena", time: "11 y 19 hs – Oración 10:15 y 18:15" },
-        { day: "Martes 7", title: "Grupos de Conexión", time: "19:30 hs" },
-        { day: "Jueves 9", title: "Reunión online especial Velorio cancelado", time: "20:30 hs" },
-        { day: "Sábado 11", title: "Arte CIs – Invictos Kids, Teens e Invictos", time: "19:30 hs" },
-        { day: "Domingo 12", title: "Reunión presencial", time: "11 y 19 hs – Oración 10:15 y 18:15" },
-        { day: "Martes 14", title: "Grupos de Conexión – Especial Alcance", time: "19:30 hs" },
-        { day: "Jueves 16", title: "Reunión online", time: "20:30 hs" },
-        { day: "Sábado 18", title: "Actividad Teens / Arte CIs / Invictos Kids, Teens e Invictos", time: "19:30 hs" },
-        { day: "Domingo 19", title: "Santa Cena", time: "11 y 19 hs – Oración 10:15 y 18:15" },
-        { day: "Martes 21", title: "Grupos de Conexión (19:30 hs) – Nueva Creación (19 hs)", time: "" },
-        { day: "Jueves 23", title: "Reunión online", time: "20:30 hs" },
-        { day: "Sábado 25", title: "Arte CIs / Invictos Kids, Teens e Invictos", time: "19:30 hs" },
-        { day: "Domingo 26", title: "Reunión presencial", time: "11 y 19 hs – Oración 10:15 y 18:15" },
-        { day: "Lunes 27", title: "Comienzo semana de Administración Financiera (Unánimes)", time: "22:30 hs" },
-        { day: "Martes 28", title: "GDC especial Administración Financiera", time: "19:30 hs" },
-        { day: "Miércoles 29", title: "Reunión presencial Administración Financiera – Pr. Daniel González", time: "19:30 hs" },
-        { day: "Jueves 30", title: "Streaming especial con invitado – Administración Financiera", time: "20:30 hs" },
-      ]
-    },
-    {
       month: "MAYO 2026",
       events: [
-        { day: "Viernes 1", title: "Reunión presencial Administración Financiera – Pr. Alfredo Dimiro", time: "19:00 hs" },
-        { day: "Sábado 2", title: "Arte CIs / Invictos Kids, Teens e Invictos especial Adm. Financiera", time: "19:30 hs" },
-        { day: "Domingo 3", title: "Reunión (nuevo horario) – Administración Financiera", time: "11 y 18 hs – Oración 10:15 y 17:15" },
+        { day: "Viernes 1", title: "Reunión presencial Administración Financiera – Pr. Alfredo Dimiro", time: "19 hs" },
+        { day: "Sábado 2", title: "Invictos Kids, Teens e Invictos especial Adm. Financiera", time: "19:30 hs" },
+        { day: "Domingo 3", title: "Reunión (nuevo horario) – Administración Financiera", time: "11 y 18 hs" },
+        { day: "Martes 5", title: "Grupos de Conexión", time: "19:30 hs" },
+        { day: "Jueves 7", title: "Reunión online especial de Adm. Financiera", time: "20:30 hs" },
+        { day: "Sábado 9", title: "Invictos Kids, Teens e Invictos", time: "19:30 hs" },
+        { day: "Domingo 10", title: "Domingo de Santa Cena", time: "11 y 18 hs" },
+        { day: "Martes 12", title: "Grupos de Conexión", time: "19:30 hs" },
+        { day: "Jueves 14", title: "Reunión online", time: "20:30 hs" },
+        { day: "Sábado 16", title: "Invictos Kids, Teens e Invictos", time: "19:30 hs" },
+        { day: "Domingo 17", title: "Reunión 11 y Unción con aceite", time: "11 y 18 hs" },
+        { day: "Martes 19", title: "Grupos de Conexión", time: "19:30 hs" },
+        { day: "Jueves 21", title: "Reunión online", time: "20:30 hs" },
+        { day: "Sábado 23", title: "Invictos Kids, Teens e Invictos", time: "19:30 hs" },
+        { day: "Domingo 24", title: "Reuniones Pentecostés", time: "11 y 18 hs" },
+        { day: "Martes 26", title: "Grupos de Conexión", time: "19:30 hs" },
+        { day: "Jueves 28", title: "Reunión online", time: "20:30 hs" },
+        { day: "Sábado 30", title: "Invictos Kids, Teens e Invictos", time: "19:30 hs" },
+        { day: "Domingo 31", title: "Reunión y Presentación de niños", time: "11 y 18 hs" },
       ]
     },
     {
       month: "JUNIO 2026",
       events: [
+        { day: "Viernes 12", title: "Nosotras – Pastora Claudia Bunster", time: "19:30 hs" },
+        { day: "Sábado 13", title: "Noche de adoración – Ap. Billy Bunster", time: "19:30 hs" },
+        { day: "Domingo 14", title: "Reunión con normalidad y Ap. Billy Bunster", time: "11 y 18 hs" },
         { day: "Lunes 15", title: "Día de Alcance", time: "Todo el día" },
       ]
     },
