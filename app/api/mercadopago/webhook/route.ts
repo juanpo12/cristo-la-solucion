@@ -4,6 +4,7 @@ import { db } from '@/lib/db'
 import { orders } from '@/lib/db/schema'
 import { eq } from 'drizzle-orm'
 import { env } from '@/lib/env'
+import { ProductService } from '@/lib/services/products'
 import crypto from 'crypto'
 
 const client = new MercadoPagoConfig({
@@ -99,20 +100,72 @@ export async function POST(request: NextRequest) {
 
             console.log('✅ Order updated successfully:', existingOrder.id)
 
-            // Si el pago fue aprobado, reducir stock de productos
-            if (paymentInfo.status === 'approved' && existingOrder.items) {
+            // Si el pago fue aprobado y venía de un estado no aprobado, reducir stock
+            const wasAlreadyApproved = existingOrder.status === 'approved'
+            if (paymentInfo.status === 'approved' && !wasAlreadyApproved && existingOrder.items) {
               try {
                 const items = existingOrder.items as Array<{ name: string; quantity: number; id: number }>
-                for (const item of items) {
-                  // Aquí podrías reducir el stock si tienes esa funcionalidad
-                  console.log(`📦 Product sold: ${item.name} x${item.quantity}`)
-                }
+                await Promise.all(
+                  items.map((item) => ProductService.reduceStock(item.id, item.quantity))
+                )
+                console.log(`📦 Stock reducido para ${items.length} producto(s) de la orden ${existingOrder.id}`)
               } catch (stockError) {
-                console.error('Error updating stock:', stockError)
+                console.error('Error actualizando stock:', stockError)
               }
             }
           } else {
-            console.log('⚠️ Order not found for external_reference:', paymentInfo.external_reference)
+            // Crear la orden a partir de los datos del pago (webhook es la única fuente de verdad)
+            const mpItems = (paymentInfo.additional_info?.items ?? []) as Array<{
+              id?: string
+              title?: string
+              description?: string
+              unit_price?: number
+              quantity?: number
+            }>
+
+            const orderItems = mpItems.map((item) => ({
+              id: parseInt(item.id ?? '0') || 0,
+              name: item.title ?? 'Producto',
+              author: item.description?.replace(/^Libro por /, '') ?? '',
+              price: item.unit_price ?? 0,
+              quantity: item.quantity ?? 1,
+              image: '',
+            }))
+
+            const [newOrder] = await db.insert(orders).values({
+              externalReference: paymentInfo.external_reference,
+              status: paymentInfo.status || 'pending',
+              total: paymentInfo.transaction_amount?.toString() ?? '0',
+              currency: paymentInfo.currency_id ?? 'ARS',
+              payerEmail: paymentInfo.payer?.email ?? '',
+              payerName: paymentInfo.payer?.first_name ?? '',
+              payerSurname: paymentInfo.payer?.last_name ?? '',
+              payerPhone: paymentInfo.payer?.phone?.number ?? '',
+              items: orderItems,
+              mercadoPagoId: paymentInfo.id?.toString(),
+              paymentMethod: paymentInfo.payment_method_id,
+              paymentType: paymentInfo.payment_type_id,
+              transactionAmount: paymentInfo.transaction_amount?.toString(),
+              netReceivedAmount: paymentInfo.transaction_details?.net_received_amount?.toString(),
+              totalPaidAmount: paymentInfo.transaction_details?.total_paid_amount?.toString(),
+              dateApproved: paymentInfo.date_approved ? new Date(paymentInfo.date_approved) : null,
+            }).returning()
+
+            console.log('✅ Order created from webhook:', newOrder.id, 'status:', newOrder.status)
+
+            // Si el pago fue aprobado, reducir stock
+            if (paymentInfo.status === 'approved' && orderItems.length > 0) {
+              try {
+                await Promise.all(
+                  orderItems
+                    .filter((item) => item.id > 0)
+                    .map((item) => ProductService.reduceStock(item.id, item.quantity))
+                )
+                console.log(`📦 Stock reducido para ${orderItems.length} producto(s) de la orden ${newOrder.id}`)
+              } catch (stockError) {
+                console.error('Error actualizando stock:', stockError)
+              }
+            }
           }
         } catch (dbError) {
           console.error('❌ Database error in webhook:', dbError)

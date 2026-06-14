@@ -58,7 +58,12 @@ export async function middleware(request: NextRequest) {
       } = await supabase.auth.getUser();
 
       if (error || !user) {
-        return NextResponse.redirect(new URL("/admin/login", request.url));
+        const loginUrl = new URL("/admin/login", request.url);
+        const loginResponse = NextResponse.redirect(loginUrl);
+        request.cookies.getAll().forEach(({ name }) => {
+          if (name.startsWith("sb-")) loginResponse.cookies.delete(name);
+        });
+        return loginResponse;
       }
 
       // Verificar que el usuario tenga rol de admin
@@ -71,8 +76,13 @@ export async function middleware(request: NextRequest) {
 
       return response;
     } catch (error) {
-      console.error("Error en middleware de autenticación:", error);
-      return NextResponse.redirect(new URL("/admin/login", request.url));
+      // Clear stale auth cookies so the broken refresh token isn't retried on every request
+      const loginUrl = new URL("/admin/login", request.url);
+      const response = NextResponse.redirect(loginUrl);
+      request.cookies.getAll().forEach(({ name }) => {
+        if (name.startsWith("sb-")) response.cookies.delete(name);
+      });
+      return response;
     }
   }
 

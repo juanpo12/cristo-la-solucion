@@ -3,6 +3,8 @@ import { Card, CardContent } from "@/components/ui/card"
 import { MapPin, Clock, Navigation, Phone } from "lucide-react"
 import Image from "next/image"
 
+export const revalidate = 3600;
+
 import { Metadata } from "next"
 
 export const metadata: Metadata = {

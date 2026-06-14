@@ -24,11 +24,10 @@ export async function GET(request: NextRequest) {
 
     const products = await ProductService.getAll(filters)
 
-    return NextResponse.json({
-      success: true,
-      data: products,
-      count: products.length
-    })
+    return NextResponse.json(
+      { success: true, data: products, count: products.length },
+      { headers: { 'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=30' } }
+    )
   } catch (error) {
     console.error('Error fetching products:', error)
     return NextResponse.json(

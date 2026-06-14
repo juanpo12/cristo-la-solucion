@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useCallback } from 'react'
 import { ProductsSkeleton } from '@/components/admin/products-skeleton'
-import { AdminSidebar } from '@/components/admin/admin-sidebar'
 import { ProductEditModal } from '@/components/admin/product-edit-modal'
 import { ProductViewModal } from '@/components/admin/product-view-modal'
 import { ProductCreateModal } from '@/components/admin/product-create-modal'
@@ -10,8 +9,6 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { createClient } from '@/lib/supabase/client'
-import { Loader2 } from 'lucide-react'
 import Image from 'next/image'
 import {
   Plus,
@@ -22,13 +19,6 @@ import {
   Package,
   Star
 } from 'lucide-react'
-
-interface AdminUser {
-  id: string
-  username?: string
-  email: string
-  role: string
-}
 
 interface Product {
   id: number
@@ -49,7 +39,6 @@ interface Product {
 }
 
 export default function AdminProductsPage() {
-  const [user, setUser] = useState<AdminUser | null>(null)
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
@@ -83,43 +72,9 @@ export default function AdminProductsPage() {
     }
   }, [searchTerm, selectedCategory, selectedStatus])
 
-  const loadUserAndProducts = useCallback(async () => {
-    try {
-      // Obtener información del usuario desde Supabase
-      const supabase = createClient()
-      const { data: { user: supabaseUser }, error } = await supabase.auth.getUser()
-
-      if (error || !supabaseUser) {
-        console.error('Error obteniendo usuario:', error)
-        return
-      }
-
-      setUser({
-        id: supabaseUser.id,
-        email: supabaseUser.email!,
-        role: supabaseUser.user_metadata?.role || 'admin',
-        username: supabaseUser.user_metadata?.username
-      })
-
-      // Obtener productos
-      await loadProducts()
-
-    } catch (error) {
-      console.error('Error cargando datos:', error)
-    } finally {
-      setLoading(false)
-    }
+  useEffect(() => {
+    loadProducts().finally(() => setLoading(false))
   }, [loadProducts])
-
-  useEffect(() => {
-    loadUserAndProducts()
-  }, [loadUserAndProducts])
-
-  useEffect(() => {
-    if (!loading) {
-      loadProducts()
-    }
-  }, [loading, loadProducts])
 
   const formatCurrency = (amount: string) => {
     return new Intl.NumberFormat('es-AR', {
@@ -222,17 +177,12 @@ export default function AdminProductsPage() {
     }
   }
 
-  if (loading || !user) {
+  if (loading) {
     return <ProductsSkeleton />
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-50 to-gray-100">
-      <div className="flex">
-        <AdminSidebar user={user} />
-
-        <div className="flex-1 lg:ml-72">
-          <div className="p-4 md:p-6 lg:p-8">
+    <div className="p-4 md:p-6 lg:p-8">
             {/* Header mejorado */}
             <div className="flex flex-col gap-4 mb-6 md:mb-8">
               <div>
@@ -425,11 +375,7 @@ export default function AdminProductsPage() {
                 ))
               )}
             </div>
-          </div>
-        </div>
-      </div>
 
-      {/* Modales */}
       <ProductViewModal
         product={selectedProduct}
         isOpen={viewModalOpen}
