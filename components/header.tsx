@@ -111,7 +111,7 @@ export function Header() {
     { href: "oracion", label: "Oración", type: "scroll" },
     { href: "dar", label: "Dar", type: "scroll" },
     { href: "/agenda", label: "Agenda", type: "link" },
-    { href: "/alcance", label: "Alcance", type: "link" },
+    // { href: "/alcance", label: "Alcance", type: "link" },
     { href: "/contacto", label: "Contacto", type: "link" },
   ]
 
