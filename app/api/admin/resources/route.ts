@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { resources } from '@/lib/db/schema'
-import { desc, eq, ilike, and } from 'drizzle-orm'
+import { asc, desc, eq, ilike, and } from 'drizzle-orm'
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
@@ -59,7 +59,7 @@ export async function GET(req: NextRequest) {
     .select()
     .from(resources)
     .where(conditions.length ? and(...conditions) : undefined)
-    .orderBy(desc(resources.createdAt))
+    .orderBy(asc(resources.sortOrder), desc(resources.createdAt))
 
   return NextResponse.json({ resources: rows })
 }

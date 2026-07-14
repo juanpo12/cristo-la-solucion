@@ -43,6 +43,13 @@
       "when": 1777643854727,
       "tag": "0005_harsh_clea",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1784053216478,
+      "tag": "0006_great_zombie",
+      "breakpoints": true
     }
   ]
 }
