@@ -36,7 +36,7 @@ export default function AdminLogin() {
 
       if (data.user) {
         // Verificar que el usuario tenga rol de admin
-        const role = data.user.user_metadata?.role
+        const role = data.user.app_metadata?.role
         if (role !== 'admin' && role !== 'superadmin') {
           setError('No tienes permisos de administrador')
           await supabase.auth.signOut()

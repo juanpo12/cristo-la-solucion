@@ -1,5 +1,8 @@
 import type { NextConfig } from "next";
 
+// Origen permitido para las APIs: el propio sitio. Evita CORS abierto (`*`).
+const siteOrigin = process.env.NEXT_PUBLIC_BASE_URL || "https://www.cristolasolucionsj.com";
+
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
@@ -21,7 +24,8 @@ const nextConfig: NextConfig = {
       {
         source: '/api/:path*',
         headers: [
-          { key: 'Access-Control-Allow-Origin', value: '*' },
+          { key: 'Access-Control-Allow-Origin', value: siteOrigin },
+          { key: 'Vary', value: 'Origin' },
           { key: 'Access-Control-Allow-Methods', value: 'GET,POST,OPTIONS' },
           { key: 'Access-Control-Allow-Headers', value: 'Content-Type, Authorization' },
           { key: 'X-Content-Type-Options', value: 'nosniff' },

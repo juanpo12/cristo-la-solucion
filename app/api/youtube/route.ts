@@ -252,7 +252,7 @@ export async function POST(request: NextRequest) {
     const { action, streamData } = body
 
     const authHeader = request.headers.get('authorization')
-    if (!authHeader || authHeader !== `Bearer ${env.ADMIN_TOKEN}`) {
+    if (!env.ADMIN_TOKEN || !authHeader || authHeader !== `Bearer ${env.ADMIN_TOKEN}`) {
       return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
     }
 

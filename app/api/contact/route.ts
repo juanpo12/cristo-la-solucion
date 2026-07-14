@@ -2,9 +2,24 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createContact } from '@/lib/services/contacts'
 import { env } from '@/lib/env'
 
+// Escapar contenido del usuario antes de interpolarlo en el HTML del email.
+function escapeHtml(value: unknown): string {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+}
+
 // Función para enviar email con Resend (Opción 1 - Recomendada)
 async function sendWithResend(data: Record<string, unknown>) {
-  const { name, email, phone, subject, message, type } = data
+  const name = escapeHtml(data.name)
+  const email = escapeHtml(data.email)
+  const phone = data.phone ? escapeHtml(data.phone) : ''
+  const subject = data.subject ? escapeHtml(data.subject) : ''
+  const message = escapeHtml(data.message)
+  const type = escapeHtml(data.type)
 
   try {
     const response = await fetch('https://api.resend.com/emails', {
@@ -70,36 +85,6 @@ async function sendWithFormspree(data: Record<string, unknown>) {
     return { success: true }
   } catch (error) {
     console.error('Error con Formspree:', error)
-    throw error
-  }
-}
-
-// Función para guardar en archivo JSON (Opción 4 - Desarrollo/Testing)
-async function saveToFile(data: Record<string, unknown>) {
-  const fs = await import('fs/promises')
-  const path = await import('path')
-
-  try {
-    const filePath = path.join(process.cwd(), 'peticiones.json')
-    let peticiones = []
-
-    try {
-      const fileContent = await fs.readFile(filePath, 'utf8')
-      peticiones = JSON.parse(fileContent)
-    } catch {
-      // Archivo no existe, crear nuevo array
-    }
-
-    peticiones.push({
-      ...data,
-      timestamp: new Date().toISOString(),
-      id: Date.now()
-    })
-
-    await fs.writeFile(filePath, JSON.stringify(peticiones, null, 2))
-    return { success: true }
-  } catch (error) {
-    console.error('Error guardando en archivo:', error)
     throw error
   }
 }
@@ -197,13 +182,8 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Opción 3: Guardar en archivo (como backup adicional)
-    try {
-      await saveToFile(emailData)
-      console.log('Petición guardada en archivo como backup')
-    } catch {
-      console.log('Error guardando en archivo backup')
-    }
+    // La petición ya quedó persistida en la base de datos (fuente de verdad).
+    // El email es solo una notificación best-effort.
 
     // Respuesta exitosa
     return NextResponse.json(

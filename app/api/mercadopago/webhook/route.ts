@@ -15,27 +15,33 @@ const payment = new Payment(client)
 
 export async function POST(request: NextRequest) {
   try {
-    // 1. Validar firma del webhook si el secreto está configurado
-    if (env.MERCADOPAGO_WEBHOOK_SECRET) {
+    // 1. Validar firma del webhook. Obligatoria en producción: sin firma válida,
+    // cualquiera podría crear órdenes "approved" y alterar el stock.
+    const secret = env.MERCADOPAGO_WEBHOOK_SECRET
+    if (!secret) {
+      if (env.NODE_ENV === 'production') {
+        console.error('MERCADOPAGO_WEBHOOK_SECRET no configurada: rechazando webhook')
+        return NextResponse.json({ error: 'Webhook not configured' }, { status: 500 })
+      }
+      // En desarrollo se permite sin firma para poder testear localmente.
+    } else {
       const xSignature = request.headers.get('x-signature')
       const xRequestId = request.headers.get('x-request-id')
+      const dataId = request.nextUrl.searchParams.get('data.id')
 
       if (!xSignature || !xRequestId) {
         return NextResponse.json({ error: 'Missing signature headers' }, { status: 401 })
       }
 
-      // Parsear x-signature
-      const parts = xSignature.split(',')
-      let ts
-      let hash
-
-      parts.forEach(part => {
+      // Parsear x-signature -> ts y v1
+      let ts: string | undefined
+      let hash: string | undefined
+      xSignature.split(',').forEach(part => {
         const [key, value] = part.split('=')
         if (key && value) {
-          const trimmedKey = key.trim()
-          const trimmedValue = value.trim()
-          if (trimmedKey === 'ts') ts = trimmedValue
-          if (trimmedKey === 'v1') hash = trimmedValue
+          const k = key.trim()
+          if (k === 'ts') ts = value.trim()
+          if (k === 'v1') hash = value.trim()
         }
       })
 
@@ -43,15 +49,22 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: 'Invalid signature format' }, { status: 401 })
       }
 
-      // Obtener template de manifestación
-      const manifest = `id:${xRequestId};request-url:${request.nextUrl.pathname};ts:${ts};`
+      // Manifest según la documentación de Mercado Pago:
+      // id:<data.id>;request-id:<x-request-id>;ts:<ts>;
+      let manifest = ''
+      if (dataId) manifest += `id:${dataId.toLowerCase()};`
+      if (xRequestId) manifest += `request-id:${xRequestId};`
+      manifest += `ts:${ts};`
 
-      // Crear HMAC
-      const hmac = crypto.createHmac('sha256', env.MERCADOPAGO_WEBHOOK_SECRET)
-      hmac.update(manifest)
-      const sha = hmac.digest('hex')
+      const expected = crypto.createHmac('sha256', secret).update(manifest).digest('hex')
 
-      if (sha !== hash) {
+      const expectedBuf = Buffer.from(expected)
+      const receivedBuf = Buffer.from(hash)
+      const valid =
+        expectedBuf.length === receivedBuf.length &&
+        crypto.timingSafeEqual(expectedBuf, receivedBuf)
+
+      if (!valid) {
         return NextResponse.json({ error: 'Invalid signature' }, { status: 401 })
       }
     }

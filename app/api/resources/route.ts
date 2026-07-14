@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { resources } from '@/lib/db/schema'
-import { desc, eq, and } from 'drizzle-orm'
+import { asc, desc, eq, and } from 'drizzle-orm'
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
     })
     .from(resources)
     .where(and(...conditions))
-    .orderBy(desc(resources.createdAt))
+    .orderBy(asc(resources.sortOrder), desc(resources.createdAt))
 
   return NextResponse.json(
     { resources: rows },

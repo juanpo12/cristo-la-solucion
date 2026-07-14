@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { resources } from '@/lib/db/schema'
-import { desc, eq, ilike, and } from 'drizzle-orm'
+import { asc, desc, eq, ilike, and } from 'drizzle-orm'
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
@@ -10,7 +10,7 @@ async function requireAdmin() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return null
-  const role = user.user_metadata?.role
+  const role = user.app_metadata?.role
   if (role !== 'admin' && role !== 'superadmin') return null
   return user
 }
@@ -59,7 +59,7 @@ export async function GET(req: NextRequest) {
     .select()
     .from(resources)
     .where(conditions.length ? and(...conditions) : undefined)
-    .orderBy(desc(resources.createdAt))
+    .orderBy(asc(resources.sortOrder), desc(resources.createdAt))
 
   return NextResponse.json({ resources: rows })
 }

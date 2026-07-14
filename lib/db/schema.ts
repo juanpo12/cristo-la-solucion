@@ -82,7 +82,8 @@ export const categories = pgTable('categories', {
 })
 
 // Admin users are now managed through Supabase Auth
-// Users with admin role have user_metadata.role = 'admin' or 'superadmin'
+// Users with admin role have app_metadata.role = 'admin' or 'superadmin'
+// (app_metadata is only writable with the service-role key, never by the user)
 
 // Tabla de contactos/peticiones
 export const contacts = pgTable('contacts', {
@@ -223,6 +224,7 @@ export const resources = pgTable('resources', {
   published: boolean('published').default(false),
   coverImage: text('cover_image'),
   author: varchar('author', { length: 255 }),
+  sortOrder: integer('sort_order').notNull().default(0),
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at').defaultNow(),
 }, (t) => [
@@ -230,6 +232,7 @@ export const resources = pgTable('resources', {
   index('idx_resources_category').on(t.category),
   index('idx_resources_type').on(t.type),
   index('idx_resources_created_at').on(t.createdAt),
+  index('idx_resources_sort_order').on(t.sortOrder),
 ])
 
 export const insertResourceSchema = createInsertSchema(resources, {

@@ -28,7 +28,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         return
       }
 
-      const role = supabaseUser.user_metadata?.role
+      const role = supabaseUser.app_metadata?.role
       if (role !== 'admin' && role !== 'superadmin') {
         setUser(null)
         router.push('/admin/unauthorized')

@@ -67,7 +67,7 @@ export async function middleware(request: NextRequest) {
       }
 
       // Verificar que el usuario tenga rol de admin
-      const role = user.user_metadata?.role;
+      const role = user.app_metadata?.role;
       if (role !== "admin" && role !== "superadmin") {
         return NextResponse.redirect(
           new URL("/admin/unauthorized", request.url)

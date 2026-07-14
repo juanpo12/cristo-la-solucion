@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import {
   Plus, Search, Edit, Trash2, Eye, EyeOff,
-  BookOpen, FileText, Globe, Lock
+  BookOpen, FileText, Globe, Lock, ArrowUp, ArrowDown
 } from 'lucide-react'
 
 interface Resource {
@@ -62,6 +62,21 @@ export default function AdminRecursosPage() {
     await fetch(`/api/admin/resources/${id}`, { method: 'DELETE' })
     await loadResources()
     setDeleting(null)
+  }
+
+  const moveResource = async (index: number, direction: -1 | 1) => {
+    const target = index + direction
+    if (target < 0 || target >= resources.length) return
+
+    const reordered = [...resources]
+    ;[reordered[index], reordered[target]] = [reordered[target], reordered[index]]
+    setResources(reordered)
+
+    await fetch('/api/admin/resources/reorder', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ids: reordered.map((r) => r.id) }),
+    })
   }
 
   const formatDate = (str: string) =>
@@ -125,11 +140,30 @@ export default function AdminRecursosPage() {
         </div>
       ) : (
         <div className="space-y-3">
-          {resources.map((resource) => (
+          {resources.map((resource, index) => (
             <div
               key={resource.id}
               className="bg-white rounded-2xl shadow-sm border border-gray-200/50 p-5 flex flex-col md:flex-row md:items-center gap-4 hover:border-church-electric-200 hover:shadow-md transition-all duration-200"
             >
+              <div className="flex md:flex-col items-center gap-1 shrink-0">
+                <button
+                  onClick={() => moveResource(index, -1)}
+                  disabled={index === 0}
+                  title="Subir"
+                  className="p-1.5 rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition-colors disabled:opacity-30 disabled:hover:bg-transparent"
+                >
+                  <ArrowUp className="h-4 w-4" />
+                </button>
+                <button
+                  onClick={() => moveResource(index, 1)}
+                  disabled={index === resources.length - 1}
+                  title="Bajar"
+                  className="p-1.5 rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition-colors disabled:opacity-30 disabled:hover:bg-transparent"
+                >
+                  <ArrowDown className="h-4 w-4" />
+                </button>
+              </div>
+
               <div className="flex-1 min-w-0">
                 <div className="flex flex-wrap items-center gap-2 mb-1">
                   <h3 className="font-semibold text-gray-900 truncate">{resource.title}</h3>
