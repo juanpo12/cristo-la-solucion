@@ -4,10 +4,10 @@ import { redirect } from "next/navigation";
 export interface AdminUser {
   id: string;
   email: string;
+  // El rol proviene de app_metadata (solo modificable con la service-role key).
   role: string;
   user_metadata?: {
     username?: string;
-    role?: string;
   };
 }
 
@@ -26,7 +26,7 @@ export class AuthService {
     }
 
     // Verificar que el usuario tenga rol de admin
-    const role = user.user_metadata?.role || "user";
+    const role = user.app_metadata?.role || "user";
     if (role !== "admin" && role !== "superadmin") {
       return null;
     }

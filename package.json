@@ -15,6 +15,7 @@
     "db:seed-simple": "node scripts/seed-db.js",
     "db:verify": "node scripts/verify-db.js",
     "db:migrate-admin": "node scripts/run-migration.js",
+    "migrate:admin-role": "tsx scripts/migrate-admin-role.ts",
     "migrate:images": "tsx scripts/migrate-images-to-storage.ts"
   },
   "dependencies": {

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { rateLimit } from '@/lib/ratelimit'
 import { z } from 'zod'
 
 const loginSchema = z.object({
@@ -9,6 +10,16 @@ const loginSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
+    // Rate limiting anti fuerza bruta: 10 intentos por IP cada 15 minutos.
+    const ip = request.headers.get('x-forwarded-for')?.split(',')[0].trim() || 'unknown'
+    const limitResult = await rateLimit(`admin_login:${ip}`, 10, 900)
+    if (!limitResult.success) {
+      return NextResponse.json(
+        { error: 'Demasiados intentos. Esperá unos minutos e intentá de nuevo.' },
+        { status: 429 }
+      )
+    }
+
     const body = await request.json()
     const { email, password } = loginSchema.parse(body)
 
@@ -28,7 +39,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Verificar que el usuario tenga rol de admin
-    const role = data.user.user_metadata?.role
+    const role = data.user.app_metadata?.role
     if (role !== 'admin' && role !== 'superadmin') {
       await supabase.auth.signOut()
       return NextResponse.json(

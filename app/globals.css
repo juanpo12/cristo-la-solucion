@@ -1,5 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-
+/* Poppins se carga vía next/font en app/layout.tsx (sin doble request ni CLS). */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -37,9 +36,11 @@
   }
 }
 
-/* Smooth scroll behavior */
-html {
-  scroll-behavior: smooth;
+/* Smooth scroll behavior (respetando accesibilidad) */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 /* Prevent layout shifts and improve performance */

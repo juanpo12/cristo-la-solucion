@@ -82,7 +82,8 @@ export const categories = pgTable('categories', {
 })
 
 // Admin users are now managed through Supabase Auth
-// Users with admin role have user_metadata.role = 'admin' or 'superadmin'
+// Users with admin role have app_metadata.role = 'admin' or 'superadmin'
+// (app_metadata is only writable with the service-role key, never by the user)
 
 // Tabla de contactos/peticiones
 export const contacts = pgTable('contacts', {

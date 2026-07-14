@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { ProductService } from '@/lib/services/products'
-import { insertProductSchema } from '@/lib/db/schema'
-import { z } from 'zod'
 
-// GET /api/products - Obtener productos con filtros
+// GET /api/products - Obtener productos con filtros (público, solo lectura).
+// Las mutaciones (crear/editar/borrar) viven en /api/admin/products y exigen auth de admin.
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
@@ -34,44 +33,6 @@ export async function GET(request: NextRequest) {
       {
         success: false,
         error: 'Failed to fetch products'
-      },
-      { status: 500 }
-    )
-  }
-}
-
-// POST /api/products - Crear nuevo producto
-export async function POST(request: NextRequest) {
-  try {
-    const body = await request.json()
-
-    // Validar datos
-    const validatedData = insertProductSchema.parse(body)
-
-    const product = await ProductService.create(validatedData)
-
-    return NextResponse.json({
-      success: true,
-      data: product
-    }, { status: 201 })
-  } catch (error) {
-    console.error('Error creating product:', error)
-
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'Validation error',
-          details: (error as any).errors
-        },
-        { status: 400 }
-      )
-    }
-
-    return NextResponse.json(
-      {
-        success: false,
-        error: 'Failed to create product'
       },
       { status: 500 }
     )
