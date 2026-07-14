@@ -1,6 +1,6 @@
 import { db } from '@/lib/db'
 import { resources, resourceCategories } from '@/lib/db/schema'
-import { desc, eq, and } from 'drizzle-orm'
+import { asc, desc, eq, and } from 'drizzle-orm'
 import Link from 'next/link'
 import { BookOpen, Clock, User2, BookMarked, FileText, FolderOpen, ArrowLeft } from 'lucide-react'
 
@@ -60,7 +60,7 @@ export default async function RecursosPage({ searchParams }: Props) {
       })
       .from(resources)
       .where(and(eq(resources.published, true), eq(resources.type, 'archivo')))
-      .orderBy(desc(resources.createdAt))
+      .orderBy(asc(resources.sortOrder), desc(resources.createdAt))
 
     return (
       <div className="min-h-screen bg-gray-50 pt-20">
@@ -117,7 +117,7 @@ export default async function RecursosPage({ searchParams }: Props) {
         })
         .from(resources)
         .where(and(eq(resources.published, true), eq(resources.type, 'apunte'), eq(resources.category, categoria)))
-        .orderBy(desc(resources.createdAt)),
+        .orderBy(asc(resources.sortOrder), desc(resources.createdAt)),
       db.select().from(resourceCategories),
     ])
 
