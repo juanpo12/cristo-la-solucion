@@ -29,8 +29,8 @@ export function Meetings() {
     <section id="reuniones" className="py-20 bg-[#171747] text-white relative overflow-hidden scroll-mt-20">
       <div className="absolute inset-0 bg-black/20"></div>
       <div className="container mx-auto px-4 relative z-10">
-        <h2 className="text-5xl font-bold text-center mb-16">NUESTRAS REUNIONES</h2>
-        <div className="grid md:grid-cols-4 gap-8  mx-auto">
+        <h2 className="text-4xl md:text-5xl font-bold text-center mb-16">NUESTRAS REUNIONES</h2>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 mx-auto">
           {meetings.map((meeting, index) => (
             <Card
               key={index}

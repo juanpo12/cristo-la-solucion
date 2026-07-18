@@ -16,7 +16,9 @@ export function usePrayerForm() {
   const [isSuccess, setIsSuccess] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const submitPrayer = async (data: PrayerFormData) => {
+  // Devuelve true si la petición se envió correctamente (el estado `error`
+  // no se actualiza a tiempo para consultarlo justo después del await)
+  const submitPrayer = async (data: PrayerFormData): Promise<boolean> => {
     setIsLoading(true)
     setError(null)
     setIsSuccess(false)
@@ -36,8 +38,10 @@ export function usePrayerForm() {
       }
 
       setIsSuccess(true)
+      return true
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error desconocido')
+      return false
     } finally {
       setIsLoading(false)
     }
