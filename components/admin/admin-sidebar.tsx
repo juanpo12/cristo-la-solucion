@@ -17,6 +17,7 @@ import {
   ChevronRight,
   HeartHandshake,
   BookOpen,
+  UserPlus,
 } from 'lucide-react'
 
 const navigation = [
@@ -59,6 +60,12 @@ const navigation = [
     href: '/admin/alcance',
     icon: HeartHandshake,
     description: 'Inscripciones'
+  },
+  {
+    name: 'Voluntariado',
+    href: '/admin/voluntarios',
+    icon: UserPlus,
+    description: 'Interesados'
   },
   {
     name: 'Configuración',

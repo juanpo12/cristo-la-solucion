@@ -64,6 +64,13 @@
       "when": 1784063002307,
       "tag": "0008_far_the_watchers",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1784343575330,
+      "tag": "0009_true_magdalene",
+      "breakpoints": true
     }
   ]
 }

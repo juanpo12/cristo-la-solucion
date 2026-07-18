@@ -18,6 +18,9 @@ const StoreShowcase = dynamic(() => import("@/components/store-showcase").then((
 const Prayer = dynamic(() => import("@/components/prayer").then((mod) => mod.Prayer), {
   loading: () => <div className="h-96 animate-pulse bg-gray-100" />,
 });
+const Volunteering = dynamic(() => import("@/components/volunteering").then((mod) => mod.Volunteering), {
+  loading: () => <div className="h-96 animate-pulse bg-gray-100" />,
+});
 const GivingSection = dynamic(() => import("@/components/giving-section"), {
   loading: () => <div className="h-96 animate-pulse bg-gray-100" />,
 });
@@ -32,6 +35,7 @@ export default function Home() {
       <StoreShowcase />
       <ResourcesSection />
       <Prayer />
+      <Volunteering />
       <GivingSection />
     </div>
   );

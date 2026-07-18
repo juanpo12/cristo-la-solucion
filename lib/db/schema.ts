@@ -1,4 +1,4 @@
-import { pgTable, serial, varchar, text, decimal, integer, timestamp, boolean, jsonb, index } from 'drizzle-orm/pg-core'
+import { pgTable, serial, varchar, text, decimal, integer, timestamp, boolean, jsonb, index, date } from 'drizzle-orm/pg-core'
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod'
 import { z } from 'zod'
 
@@ -248,6 +248,21 @@ export const subscribers = pgTable('subscribers', {
 
 export type Subscriber = typeof subscribers.$inferSelect
 export type NewSubscriber = typeof subscribers.$inferInsert
+
+// Tabla de voluntarios (interesados en servir en algún área de la iglesia)
+// email y telefono son opcionales a nivel DB, pero la API exige al menos uno
+export const volunteers = pgTable('volunteers', {
+  id: serial('id').primaryKey(),
+  nombre: varchar('nombre', { length: 255 }).notNull(),
+  apellido: varchar('apellido', { length: 255 }).notNull(),
+  fechaNacimiento: date('fecha_nacimiento').notNull(),
+  email: varchar('email', { length: 255 }),
+  telefono: varchar('telefono', { length: 50 }),
+  createdAt: timestamp('created_at').defaultNow(),
+})
+
+export type Volunteer = typeof volunteers.$inferSelect
+export type NewVolunteer = typeof volunteers.$inferInsert
 
 export const insertResourceSchema = createInsertSchema(resources, {
   title: z.string().min(1, 'El título es requerido').max(255),
