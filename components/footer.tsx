@@ -56,7 +56,7 @@ export function Footer() {
                 Archivos
               </Link>
               <Link
-                href="/#voluntariado"
+                href="/voluntariado"
                 className="block text-gray-300 hover:text-church-electric-400 transition-colors text-lg"
               >
                 Voluntariado
