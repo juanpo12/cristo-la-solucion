@@ -26,22 +26,34 @@ export function Footer() {
             <h4 className="font-bold mb-6 text-xl">Enlaces Rápidos</h4>
             <div className="space-y-3">
               <Link
-                href="#vision"
+                href="/#vision"
                 className="block text-gray-300 hover:text-church-electric-400 transition-colors text-lg"
               >
                 Visión
               </Link>
               <Link
-                href="#grupos"
+                href="/#grupos"
                 className="block text-gray-300 hover:text-church-electric-400 transition-colors text-lg"
               >
                 Grupos
               </Link>
               <Link
-                href="#reuniones"
+                href="/#reuniones"
                 className="block text-gray-300 hover:text-church-electric-400 transition-colors text-lg"
               >
                 Reuniones
+              </Link>
+              <Link
+                href="/recursos?tipo=apunte"
+                className="block text-gray-300 hover:text-church-electric-400 transition-colors text-lg"
+              >
+                Apuntes
+              </Link>
+              <Link
+                href="/recursos?tipo=archivo"
+                className="block text-gray-300 hover:text-church-electric-400 transition-colors text-lg"
+              >
+                Archivos
               </Link>
             </div>
           </div>

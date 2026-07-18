@@ -1,9 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest, NextResponse, after } from 'next/server'
 import { db } from '@/lib/db'
 import { resources } from '@/lib/db/schema'
 import { eq } from 'drizzle-orm'
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
+import { notifySubscribersOfResource } from '@/lib/services/newsletter'
 import { z } from 'zod'
 
 async function requireAdmin() {
@@ -59,6 +60,14 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
   if (!updated) return NextResponse.json({ error: 'Not found' }, { status: 404 })
   revalidatePath('/recursos')
   revalidatePath('/admin/recursos')
+  revalidatePath('/')
+
+  // Si quedó publicado, avisar a suscriptores (notifySubscribersOfResource
+  // solo envía si nunca se notificó este recurso)
+  if (updated.published) {
+    after(() => notifySubscribersOfResource(updated.id))
+  }
+
   return NextResponse.json({ resource: updated })
 }
 
@@ -70,5 +79,6 @@ export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ 
   await db.delete(resources).where(eq(resources.id, Number(id)))
   revalidatePath('/recursos')
   revalidatePath('/admin/recursos')
+  revalidatePath('/')
   return NextResponse.json({ success: true })
 }

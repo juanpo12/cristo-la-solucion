@@ -1,9 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest, NextResponse, after } from 'next/server'
 import { db } from '@/lib/db'
 import { resources } from '@/lib/db/schema'
 import { asc, desc, eq, ilike, and } from 'drizzle-orm'
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
+import { notifySubscribersOfResource } from '@/lib/services/newsletter'
 import { z } from 'zod'
 
 async function requireAdmin() {
@@ -91,5 +92,11 @@ export async function POST(req: NextRequest) {
 
   revalidatePath('/recursos')
   revalidatePath('/admin/recursos')
+  revalidatePath('/')
+
+  if (created.published) {
+    after(() => notifySubscribersOfResource(created.id))
+  }
+
   return NextResponse.json({ resource: created }, { status: 201 })
 }

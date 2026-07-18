@@ -225,6 +225,8 @@ export const resources = pgTable('resources', {
   coverImage: text('cover_image'),
   author: varchar('author', { length: 255 }),
   sortOrder: integer('sort_order').notNull().default(0),
+  // Fecha en que se notificó a los suscriptores (null = todavía no se avisó de este recurso)
+  notifiedAt: timestamp('notified_at'),
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at').defaultNow(),
 }, (t) => [
@@ -234,6 +236,18 @@ export const resources = pgTable('resources', {
   index('idx_resources_created_at').on(t.createdAt),
   index('idx_resources_sort_order').on(t.sortOrder),
 ])
+
+// Tabla de suscriptores a novedades (avisos por email cuando hay recursos nuevos)
+export const subscribers = pgTable('subscribers', {
+  id: serial('id').primaryKey(),
+  email: varchar('email', { length: 255 }).notNull().unique(),
+  unsubscribeToken: varchar('unsubscribe_token', { length: 64 }).notNull().unique(),
+  createdAt: timestamp('created_at').defaultNow(),
+  unsubscribedAt: timestamp('unsubscribed_at'),
+})
+
+export type Subscriber = typeof subscribers.$inferSelect
+export type NewSubscriber = typeof subscribers.$inferInsert
 
 export const insertResourceSchema = createInsertSchema(resources, {
   title: z.string().min(1, 'El título es requerido').max(255),

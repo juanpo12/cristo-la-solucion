@@ -43,10 +43,10 @@ export function Prayer() {
     if (!formData.name || !formData.lastName || !formData.category || !formData.message) {
       return
     }
-    
-    await submitPrayer(formData)
-    
-    if (!error) {
+
+    const ok = await submitPrayer(formData)
+
+    if (ok) {
       // Reset form on success
       setFormData({
         name: '',
@@ -78,7 +78,7 @@ export function Prayer() {
       <div className="container mx-auto px-4">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-5xl font-bold church-text mb-10">PETICIONES DE ORACIÓN</h2>
+            <h2 className="text-4xl md:text-5xl font-bold church-text mb-10">PETICIONES DE ORACIÓN</h2>
             <p className="text-xl church-text-muted leading-relaxed max-w-4xl mx-auto">
               Creemos en el poder de la oración. Comparte tu petición con nosotros y permítenos acompañarte en oración.
               Juntos llevamos tus necesidades ante el trono de la gracia.
@@ -118,7 +118,7 @@ export function Prayer() {
                     </div>
                   ) : (
                     <form onSubmit={handleSubmit} className="space-y-6">
-                      <div className="grid grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <Input 
                           placeholder="Nombre" 
                           className="church-card h-12" 
@@ -134,12 +134,13 @@ export function Prayer() {
                           required
                         />
                       </div>
-                      <Input 
-                        type="email" 
-                        placeholder="Email" 
-                        className="church-card h-12" 
+                      <Input
+                        type="email"
+                        placeholder="Email"
+                        className="church-card h-12"
                         value={formData.email}
                         onChange={(e) => handleInputChange('email', e.target.value)}
+                        required
                       />
                       <Input 
                         placeholder="Teléfono (opcional)" 

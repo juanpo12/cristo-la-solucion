@@ -205,7 +205,7 @@ export function StoreShowcase() {
       <div className="hidden md:block lg:hidden py-8">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 gap-6 max-w-5xl mx-auto">
-            {storeSections.slice(0, 2).map((section) => (
+            {storeSections.map((section) => (
               <Link
                 key={section.id}
                 href={`/${section.id}`}
@@ -245,46 +245,6 @@ export function StoreShowcase() {
                 </div>
               </Link>
             ))}
-          </div>
-          {/* Tercera sección en fila completa */}
-          <div className="mt-6 max-w-5xl mx-auto">
-            <Link
-              href={`/${storeSections[2].id}`}
-              className="relative h-64 block overflow-hidden rounded-2xl cursor-pointer group shadow-lg hover:shadow-2xl transition-all duration-300"
-            >
-              <div
-                className="absolute inset-0 bg-cover bg-center transition-all duration-500 group-hover:scale-110"
-                style={{
-                  backgroundImage: `url('${storeSections[2].image}')`,
-                  backgroundPosition: storeSections[2].focusPosition,
-                }}
-              />
-              <div
-                className={`absolute inset-0 bg-gradient-to-t ${storeSections[2].color} opacity-50 group-hover:opacity-30 transition-opacity duration-300`}
-              />
-              <div className="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-colors duration-300" />
-              <div className="absolute inset-0 flex flex-col justify-center items-center text-white p-6 z-10">
-                <div className="text-center transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
-                  <img
-                    src={storeSections[2].emoji}
-                    alt={storeSections[2].name}
-                    className="w-24 h-24 mx-auto mb-4 drop-shadow-lg object-contain"
-                  />
-                  <h3 className="text-3xl font-bold mb-3 text-white drop-shadow-lg">
-                    {storeSections[2].name}
-                  </h3>
-                  <p className="text-lg mb-6 text-white/90 font-medium">
-                    {storeSections[2].shortDesc}
-                  </p>
-                  <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <Button className="bg-white/90 text-gray-800 hover:bg-white hover:text-gray-900 transition-all duration-300">
-                      Explorar
-                      <ArrowRight className="w-4 h-4 ml-2" />
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </Link>
           </div>
         </div>
       </div>

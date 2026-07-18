@@ -5,7 +5,7 @@ export function Vision() {
     <section id="vision" className="py-20 bg-gray-50 scroll-mt-20">
       <div className="container mx-auto px-4">
         <div className="max-w-5xl mx-auto text-center">
-          <h2 className="text-5xl font-bold church-text mb-10 animate-fade-in">NUESTRA VISIÓN</h2>
+          <h2 className="text-4xl md:text-5xl font-bold church-text mb-10 animate-fade-in">NUESTRA VISIÓN</h2>
           <p className="text-xl church-text-muted leading-relaxed mb-16 max-w-4xl mx-auto animate-fade-in">
             El propósito de nuestra iglesia es enseñar a las personas quiénes son en Cristo y cómo vivir una vida victoriosa según los privilegios del pacto. Esto se logra cuando los creyentes están suficientemente arraigados y cimentados en la Palabra de Dios como para poder hablarle a otros los mismos principios.
           </p>

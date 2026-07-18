@@ -1,17 +1,10 @@
 'use client'
 import { Button } from "@/components/ui/button"
-import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react"
+import { ArrowRight } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
-import { useState, useEffect } from "react"
 
 export function Hero() {
-  const [currentSlide, setCurrentSlide] = useState(0)
-
-  const images = [
-    { src: "/pastorportadav.jpg", alt: "Hero principal" }
-  ]
-
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId)
     if (element) {
@@ -25,71 +18,26 @@ export function Hero() {
     }
   }
 
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % images.length)
-  }
-
-  const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + images.length) % images.length)
-  }
-
-  // Auto-play del carrusel
-  useEffect(() => {
-    const interval = setInterval(nextSlide, 5000) // Cambia cada 5 segundos
-    return () => clearInterval(interval)
-  }, [])
-
-  // Determinar si el slide actual debe ocultar el contenido
-  const shouldHideContent = currentSlide === 1 || currentSlide === 2
-
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden">
-      {/* Carrusel de imágenes de fondo */}
+      {/* Imagen de fondo */}
       <div className="absolute inset-0 w-full h-full">
-        {images.map((image, index) => (
-          <Image
-            key={index}
-            width={1920}
-            height={1080}
-            src={image.src}
-            alt={image.alt}
-            className={`absolute inset-0 w-full h-full object-cover object-[75%_center] md:object-center transition-opacity duration-1000 ${index === currentSlide ? 'opacity-100' : 'opacity-0'
-              }`}
-            style={{ zIndex: -1 }}
-            priority={index === 0}
-            unoptimized={false}
-          />
-        ))}
+        <Image
+          width={1920}
+          height={1080}
+          src="/pastorportadav.jpg"
+          alt="Hero principal"
+          className="absolute inset-0 w-full h-full object-cover object-[75%_center] md:object-center"
+          style={{ zIndex: -1 }}
+          priority
+        />
       </div>
 
-      {/* Controles del carrusel */}
-      {images.length > 1 && (
-        <button
-          onClick={prevSlide}
-          className="hidden md:block absolute left-4 top-1/2 transform -translate-y-1/2 z-20 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full p-2 transition-all duration-300"
-          aria-label="Imagen anterior"
-        >
-          <ChevronLeft className="w-6 h-6 text-white" />
-        </button>
-      )}
-
-      {images.length > 1 && (
-        <button
-          onClick={nextSlide}
-          className="hidden md:block absolute right-4 top-1/2 transform -translate-y-1/2 z-20 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full p-2 transition-all duration-300"
-          aria-label="Siguiente imagen"
-        >
-          <ChevronRight className="w-6 h-6 text-white" />
-        </button>
-      )}
-
-      {/* Overlay con gradiente moderno - Solo visible en el primer slide */}
-      <div className={`absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/50 transition-opacity duration-1000 ${shouldHideContent ? 'opacity-0' : 'opacity-100'
-        }`} />
+      {/* Overlay con gradiente moderno */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/50" />
 
       {/* Contenido principal - Posicionado centro-derecha */}
-      <div className={`relative z-10 w-full max-w-screen mx-auto px-4 sm:px-6 lg:px-12 transition-opacity duration-1000 ${shouldHideContent ? 'opacity-0 pointer-events-none' : 'opacity-100'
-        }`}>
+      <div className="relative z-10 w-full max-w-screen mx-auto px-4 sm:px-6 lg:px-12">
         <div className="grid grid-cols-12 gap-4 items-center min-h-screen">
           {/* Espacio vacío a la izquierda */}
           <div className="hidden md:block md:col-span-1 lg:col-span-1"></div>
@@ -115,7 +63,7 @@ export function Hero() {
                 </p>
               </div>
 
-              {/* Botones mejorados */}
+              {/* Botones: acción principal sólida, secundaria delineada */}
               <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center md:justify-start items-center pt-3 md:pt-4">
                 <Button
                   size="lg"
@@ -130,7 +78,7 @@ export function Hero() {
                   size="lg"
                   variant="outline"
                   onClick={() => scrollToSection("vision")}
-                  className="bg-white text-gray-900 hover:bg-gray-100 px-6 md:px-8 py-3 md:py-4 text-base md:text-lg font-medium shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 w-full sm:w-auto"
+                  className="bg-transparent border-2 border-white text-white hover:bg-white/10 hover:text-white px-6 md:px-8 py-3 md:py-4 text-base md:text-lg font-medium shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 w-full sm:w-auto"
                 >
                   Conoce más
                   <ArrowRight className="w-4 md:w-5 h-4 md:h-5 ml-2" />
@@ -142,8 +90,7 @@ export function Hero() {
       </div>
 
       {/* Indicador de scroll - Oculto en móvil para evitar superposición */}
-      <div className={`hidden md:block absolute bottom-10 left-1/2 transform -translate-x-1/2 z-10 animate-bounce transition-opacity duration-1000 ${shouldHideContent ? 'opacity-0' : 'opacity-100'
-        }`}>
+      <div className="hidden md:block absolute bottom-10 left-1/2 transform -translate-x-1/2 z-10 animate-bounce">
         <div className="w-6 h-10 border-2 border-white/40 rounded-full flex justify-center">
           <div className="w-1 h-3 bg-white/60 rounded-full mt-2 animate-pulse" />
         </div>
