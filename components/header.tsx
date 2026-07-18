@@ -112,6 +112,7 @@ export function Header() {
     { href: "dar", label: "Dar", type: "scroll" },
     { href: "/agenda", label: "Agenda", type: "link" },
     // { href: "/alcance", label: "Alcance", type: "link" },
+    { href: "/voluntariado", label: "Voluntariado", type: "link" },
     { href: "/contacto", label: "Contacto", type: "link" },
   ]
 
@@ -129,6 +130,7 @@ export function Header() {
         case '/arte': return 'Arte'
         case '/alcance': return 'Día de Alcance'
         case '/agenda': return 'Agenda'
+        case '/voluntariado': return 'Voluntariado'
         default: return 'Cristo la Solución'
       }
     }
