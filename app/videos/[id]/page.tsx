@@ -22,17 +22,15 @@ export default function VideoDetailPage() {
     const fetchVideo = async () => {
       setIsLoading(true)
       try {
-        const response = await fetch('/api/youtube/pastor-videos')
+        // Se pide el video puntual: antes se traía la lista entera y se buscaba
+        // dentro, lo que además dejaba de encontrar cualquier video fuera de la
+        // primera página del canal.
+        const response = await fetch(`/api/youtube/pastor-videos?id=${encodeURIComponent(videoId as string)}`)
         if (response.ok) {
           const data = await response.json()
-          const foundVideo = data.videos.find((v: any) => v.id === videoId)
-          if (foundVideo) {
-            setVideo(foundVideo)
-            // Get related videos (excluding current one)
-            const related = data.videos
-              .filter((v: any) => v.id !== videoId)
-              .slice(0, 15) // Limit roughly to look good on desktop
-            setRelatedVideos(related)
+          if (data.video) {
+            setVideo(data.video)
+            setRelatedVideos(data.related ?? [])
           }
         }
       } catch (error) {
@@ -57,7 +55,7 @@ export default function VideoDetailPage() {
 
   const formatViewCount = (count: string | number) => {
     if (typeof count === 'string') {
-      const num = parseInt(count.replace(/,/g, ''))
+      const num = parseInt(count, 10)
       if (num >= 1000000) {
         return `${(num / 1000000).toFixed(1)}M`
       } else if (num >= 1000) {
@@ -168,7 +166,7 @@ export default function VideoDetailPage() {
               <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-sm text-gray-500 mb-6 pb-6 border-b border-gray-100">
                 <div className="flex items-center bg-gray-50 px-3 py-1.5 rounded-lg border border-gray-100">
                   <Eye className="w-4 h-4 mr-2 text-church-electric-500" />
-                  <span className="font-medium text-gray-700">{video.viewCount} <span className="hidden sm:inline">vistas</span></span>
+                  <span className="font-medium text-gray-700">{formatViewCount(video.viewCount)} <span className="hidden sm:inline">vistas</span></span>
                 </div>
                 <div className="flex items-center bg-gray-50 px-3 py-1.5 rounded-lg border border-gray-100">
                   <Calendar className="w-4 h-4 mr-2 text-church-electric-500" />
