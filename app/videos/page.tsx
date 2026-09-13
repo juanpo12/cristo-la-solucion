@@ -1,14 +1,13 @@
 "use client"
 
-import { useState, useEffect, useMemo } from "react"
+import { useState, useEffect, useMemo, useCallback, useRef } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { ArrowLeft, Play, Search, Filter, Calendar, Eye, Clock, ExternalLink, Grid, List } from "lucide-react"
+import { Play, Search, Filter, Calendar, Eye, ExternalLink, Grid, List } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
-import { YouTubePlayer } from "@/components/youtube-player"
 
 interface PastorVideo {
   id: string
@@ -20,6 +19,7 @@ interface PastorVideo {
   viewCount: string
   url: string
   category: string
+  isLive: boolean
 }
 
 // Videos de ejemplo del Pastor Alfredo Dimiro (en producción vendrían de YouTube API)
@@ -35,12 +35,12 @@ export default function VideosPage() {
   const [searchTerm, setSearchTerm] = useState("")
   const [sortBy, setSortBy] = useState("Más Recientes")
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
-  const [isLoading, setIsLoading] = useState(false)
-
-  console.log(setIsLoading);
-  console.log(setVideos);
-  
-  
+  const [isLoading, setIsLoading] = useState(true)
+  const [isLoadingMore, setIsLoadingMore] = useState(false)
+  const [nextPageToken, setNextPageToken] = useState<string | null>(null)
+  const [totalResults, setTotalResults] = useState(0)
+  const [error, setError] = useState("")
+  const sentinelRef = useRef<HTMLDivElement | null>(null)
 
   // Filtrar y ordenar videos
   const filteredAndSortedVideos = useMemo(() => {
@@ -77,36 +77,72 @@ export default function VideosPage() {
     })
   }
 
+  // El backend manda el número crudo: se formatea acá, sin pasar por toLocaleString
+  // del servidor, que según su idioma usa punto o coma y rompía el parseo.
   const formatViewCount = (count: string) => {
-    const num = parseInt(count.replace(/,/g, ''))
-    if (num >= 1000000) {
-      return `${(num / 1000000).toFixed(1)}M`
-    } else if (num >= 1000) {
-      return `${(num / 1000).toFixed(1)}k`
-    }
-    return count
+    const num = parseInt(count, 10)
+    if (!Number.isFinite(num)) return "0"
+    if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`
+    if (num >= 1000) return `${(num / 1000).toFixed(1)}k`
+    return String(num)
   }
 
-  // Cargar videos reales de YouTube API (opcional)
-    const loadVideosFromAPI = async () => {
-      setIsLoading(true)
-      try {
-        const response = await fetch('/api/youtube/pastor-videos')
-        if (response.ok) {
-          const data = await response.json()
-          setVideos(data.videos)
-        }
-      } catch (error) {
-        console.error('Error cargando videos:', error)
-      } finally {
-        setIsLoading(false)
+  /**
+   * El canal tiene más de mil videos, así que se traen de a 50 con el pageToken
+   * de la playlist de subidas. Sin token se arranca de cero; con token se suma
+   * a lo que ya está en pantalla.
+   */
+  const loadVideos = useCallback(async (pageToken?: string) => {
+    if (pageToken) setIsLoadingMore(true)
+    else setIsLoading(true)
+    setError("")
+
+    try {
+      const url = pageToken
+        ? `/api/youtube/pastor-videos?pageToken=${encodeURIComponent(pageToken)}`
+        : '/api/youtube/pastor-videos'
+      const response = await fetch(url)
+      const data = await response.json()
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.error || 'No se pudieron cargar los videos')
       }
+
+      setVideos((prev) => {
+        if (!pageToken) return data.videos
+        // Una recarga puede repetir videos entre páginas: se deduplica por id.
+        const seen = new Set(prev.map((v: PastorVideo) => v.id))
+        return [...prev, ...data.videos.filter((v: PastorVideo) => !seen.has(v.id))]
+      })
+      setNextPageToken(data.nextPageToken ?? null)
+      setTotalResults(data.totalResults ?? 0)
+    } catch (err) {
+      console.error('Error cargando videos:', err)
+      setError(err instanceof Error ? err.message : 'No se pudieron cargar los videos')
+    } finally {
+      setIsLoading(false)
+      setIsLoadingMore(false)
     }
+  }, [])
 
   useEffect(() => {
-    // Cargar videos reales si la API está disponible
-    loadVideosFromAPI()
-  }, [])
+    loadVideos()
+  }, [loadVideos])
+
+  // Scroll infinito: cuando el centinela entra en pantalla, se pide la página siguiente.
+  useEffect(() => {
+    const sentinel = sentinelRef.current
+    if (!sentinel || !nextPageToken || isLoading || isLoadingMore) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) loadVideos(nextPageToken)
+      },
+      { rootMargin: '400px' },
+    )
+    observer.observe(sentinel)
+    return () => observer.disconnect()
+  }, [nextPageToken, isLoading, isLoadingMore, loadVideos])
 
   return (
     <div className="min-h-screen bg-gray-50 pt-20 overflow-x-hidden">
@@ -190,7 +226,13 @@ export default function VideosPage() {
           <div className="flex items-center justify-between mt-6 pt-6 border-t border-gray-200">
             <div className="flex items-center space-x-2 text-church-text-muted">
               <Filter className="w-5 h-5" />
-              <span>{filteredAndSortedVideos.length} videos encontrados</span>
+              <span>
+                {searchTerm
+                  ? `${filteredAndSortedVideos.length} de ${videos.length} videos cargados`
+                  : totalResults > videos.length
+                    ? `${videos.length} de ${totalResults} videos`
+                    : `${videos.length} videos`}
+              </span>
             </div>
             <Link 
               href="https://youtube.com/@AlfredoDimiroLive" 
@@ -204,6 +246,21 @@ export default function VideosPage() {
             </Link>
           </div>
         </div>
+
+        {searchTerm && nextPageToken ? (
+          <p className="mb-4 text-sm text-church-text-muted bg-amber-50 border border-amber-200 rounded-lg px-4 py-3">
+            La búsqueda mira los {videos.length} videos cargados hasta ahora. Seguí bajando para
+            cargar el resto del canal.
+          </p>
+        ) : null}
+
+        {error ? (
+          <div className="text-center py-16">
+            <h3 className="text-2xl font-bold church-text mb-2">No se pudieron cargar los videos</h3>
+            <p className="text-church-text-muted mb-6">{error}</p>
+            <Button onClick={() => loadVideos()}>Reintentar</Button>
+          </div>
+        ) : null}
 
         {/* Videos */}
         {isLoading ? (
@@ -243,7 +300,9 @@ export default function VideosPage() {
                   </div>
                   
                   {/* Duration Badge */}
-                  <div className="absolute bottom-2 right-2 bg-black/80 text-white px-2 py-1 rounded text-sm">
+                  <div className={`absolute bottom-2 right-2 px-2 py-1 rounded text-sm text-white ${
+                    video.isLive ? "bg-red-600" : "bg-black/80"
+                  }`}>
                     {video.duration}
                   </div>
 
@@ -276,6 +335,28 @@ export default function VideosPage() {
             ))}
           </div>
         )}
+
+        {/* Centinela del scroll infinito + salida manual por si el observer no dispara */}
+        {!isLoading && !error && nextPageToken ? (
+          <div ref={sentinelRef} className="mt-10 flex justify-center">
+            {isLoadingMore ? (
+              <div className="flex items-center space-x-3 text-church-text-muted">
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-church-electric-600"></div>
+                <span>Cargando más videos...</span>
+              </div>
+            ) : (
+              <Button variant="outline" size="lg" onClick={() => loadVideos(nextPageToken)}>
+                Cargar más videos
+              </Button>
+            )}
+          </div>
+        ) : null}
+
+        {!isLoading && !error && !nextPageToken && videos.length > 0 ? (
+          <p className="mt-10 text-center text-church-text-muted">
+            Ya viste los {videos.length} videos del canal.
+          </p>
+        ) : null}
 
         {/* Call to Action */}
         <div className="mt-16 text-center bg-gradient-to-r from-church-electric-500 to-church-navy-600 rounded-2xl p-12 text-white">
