@@ -1,5 +1,6 @@
 import { Hero } from "@/components/hero";
 import { Vision } from "@/components/vision";
+import { FamilyWeek } from "@/components/family-week";
 import { ResourcesSection } from "@/components/resources-section";
 import dynamic from "next/dynamic";
 
@@ -29,6 +30,7 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       <Hero />
+      <FamilyWeek />
       <Vision />
       <Groups />
       <Meetings />

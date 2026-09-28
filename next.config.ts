@@ -22,6 +22,15 @@ const nextConfig: NextConfig = {
         ],
       },
       {
+        // Links compartidos por WhatsApp: fuerza la descarga en vez de abrir el visor del celular.
+        // Con ?ver se abre en el navegador (link "o leelo online" de la home).
+        source: '/semana-familia/devocional-semana-de-la-familia.pdf',
+        missing: [{ type: 'query', key: 'ver' }],
+        headers: [
+          { key: 'Content-Disposition', value: 'attachment; filename="Devocional Semana de la Familia.pdf"' },
+        ],
+      },
+      {
         source: '/api/:path*',
         headers: [
           { key: 'Access-Control-Allow-Origin', value: siteOrigin },
